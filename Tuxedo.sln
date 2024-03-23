@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tuxedo", "Tuxedo\Tuxedo.csproj", "{DC949E3D-C7A1-41D6-B2F5-B433E4B1A6AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tuxedo.Tests", "Tuxedo.Tests\Tuxedo.Tests.csproj", "{B724B08A-9CEB-4E61-B086-22DEF99FAA2A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DC949E3D-C7A1-41D6-B2F5-B433E4B1A6AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC949E3D-C7A1-41D6-B2F5-B433E4B1A6AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC949E3D-C7A1-41D6-B2F5-B433E4B1A6AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC949E3D-C7A1-41D6-B2F5-B433E4B1A6AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B724B08A-9CEB-4E61-B086-22DEF99FAA2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B724B08A-9CEB-4E61-B086-22DEF99FAA2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B724B08A-9CEB-4E61-B086-22DEF99FAA2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B724B08A-9CEB-4E61-B086-22DEF99FAA2A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

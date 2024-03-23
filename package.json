@@ -1,0 +1,9 @@
+{
+  "name": "tuxedo",
+  "version": "1.0.0",
+  "devDependencies": {
+    "@commitlint/cli": "^19.0.3",
+    "@commitlint/config-conventional": "^19.0.3",
+    "markdownlint-cli2": "^0.12.1"
+  }
+}
