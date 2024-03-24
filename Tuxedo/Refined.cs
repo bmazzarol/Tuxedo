@@ -36,6 +36,15 @@ public readonly record struct Refined<T, TRefinement>
     /// <exception cref="RefinementFailureException">thrown if the value cannot be refined</exception>
     public static implicit operator Refined<T, TRefinement>(T value) =>
         Refined.Refine<T, TRefinement>(value);
+
+    /// <summary>
+    /// Deconstructs the refined value
+    /// </summary>
+    /// <param name="value">underlying raw value</param>
+    public void Deconstruct(out T value)
+    {
+        value = Value;
+    }
 }
 
 /// <summary>
@@ -88,6 +97,17 @@ public readonly record struct Refined<TRaw, TRefined, TRefinement>
     /// <exception cref="RefinementFailureException">thrown if the value cannot be refined</exception>
     public static implicit operator Refined<TRaw, TRefined, TRefinement>(TRaw value) =>
         Refined.Refine<TRaw, TRefined, TRefinement>(value);
+
+    /// <summary>
+    /// Deconstructs the refined value
+    /// </summary>
+    /// <param name="rawValue">underlying raw value</param>
+    /// <param name="refinedValue">underlying refined value</param>
+    public void Deconstruct(out TRaw rawValue, out TRefined refinedValue)
+    {
+        rawValue = RawValue;
+        refinedValue = RefinedValue;
+    }
 }
 
 /// <summary>

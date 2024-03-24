@@ -12,10 +12,10 @@ public readonly struct Trimmed : IRefinement<Trimmed, string>
         string.Equals(value.Trim(), value, StringComparison.Ordinal);
 
     /// <inheritdoc />
-    public bool TryApplyRefinement(string value, [NotNullWhen(true)] out string? refinedValue)
+    public bool TryApplyRefinement(string? value, [NotNullWhen(true)] out string? refinedValue)
     {
-        refinedValue = value.Trim();
-        return true;
+        refinedValue = value?.Trim();
+        return refinedValue is not null;
     }
 
     /// <inheritdoc />

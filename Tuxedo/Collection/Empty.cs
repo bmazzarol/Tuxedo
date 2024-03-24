@@ -4,9 +4,10 @@ using System.Diagnostics.CodeAnalysis;
 namespace Tuxedo;
 
 /// <summary>
-/// Enforces that a value is not empty
+/// Enforces that a value is empty
 /// </summary>
-public readonly struct NonEmpty<T> : IRefinement<NonEmpty<T>, T>
+/// <typeparam name="T"></typeparam>
+public readonly struct Empty<T> : IRefinement<Empty<T>, T>
 {
     /// <inheritdoc />
     public bool CanBeRefined(T value)
@@ -14,19 +15,19 @@ public readonly struct NonEmpty<T> : IRefinement<NonEmpty<T>, T>
         switch (value)
         {
             case null:
-                return false;
+                return true;
             case string text:
-                return text.Length > 0;
+                return string.IsNullOrEmpty(text);
             case ICollection collection:
-                return collection.Count > 0;
+                return collection.Count == 0;
             case IEnumerable enumerable:
             {
                 var enumerator = enumerable.GetEnumerator();
                 using var disposable = enumerator as IDisposable;
-                return enumerator.MoveNext();
+                return !enumerator.MoveNext();
             }
             default:
-                return !EqualityComparer<T>.Default.Equals(value, default!);
+                return EqualityComparer<T>.Default.Equals(value, default!);
         }
     }
 
@@ -34,12 +35,12 @@ public readonly struct NonEmpty<T> : IRefinement<NonEmpty<T>, T>
     public bool TryApplyRefinement(T value, [NotNullWhen(true)] out T? refinedValue)
     {
         refinedValue = default;
-        return CanBeRefined(value);
+        return false;
     }
 
     /// <inheritdoc />
     public string BuildFailureMessage(T value)
     {
-        return "Value cannot be empty";
+        return "Value must be empty";
     }
 }

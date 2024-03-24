@@ -41,7 +41,7 @@ public static class BooleanRefinementTests
     public static void Case4()
     {
         Refined<bool, False> refined = false;
-        ((bool)refined).Should().BeFalse();
+        refined.Value.Should().BeFalse();
         Refined.TryRefine<bool, False>(false, out _).Should().BeTrue();
     }
 
@@ -68,7 +68,7 @@ public static class BooleanRefinementTests
     public static void Case7()
     {
         Refined<bool, Not<True, bool>> refined = false;
-        ((bool)refined).Should().BeFalse();
+        (refined is { Value: false }).Should().BeTrue();
         Refined.TryRefine<bool, Not<True, bool>>(false, out _).Should().BeTrue();
     }
 

@@ -7,28 +7,28 @@ public static class StringRefinementTests
     [Fact(DisplayName = "A non-empty string can be refined")]
     public static void Case1()
     {
-        Refined<string, NonEmpty> nonEmptyString = "Hello, World!";
+        Refined<string, NonEmpty<string>> nonEmptyString = "Hello, World!";
         ((string)nonEmptyString).Should().Be("Hello, World!");
         string.Equals(nonEmptyString, "Hello, World!", StringComparison.Ordinal).Should().BeTrue();
-        Refined.TryRefine<string, NonEmpty>("Hello, World!", out _).Should().BeTrue();
+        Refined.TryRefine<string, NonEmpty<string>>("Hello, World!", out _).Should().BeTrue();
     }
 
     [Fact(DisplayName = "An empty string cannot be refined")]
     public static void Case2()
     {
-        Refined.TryRefine<string, NonEmpty>(string.Empty, out _).Should().BeFalse();
+        Refined.TryRefine<string, NonEmpty<string>>(string.Empty, out _).Should().BeFalse();
     }
 
     [Fact(DisplayName = "A null string cannot be refined")]
     public static void Case3()
     {
-        Refined.TryRefine<string, NonEmpty>(null!, out _).Should().BeFalse();
+        Refined.TryRefine<string, NonEmpty<string>>(null!, out _).Should().BeFalse();
     }
 
     [Fact(DisplayName = "A empty string cannot be refined and throws")]
     public static void Case4()
     {
-        var act = () => (Refined<string, NonEmpty>)string.Empty;
+        var act = () => (Refined<string, NonEmpty<string>>)string.Empty;
         act.Should()
             .Throw<RefinementFailureException>()
             .WithMessage("Value cannot be empty")
@@ -39,9 +39,12 @@ public static class StringRefinementTests
     [Fact(DisplayName = "A non-empty string refinement can be inverted")]
     public static void Case5()
     {
-        Refined<string, Not<NonEmpty, string>> refined = string.Empty;
-        ((string)refined).Should().BeEmpty();
-        Refined.TryRefine<string, Not<NonEmpty, string>>(string.Empty, out _).Should().BeTrue();
+        Refined<string, Not<NonEmpty<string>, string>> refined = string.Empty;
+        refined.Value.Should().BeEmpty();
+        Refined
+            .TryRefine<string, Not<NonEmpty<string>, string>>(string.Empty, out _)
+            .Should()
+            .BeTrue();
     }
 
     [Fact(DisplayName = "A trimmed string can be refined")]
@@ -53,7 +56,7 @@ public static class StringRefinementTests
         Refined.TryRefine<string, Trimmed>("Hello, World!", out _).Should().BeTrue();
 
         // leading and trailing whitespace is removed by the refinement
-        var trimmedString2 = (Refined<string, Trimmed>)" Hello, World! ";
+        Refined<string, Trimmed> trimmedString2 = " Hello, World! ";
         ((string)trimmedString2).Should().Be("Hello, World!");
     }
 
@@ -86,10 +89,10 @@ public static class StringRefinementTests
     [Fact(DisplayName = "A refinement can be combined with logical AND")]
     public static void Case10()
     {
-        Refined<string, And<NonEmpty, Trimmed, string>> refined = "Hello, World!";
+        Refined<string, And<NonEmpty<string>, Trimmed, string>> refined = "Hello, World!";
         ((string)refined).Should().Be("Hello, World!");
         Refined
-            .TryRefine<string, And<NonEmpty, Trimmed, string>>("Hello, World!", out _)
+            .TryRefine<string, And<NonEmpty<string>, Trimmed, string>>("Hello, World!", out _)
             .Should()
             .BeTrue();
     }
@@ -97,7 +100,7 @@ public static class StringRefinementTests
     [Fact(DisplayName = "A refinement can be combined with logical AND and throws")]
     public static void Case11()
     {
-        var act = () => (Refined<string, And<NonEmpty, Trimmed, string>>)" Hello, World! ";
+        var act = () => (Refined<string, And<NonEmpty<string>, Trimmed, string>>)" Hello, World! ";
         act.Should()
             .Throw<RefinementFailureException>()
             .WithMessage(
@@ -111,8 +114,9 @@ public static class StringRefinementTests
     public static void Case12()
     {
         Refined<string, Guid, Uuid> refined = "d3f4e5a6-7b8c-9d0e-1f2a-3b4c5d6e7f8a";
-        ((string)refined).Should().Be("d3f4e5a6-7b8c-9d0e-1f2a-3b4c5d6e7f8a");
-        ((Guid)refined).Should().Be(Guid.Parse("d3f4e5a6-7b8c-9d0e-1f2a-3b4c5d6e7f8a"));
+        var (raw, guid) = refined;
+        raw.Should().Be("d3f4e5a6-7b8c-9d0e-1f2a-3b4c5d6e7f8a");
+        guid.Should().Be(Guid.Parse("d3f4e5a6-7b8c-9d0e-1f2a-3b4c5d6e7f8a"));
         Refined
             .TryRefine<string, Guid, Uuid>("d3f4e5a6-7b8c-9d0e-1f2a-3b4c5d6e7f8a", out _)
             .Should()
@@ -263,5 +267,21 @@ public static class StringRefinementTests
             .WithMessage("Value must start with 'Hello'")
             .And.Value.Should()
             .Be("Hi, World!");
+    }
+
+    [Fact(DisplayName = "An empty string can be refined using empty")]
+    public static void Case24()
+    {
+        Refined<string, Empty<string>> emptyString = string.Empty;
+        emptyString.Value.Should().BeEmpty();
+        Refined.TryRefine<string, Empty<string>>(string.Empty, out _).Should().BeTrue();
+    }
+
+    [Fact(DisplayName = "An null string can be refined using empty")]
+    public static void Case25()
+    {
+        Refined<string, Empty<string>> emptyString = null!;
+        emptyString.Value.Should().BeNull();
+        Refined.TryRefine<string, Empty<string>>(null!, out _).Should().BeTrue();
     }
 }
