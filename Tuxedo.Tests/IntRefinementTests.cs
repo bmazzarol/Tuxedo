@@ -121,4 +121,10 @@ public static class IntRefinementTests
         refined.Value.Should().Be(default);
         Refined.TryRefine<int, Empty<int>>(default, out _).Should().BeTrue();
     }
+
+    [Fact(DisplayName = "A int cannot be refined by size")]
+    public static void Case15()
+    {
+        Refined.TryRefine<int, Size<int, Even>>(1, out _).Should().BeFalse();
+    }
 }

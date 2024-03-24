@@ -284,4 +284,17 @@ public static class StringRefinementTests
         emptyString.Value.Should().BeNull();
         Refined.TryRefine<string, Empty<string>>(null!, out _).Should().BeTrue();
     }
+
+    [Fact(DisplayName = "A string can be refined by size")]
+    public static void Case26()
+    {
+        Refined<string, Size<string, Even>> refined = "123456";
+        ((string)refined).Should().Be("123456");
+    }
+
+    [Fact(DisplayName = "A string cannot be refined by size")]
+    public static void Case27()
+    {
+        Refined.TryRefine<string, Size<string, Even>>("12345", out _).Should().BeFalse();
+    }
 }

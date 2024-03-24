@@ -87,4 +87,37 @@ public static class CollectionRefinementTests
         );
         emptyCollection.Value.Should().BeEmpty();
     }
+
+    [Fact(DisplayName = "A collection can be refined by size")]
+    public static void Case9()
+    {
+        Refined<string[], Size<string[], Even>> refined = new[] { "Hello", "World" };
+        refined.Value.Should().BeEquivalentTo("Hello", "World");
+        Refined
+            .TryRefine<string[], Size<string[], Even>>(new[] { "Hello", "World" }, out _)
+            .Should()
+            .BeTrue();
+    }
+
+    [Fact(DisplayName = "A collection cannot be refined by size")]
+    public static void Case10()
+    {
+        Refined
+            .TryRefine<string[], Size<string[], Even>>(new[] { "Hello", "World", "!" }, out _)
+            .Should()
+            .BeFalse();
+    }
+
+    [Fact(DisplayName = "A collection cannot be refined by size and throws")]
+    public static void Case11()
+    {
+        var act = () => (Refined<string[], Size<string[], Even>>)new[] { "Hello", "World", "!" };
+        act.Should()
+            .Throw<RefinementFailureException>()
+            .WithMessage("The values size failed refinement: Value must be even")
+            .And.Value.Should()
+            .BeOfType<string[]>()
+            .Which.Should()
+            .BeEquivalentTo("Hello", "World", "!");
+    }
 }
