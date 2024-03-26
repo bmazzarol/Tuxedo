@@ -22,7 +22,7 @@ public static class IntRefinementTests
         var act = () => Refined.Refine<int, Positive>(-1);
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be positive")
+            .WithMessage("Value must be positive, but found -1")
             .And.Value.Should()
             .Be(-1);
     }
@@ -45,7 +45,7 @@ public static class IntRefinementTests
         var act = () => OnlyAcceptPositiveInt(10, -2);
         var ex = act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be positive");
+            .WithMessage("Value must be positive, but found -2");
         ex.And.Value.Should().Be(-2);
         // todo: ensure the stack trace is correct
     }
@@ -70,7 +70,7 @@ public static class IntRefinementTests
         var act = () => Refined.Refine<int, Even>(1);
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be even")
+            .WithMessage("Value must be an even number, but found 1")
             .And.Value.Should()
             .Be(1);
     }
@@ -78,24 +78,24 @@ public static class IntRefinementTests
     [Fact(DisplayName = "Using Not odd integers can be refined with even")]
     public static void Case9()
     {
-        Refined<int, Not<Even, int>> refined = 1;
+        Refined<int, Not<Even>> refined = 1;
         refined.Value.Should().Be(1);
-        Refined.TryRefine<int, Not<Even, int>>(1, out _).Should().BeTrue();
+        Refined.TryRefine<int, Not<Even>>(1, out _).Should().BeTrue();
     }
 
     [Fact(DisplayName = "Using Not even integers cannot be refined with even")]
     public static void Case10()
     {
-        Refined.TryRefine<int, Not<Even, int>>(2, out _).Should().BeFalse();
+        Refined.TryRefine<int, Not<Even>>(2, out _).Should().BeFalse();
     }
 
     [Fact(DisplayName = "Using Not even integers cannot be refined with even and throws")]
     public static void Case11()
     {
-        var act = () => Refined.Refine<int, Not<Even, int>>(2);
+        var act = () => Refined.Refine<int, Not<Even>>(2);
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Not, Value must be even")
+            .WithMessage("Not: Value must be an even number, but found 2")
             .And.Value.Should()
             .Be(2);
     }
@@ -103,28 +103,28 @@ public static class IntRefinementTests
     [Fact(DisplayName = "A non default integer can be refined")]
     public static void Case12()
     {
-        Refined<int, NonEmpty<int>> refined = 1;
+        Refined<int, NonEmpty> refined = 1;
         refined.Value.Should().Be(1);
-        Refined.TryRefine<int, NonEmpty<int>>(1, out _).Should().BeTrue();
+        Refined.TryRefine<int, NonEmpty>(1, out _).Should().BeTrue();
     }
 
     [Fact(DisplayName = "A default integer cannot be refined")]
     public static void Case13()
     {
-        Refined.TryRefine<int, NonEmpty<int>>(default, out _).Should().BeFalse();
+        Refined.TryRefine<int, NonEmpty>(default, out _).Should().BeFalse();
     }
 
     [Fact(DisplayName = "A default integer can be refined with empty")]
     public static void Case14()
     {
-        Refined<int, Empty<int>> refined = default;
+        Refined<int, Empty> refined = default;
         refined.Value.Should().Be(default);
-        Refined.TryRefine<int, Empty<int>>(default, out _).Should().BeTrue();
+        Refined.TryRefine<int, Empty>(default, out _).Should().BeTrue();
     }
 
     [Fact(DisplayName = "A int cannot be refined by size")]
     public static void Case15()
     {
-        Refined.TryRefine<int, Size<int, Even>>(1, out _).Should().BeFalse();
+        Refined.TryRefine<int, Size<Even>>(1, out _).Should().BeFalse();
     }
 }

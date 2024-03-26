@@ -1,18 +1,16 @@
 ﻿using System.Collections;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Tuxedo;
 
 /// <summary>
 /// Enforces that a value has a specific size
 /// </summary>
-/// <typeparam name="T">type of the value</typeparam>
 /// <typeparam name="TSize">size refinement</typeparam>
-public readonly struct Size<T, TSize> : IRefinement<Size<T, TSize>, T>
-    where TSize : struct, IRefinement<TSize, int>
+public readonly struct Size<TSize> : IRefinement<Size<TSize>>
+    where TSize : struct, IRefinement<TSize>
 {
     /// <inheritdoc />
-    public bool CanBeRefined(T value)
+    public bool CanBeRefined<T>(T value)
     {
         switch (value)
         {
@@ -29,13 +27,6 @@ public readonly struct Size<T, TSize> : IRefinement<Size<T, TSize>, T>
     }
 
     /// <inheritdoc />
-    public bool TryApplyRefinement(T value, [NotNullWhen(true)] out T? refinedValue)
-    {
-        refinedValue = default;
-        return false;
-    }
-
-    /// <inheritdoc />
-    public string BuildFailureMessage(T value) =>
-        $"The values size failed refinement: {default(TSize).BuildFailureMessage(default)}";
+    public string BuildFailureMessage<T>(T value) =>
+        $"The values size failed refinement: {default(TSize).BuildFailureMessage(default(int))}";
 }

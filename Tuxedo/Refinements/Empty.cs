@@ -1,16 +1,14 @@
 ﻿using System.Collections;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Tuxedo;
 
 /// <summary>
 /// Enforces that a value is empty
 /// </summary>
-/// <typeparam name="T"></typeparam>
-public readonly struct Empty<T> : IRefinement<Empty<T>, T>
+public readonly struct Empty : IRefinement<Empty>
 {
     /// <inheritdoc />
-    public bool CanBeRefined(T value)
+    public bool CanBeRefined<T>(T value)
     {
         switch (value)
         {
@@ -32,15 +30,5 @@ public readonly struct Empty<T> : IRefinement<Empty<T>, T>
     }
 
     /// <inheritdoc />
-    public bool TryApplyRefinement(T value, [NotNullWhen(true)] out T? refinedValue)
-    {
-        refinedValue = default;
-        return false;
-    }
-
-    /// <inheritdoc />
-    public string BuildFailureMessage(T value)
-    {
-        return "Value must be empty";
-    }
+    public string BuildFailureMessage<T>(T value) => "Value must be empty";
 }
