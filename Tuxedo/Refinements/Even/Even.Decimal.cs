@@ -3,9 +3,9 @@
 namespace Tuxedo;
 
 /// <summary>
-/// Enforces that an integer value is even
+/// Enforces that an numeric value is even
 /// </summary>
-public readonly struct Even : IRefinement<Even>
+public readonly partial struct Even : IRefinement<Even, decimal>
 {
     /// <inheritdoc />
     public bool CanBeRefined<T>(T value) =>
@@ -40,4 +40,9 @@ public readonly struct Even : IRefinement<Even>
                 => $"Value must have an even count, but found {enumerable.Cast<object?>().Count()}",
             _ => "Value must be even"
         };
+
+    bool IRefinement<Even, decimal>.CanBeRefined(decimal value) => value % 2 == 0;
+
+    string IRefinement<Even, decimal>.BuildFailureMessage(decimal value) =>
+        $"Value must be an even number, but found {value}";
 }

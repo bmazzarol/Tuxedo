@@ -1,0 +1,12 @@
+﻿namespace Tuxedo;
+
+/// <summary>
+/// Enforces that an numeric value is even
+/// </summary>
+public readonly partial struct Even : IRefinement<Even, int>
+{
+    bool IRefinement<Even, int>.CanBeRefined(int value) => value % 2 == 0;
+
+    string IRefinement<Even, int>.BuildFailureMessage(int value) =>
+        $"Value must be an even number, but found {value}";
+}

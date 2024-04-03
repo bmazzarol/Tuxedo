@@ -39,9 +39,9 @@ public static class StringRefinementTests
     [Fact(DisplayName = "A non-empty string refinement can be inverted")]
     public static void Case5()
     {
-        Refined<string, Not<NonEmpty>> refined = string.Empty;
+        Refined<string, Not<string, NonEmpty>> refined = string.Empty;
         refined.Value.Should().BeEmpty();
-        Refined.TryRefine<string, Not<NonEmpty>>(string.Empty, out _).Should().BeTrue();
+        Refined.TryRefine<string, Not<string, NonEmpty>>(string.Empty, out _).Should().BeTrue();
     }
 
     [Fact(DisplayName = "A trimmed string can be refined")]
@@ -77,7 +77,7 @@ public static class StringRefinementTests
         var act = () => (Refined<string, Trimmed>)" Hello, World! ";
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must have no leading or trailing whitespace")
+            .WithMessage("Value must be trimmed, but found ' Hello, World! '")
             .And.Value.Should()
             .Be(" Hello, World! ");
     }
@@ -85,19 +85,22 @@ public static class StringRefinementTests
     [Fact(DisplayName = "A refinement can be combined with logical AND")]
     public static void Case10()
     {
-        Refined<string, And<NonEmpty, Trimmed>> refined = "Hello, World!";
+        Refined<string, And<string, NonEmpty, Trimmed>> refined = "Hello, World!";
         ((string)refined).Should().Be("Hello, World!");
-        Refined.TryRefine<string, And<NonEmpty, Trimmed>>("Hello, World!", out _).Should().BeTrue();
+        Refined
+            .TryRefine<string, And<string, NonEmpty, Trimmed>>("Hello, World!", out _)
+            .Should()
+            .BeTrue();
     }
 
     [Fact(DisplayName = "A refinement can be combined with logical AND and throws")]
     public static void Case11()
     {
-        var act = () => (Refined<string, And<NonEmpty, Trimmed>>)" Hello, World! ";
+        var act = () => (Refined<string, And<string, NonEmpty, Trimmed>>)" Hello, World! ";
         act.Should()
             .Throw<RefinementFailureException>()
             .WithMessage(
-                "Value cannot be empty and Value must have no leading or trailing whitespace"
+                "Value cannot be empty and Value must be trimmed, but found ' Hello, World! '"
             )
             .And.Value.Should()
             .Be(" Hello, World! ");
@@ -130,18 +133,23 @@ public static class StringRefinementTests
     [Fact(DisplayName = "A absolute uri can be refined")]
     public static void Case14()
     {
-        Refined<string, AbsoluteUri> refined = "https://www.bmazzarol.com.au";
+        Refined<string, Uri<UriKindAbsolute>> refined = "https://www.bmazzarol.com.au";
         ((string)refined).Should().Be("https://www.bmazzarol.com.au");
         Refined
-            .TryRefine<string, AbsoluteUri>("https://www.bmazzarol.com.au", out _)
+            .TryRefine<string, Uri<UriKindAbsolute>>("https://www.bmazzarol.com.au", out _)
             .Should()
             .BeTrue();
 
-        Refined<string, Uri, AbsoluteUri> refined2 = "http://www.bmazzarol.com.au";
+        Refined<string, System.Uri, Uri<UriKindAbsolute>> refined2 = "http://www.bmazzarol.com.au";
         ((string)refined2).Should().Be("http://www.bmazzarol.com.au");
-        ((Uri)refined2).Should().Be(new Uri("http://www.bmazzarol.com.au", UriKind.Absolute));
+        ((System.Uri)refined2)
+            .Should()
+            .Be(new System.Uri("http://www.bmazzarol.com.au", UriKind.Absolute));
         Refined
-            .TryRefine<string, Uri, AbsoluteUri>("http://www.bmazzarol.com.au", out _)
+            .TryRefine<string, System.Uri, Uri<UriKindAbsolute>>(
+                "http://www.bmazzarol.com.au",
+                out _
+            )
             .Should()
             .BeTrue();
     }
@@ -149,30 +157,33 @@ public static class StringRefinementTests
     [Fact(DisplayName = "A absolute uri cannot be refined and throws")]
     public static void Case15()
     {
-        var act = () => (Refined<string, AbsoluteUri>)"/some/path";
+        var act = () => (Refined<string, Uri<UriKindAbsolute>>)"/some/path";
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be a valid absolute URI")
+            .WithMessage("Value must be a valid URI")
             .And.Value.Should()
             .Be("/some/path");
-        Refined.TryRefine<string, Uri, AbsoluteUri>("/some/path", out _).Should().BeFalse();
+        Refined
+            .TryRefine<string, System.Uri, Uri<UriKindAbsolute>>("/some/path", out _)
+            .Should()
+            .BeFalse();
     }
 
     [Fact(DisplayName = "A relative uri can be refined")]
     public static void Case16()
     {
-        Refined<string, RelativeUri> refined = "/some/path";
+        Refined<string, Uri<UriKindRelative>> refined = "/some/path";
         ((string)refined).Should().Be("/some/path");
-        Refined.TryRefine<string, RelativeUri>("/some/path", out _).Should().BeTrue();
+        Refined.TryRefine<string, Uri<UriKindRelative>>("/some/path", out _).Should().BeTrue();
     }
 
     [Fact(DisplayName = "A relative uri cannot be refined and throws")]
     public static void Case17()
     {
-        var act = () => (Refined<string, RelativeUri>)"https://www.bmazzarol.com.au";
+        var act = () => (Refined<string, Uri<UriKindRelative>>)"https://www.bmazzarol.com.au";
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be a valid relative URI")
+            .WithMessage("Value must be a valid URI")
             .And.Value.Should()
             .Be("https://www.bmazzarol.com.au");
     }
@@ -182,16 +193,16 @@ public static class StringRefinementTests
     [InlineData("https://www.bmazzarol.com.au")]
     public static void Case18(string uri)
     {
-        Refined<string, AnyUri> refined = uri;
+        Refined<string, Uri> refined = uri;
         ((string)refined).Should().Be(uri);
-        Refined.TryRefine<string, AnyUri>(uri, out _).Should().BeTrue();
+        Refined.TryRefine<string, Uri>(uri, out _).Should().BeTrue();
     }
 
     [Fact(DisplayName = "A non uri cannot be refined and throws")]
     public static void Case19()
     {
         // invalid uri characters
-        var act = () => (Refined<string, AnyUri>)null!;
+        var act = () => (Refined<string, Uri>)null!;
         act.Should()
             .Throw<RefinementFailureException>()
             .WithMessage("Value must be a valid URI")

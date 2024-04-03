@@ -3,11 +3,11 @@
 /// <summary>
 /// Enforces that a boolean value is false
 /// </summary>
-public readonly struct False : IRefinement<False>
+public readonly struct False : IRefinement<False, bool>
 {
     /// <inheritdoc />
-    public bool CanBeRefined<T>(T value) => value is false;
+    public bool CanBeRefined(bool value) => !value;
 
     /// <inheritdoc />
-    public string BuildFailureMessage<T>(T value) => "Value must be false";
+    public string BuildFailureMessage(bool value) => "Value must be false";
 }

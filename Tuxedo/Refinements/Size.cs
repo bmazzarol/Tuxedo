@@ -6,27 +6,27 @@ namespace Tuxedo;
 /// Enforces that a value has a specific size
 /// </summary>
 /// <typeparam name="TSize">size refinement</typeparam>
-public readonly struct Size<TSize> : IRefinement<Size<TSize>>
-    where TSize : struct, IRefinement<TSize>
+public readonly struct Size<TSize> : IRefinement<Size<TSize>, IEnumerable>
+    where TSize : struct, IRefinement<TSize, int>
 {
     /// <inheritdoc />
-    public bool CanBeRefined<T>(T value)
+    public bool CanBeRefined(IEnumerable value)
     {
         switch (value)
         {
             case ICollection collection:
                 return default(TSize).CanBeRefined(collection.Count);
-            case IEnumerable enumerable:
+            default:
             {
-                var count = enumerable.Cast<object?>().Count();
+                var count = 0;
+                foreach (var _ in value)
+                    count++;
                 return default(TSize).CanBeRefined(count);
             }
-            default:
-                return false;
         }
     }
 
     /// <inheritdoc />
-    public string BuildFailureMessage<T>(T value) =>
-        $"The values size failed refinement: {default(TSize).BuildFailureMessage(default(int))}";
+    public string BuildFailureMessage(IEnumerable value) =>
+        $"The values size failed refinement: {default(TSize).BuildFailureMessage(default)}";
 }

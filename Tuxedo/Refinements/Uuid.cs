@@ -3,15 +3,15 @@
 /// <summary>
 /// Enforces that a string value is a valid <see cref="Guid"/>
 /// </summary>
-public readonly struct Uuid : IRefinementResult<Uuid, Guid>
+public readonly struct Uuid : IRefinement<Uuid, string, Guid>
 {
     /// <inheritdoc />
-    public bool CanBeRefined<T>(T value) => TryRefine(value, out _);
+    public bool CanBeRefined(string value) => TryRefine(value, out _);
 
     /// <inheritdoc />
-    public bool TryRefine<T>(T value, out Guid refinedValue) =>
-        value is string s && Guid.TryParse(s, out refinedValue);
+    public bool TryRefine(string value, out Guid refinedValue) =>
+        Guid.TryParse(value, out refinedValue);
 
     /// <inheritdoc />
-    public string BuildFailureMessage<T>(T value) => "Value must be a valid GUID";
+    public string BuildFailureMessage(string value) => "Value must be a valid GUID";
 }

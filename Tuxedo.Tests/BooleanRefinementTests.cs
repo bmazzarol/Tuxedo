@@ -67,21 +67,21 @@ public static class BooleanRefinementTests
     [Fact(DisplayName = "A refinement can be inverted")]
     public static void Case7()
     {
-        Refined<bool, Not<True>> refined = false;
+        Refined<bool, Not<bool, True>> refined = false;
         (refined is { Value: false }).Should().BeTrue();
-        Refined.TryRefine<bool, Not<True>>(false, out _).Should().BeTrue();
+        Refined.TryRefine<bool, Not<bool, True>>(false, out _).Should().BeTrue();
     }
 
     [Fact(DisplayName = "An inverted refinement fail")]
     public static void Case8()
     {
-        Refined.TryRefine<bool, Not<True>>(true, out _).Should().BeFalse();
+        Refined.TryRefine<bool, Not<bool, True>>(true, out _).Should().BeFalse();
     }
 
     [Fact(DisplayName = "An inverted refinement fail and throws")]
     public static void Case9()
     {
-        var act = () => (Refined<bool, Not<True>>)true;
+        var act = () => (Refined<bool, Not<bool, True>>)true;
         act.Should()
             .Throw<RefinementFailureException>()
             .WithMessage("Not: Value must be true")

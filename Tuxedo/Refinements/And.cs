@@ -5,13 +5,14 @@
 /// </summary>
 /// <typeparam name="TFirstRefinement">first refinement</typeparam>
 /// <typeparam name="TSecondRefinement">second refinement</typeparam>
-public readonly struct And<TFirstRefinement, TSecondRefinement>
-    : IRefinement<And<TFirstRefinement, TSecondRefinement>>
-    where TFirstRefinement : struct, IRefinement<TFirstRefinement>
-    where TSecondRefinement : struct, IRefinement<TSecondRefinement>
+/// <typeparam name="T">type of value</typeparam>
+public readonly struct And<T, TFirstRefinement, TSecondRefinement>
+    : IRefinement<And<T, TFirstRefinement, TSecondRefinement>, T>
+    where TFirstRefinement : struct, IRefinement<TFirstRefinement, T>
+    where TSecondRefinement : struct, IRefinement<TSecondRefinement, T>
 {
     /// <inheritdoc />
-    public bool CanBeRefined<T>(T value)
+    public bool CanBeRefined(T value)
     {
         var firstRefinement = default(TFirstRefinement);
         var secondRefinement = default(TSecondRefinement);
@@ -19,7 +20,7 @@ public readonly struct And<TFirstRefinement, TSecondRefinement>
     }
 
     /// <inheritdoc />
-    public string BuildFailureMessage<T>(T value)
+    public string BuildFailureMessage(T value)
     {
         var firstRefinement = default(TFirstRefinement);
         var secondRefinement = default(TSecondRefinement);

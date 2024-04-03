@@ -5,26 +5,30 @@ namespace Tuxedo;
 /// <summary>
 /// Ensures that a string value has no leading or trailing whitespace
 /// </summary>
-public readonly struct Trimmed : IRefinementResult<Trimmed, string>
+public readonly struct Trimmed : IRefinement<Trimmed, string, string>
 {
-    /// <inheritdoc />
-    public bool CanBeRefined<T>(T value) =>
-        value is string s && s.Equals(s.Trim(), StringComparison.Ordinal);
-
-    /// <inheritdoc />
-    public bool TryRefine<TIn>(TIn value, [NotNullWhen(true)] out string? refinedValue)
+    /// <summary>
+    /// Determines if the value is trimmed
+    /// </summary>
+    /// <param name="value">The value to check</param>
+    /// <returns>True if the value is trimmed, otherwise false</returns>
+    public bool CanBeRefined(string value)
     {
-        if (value is string s)
-        {
-            refinedValue = s.Trim();
-            return true;
-        }
-
-        refinedValue = null;
-        return false;
+        return string.Equals(value.Trim(), value, StringComparison.Ordinal);
     }
 
+    /// <summary>
+    /// Builds a failure message
+    /// </summary>
+    /// <param name="value">The value that failed the refinement</param>
+    /// <returns>A message describing the failure</returns>
+    public string BuildFailureMessage(string value) =>
+        $"Value must be trimmed, but found '{value}'";
+
     /// <inheritdoc />
-    public string BuildFailureMessage<T>(T value) =>
-        "Value must have no leading or trailing whitespace";
+    public bool TryRefine(string value, [NotNullWhen(true)] out string? refinedValue)
+    {
+        refinedValue = value.Trim();
+        return true;
+    }
 }

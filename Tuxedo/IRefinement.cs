@@ -9,7 +9,8 @@ namespace Tuxedo;
 /// A refined type is a type that is a subset of another type, limited by some predicate.
 /// </summary>
 /// <typeparam name="TThis">the refinement instance; must be a struct type to enable lookup</typeparam>
-public interface IRefinement<TThis>
+/// <typeparam name="T">type to refine</typeparam>
+public interface IRefinement<TThis, in T>
     where TThis : struct
 {
     /// <summary>
@@ -17,22 +18,23 @@ public interface IRefinement<TThis>
     /// </summary>
     /// <param name="value">value to test for refinement</param>
     /// <returns>true if the value can be refined; otherwise, false</returns>
-    bool CanBeRefined<T>(T value);
+    bool CanBeRefined(T value);
 
     /// <summary>
     /// Builds a failure message for the given value when it cannot be refined.
     /// </summary>
     /// <param name="value">value that cannot be refined</param>
     /// <returns>failure message</returns>
-    string BuildFailureMessage<T>(T value);
+    string BuildFailureMessage(T value);
 }
 
 /// <summary>
 /// Defines that a contract can be used to refine some type T, with a refined result.
 /// </summary>
 /// <typeparam name="TThis">the refinement instance; must be a struct type to enable lookup</typeparam>
+/// <typeparam name="TIn">input type to refine</typeparam>
 /// <typeparam name="TOut">result of the refinement</typeparam>
-public interface IRefinementResult<TThis, TOut> : IRefinement<TThis>
+public interface IRefinement<TThis, in TIn, TOut> : IRefinement<TThis, TIn>
     where TThis : struct
 {
     /// <summary>
@@ -41,5 +43,5 @@ public interface IRefinementResult<TThis, TOut> : IRefinement<TThis>
     /// <param name="value">value to test for refinement</param>
     /// <param name="refinedValue">refined value</param>
     /// <returns>true if the value can be refined; otherwise, false</returns>
-    bool TryRefine<TIn>(TIn value, [NotNullWhen(true)] out TOut? refinedValue);
+    bool TryRefine(TIn value, [NotNullWhen(true)] out TOut? refinedValue);
 }
