@@ -1,5 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+using Tuxedo.Extensions;
 
 namespace Tuxedo;
 
@@ -127,7 +129,7 @@ public static class Refined
         where TRefinement : struct, IRefinement<TRefinement, T>
     {
         var refinement = default(TRefinement);
-        if (!refinement.CanBeRefined(value))
+        if (!refinement.CanBeRefined(value, out _))
         {
             refined = default;
             return false;
@@ -153,7 +155,7 @@ public static class Refined
         where TRefinement : struct, IRefinement<TRefinement, TRaw, TRefined>
     {
         var refinement = default(TRefinement);
-        if (!refinement.TryRefine(value, out var refinedValue))
+        if (!refinement.TryRefine(value, out var refinedValue, out _))
         {
             refined = default;
             return false;
@@ -164,13 +166,11 @@ public static class Refined
     }
 
     [DoesNotReturn]
-    [SuppressMessage("Design", "MA0026:Fix TODO comment")]
-    [SuppressMessage("Info Code Smell", "S1135:Track uses of \"TODO\" tags")]
-    private static void Throw<T, TRefinement>(T value, TRefinement refinement)
-        where TRefinement : struct, IRefinement<TRefinement, T>
+    private static void Throw<T>(T value, string message)
     {
-        // TODO: find a way to rewind the stack trace to the caller
-        throw new RefinementFailureException(value, refinement.BuildFailureMessage(value));
+        throw new RefinementFailureException(value, message).WithStackTrace(
+            new StackTrace(skipFrames: 3)
+        );
     }
 
     /// <summary>
@@ -185,12 +185,12 @@ public static class Refined
         where TRefinement : struct, IRefinement<TRefinement, T>
     {
         var refinement = default(TRefinement);
-        if (refinement.CanBeRefined(value))
+        if (refinement.CanBeRefined(value, out var failureMessage))
         {
             return new Refined<T, TRefinement>(value);
         }
 
-        Throw(value, refinement);
+        Throw(value, failureMessage);
         return default;
     }
 
@@ -209,12 +209,12 @@ public static class Refined
         where TRefinement : struct, IRefinement<TRefinement, TRaw, TRefined>
     {
         var refinement = default(TRefinement);
-        if (refinement.TryRefine(value, out var refinedValue))
+        if (refinement.TryRefine(value, out var refinedValue, out var failureMessage))
         {
             return new Refined<TRaw, TRefined, TRefinement>(value, refinedValue);
         }
 
-        Throw(value, refinement);
+        Throw(value, failureMessage);
         return default;
     }
 }

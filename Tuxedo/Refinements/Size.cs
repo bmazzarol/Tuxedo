@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Tuxedo;
 
@@ -10,23 +11,21 @@ public readonly struct Size<TSize> : IRefinement<Size<TSize>, IEnumerable>
     where TSize : struct, IRefinement<TSize, int>
 {
     /// <inheritdoc />
-    public bool CanBeRefined(IEnumerable value)
+    public bool CanBeRefined(IEnumerable value, [NotNullWhen(false)] out string? failureMessage)
     {
-        switch (value)
+        var size = value switch
         {
-            case ICollection collection:
-                return default(TSize).CanBeRefined(collection.Count);
-            default:
-            {
-                var count = 0;
-                foreach (var _ in value)
-                    count++;
-                return default(TSize).CanBeRefined(count);
-            }
-        }
-    }
+            ICollection collection => collection.Count,
+            _ => value.Cast<object?>().Count()
+        };
 
-    /// <inheritdoc />
-    public string BuildFailureMessage(IEnumerable value) =>
-        $"The values size failed refinement: {default(TSize).BuildFailureMessage(default)}";
+        if (default(TSize).CanBeRefined(size, out var sizeFailureMessage))
+        {
+            failureMessage = null;
+            return true;
+        }
+
+        failureMessage = $"The values size failed refinement: {sizeFailureMessage}";
+        return false;
+    }
 }

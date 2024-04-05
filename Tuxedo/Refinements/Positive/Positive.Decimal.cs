@@ -1,12 +1,24 @@
-﻿namespace Tuxedo;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Tuxedo;
 
 /// <summary>
 /// Ensures that an numeric value is positive
 /// </summary>
 public readonly partial struct Positive : IRefinement<Positive, decimal>
 {
-    bool IRefinement<Positive, decimal>.CanBeRefined(decimal value) => value > 0;
+    bool IRefinement<Positive, decimal>.CanBeRefined(
+        decimal value,
+        [NotNullWhen(false)] out string? failureMessage
+    )
+    {
+        if (value > 0)
+        {
+            failureMessage = null;
+            return true;
+        }
 
-    string IRefinement<Positive, decimal>.BuildFailureMessage(decimal value) =>
-        $"Value must be positive, but found {value}";
+        failureMessage = $"Value must be positive, but found {value}";
+        return false;
+    }
 }

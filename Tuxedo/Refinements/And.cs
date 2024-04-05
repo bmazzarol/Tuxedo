@@ -1,4 +1,6 @@
-﻿namespace Tuxedo;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Tuxedo;
 
 /// <summary>
 /// Combines two refinements with a logical AND
@@ -12,18 +14,27 @@ public readonly struct And<T, TFirstRefinement, TSecondRefinement>
     where TSecondRefinement : struct, IRefinement<TSecondRefinement, T>
 {
     /// <inheritdoc />
-    public bool CanBeRefined(T value)
+    public bool CanBeRefined(T value, [NotNullWhen(false)] out string? failureMessage)
     {
-        var firstRefinement = default(TFirstRefinement);
-        var secondRefinement = default(TSecondRefinement);
-        return firstRefinement.CanBeRefined(value) && secondRefinement.CanBeRefined(value);
-    }
-
-    /// <inheritdoc />
-    public string BuildFailureMessage(T value)
-    {
-        var firstRefinement = default(TFirstRefinement);
-        var secondRefinement = default(TSecondRefinement);
-        return $"{firstRefinement.BuildFailureMessage(value)} and {secondRefinement.BuildFailureMessage(value)}";
+        switch (
+            (
+                default(TFirstRefinement).CanBeRefined(value, out var firstFailureMessage),
+                default(TSecondRefinement).CanBeRefined(value, out var secondFailureMessage)
+            )
+        )
+        {
+            case (true, true):
+                failureMessage = null;
+                return true;
+            case (false, false):
+                failureMessage = $"{firstFailureMessage} and {secondFailureMessage}";
+                return false;
+            case (true, false):
+                failureMessage = secondFailureMessage ?? string.Empty;
+                return false;
+            case (false, true):
+                failureMessage = firstFailureMessage ?? string.Empty;
+                return false;
+        }
     }
 }

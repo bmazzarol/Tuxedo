@@ -1,4 +1,6 @@
-﻿namespace Tuxedo;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Tuxedo;
 
 /// <summary>
 /// Enforces that a string value is a valid <see cref="Guid"/>
@@ -6,12 +8,23 @@
 public readonly struct Uuid : IRefinement<Uuid, string, Guid>
 {
     /// <inheritdoc />
-    public bool CanBeRefined(string value) => TryRefine(value, out _);
+    public bool CanBeRefined(string value, [NotNullWhen(false)] out string? failureMessage) =>
+        TryRefine(value, out _, out failureMessage);
 
     /// <inheritdoc />
-    public bool TryRefine(string value, out Guid refinedValue) =>
-        Guid.TryParse(value, out refinedValue);
+    public bool TryRefine(
+        string value,
+        out Guid refinedValue,
+        [NotNullWhen(false)] out string? failureMessage
+    )
+    {
+        if (Guid.TryParse(value, out refinedValue))
+        {
+            failureMessage = null;
+            return true;
+        }
 
-    /// <inheritdoc />
-    public string BuildFailureMessage(string value) => "Value must be a valid GUID";
+        failureMessage = "Value must be a valid GUID";
+        return false;
+    }
 }

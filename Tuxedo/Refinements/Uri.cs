@@ -9,23 +9,28 @@ public readonly struct Uri<TKind> : IRefinement<Uri<TKind>, string, System.Uri>
     where TKind : struct, IConstant<TKind, UriKind>
 {
     /// <inheritdoc />
-    public bool CanBeRefined(string value) => TryRefine(value, out _);
+    public bool CanBeRefined(string value, [NotNullWhen(false)] out string? failureMessage) =>
+        TryRefine(value, out _, out failureMessage);
 
     /// <inheritdoc />
-    public bool TryRefine(string value, [NotNullWhen(true)] out System.Uri? refinedValue)
+    public bool TryRefine(
+        string value,
+        [NotNullWhen(true)] out System.Uri? refinedValue,
+        [NotNullWhen(false)] out string? failureMessage
+    )
     {
         if (System.Uri.TryCreate(value, default(TKind).Value, out var uri))
         {
             refinedValue = uri;
+            failureMessage = null;
             return true;
         }
 
         refinedValue = null;
+        failureMessage =
+            $"Value must be a valid {default(TKind).Value.ToString().ToLowerInvariant()} URI";
         return false;
     }
-
-    /// <inheritdoc />
-    public string BuildFailureMessage(string value) => "Value must be a valid URI";
 }
 
 /// <summary>
@@ -34,29 +39,33 @@ public readonly struct Uri<TKind> : IRefinement<Uri<TKind>, string, System.Uri>
 public readonly struct Uri : IRefinement<Uri, string, System.Uri>
 {
     /// <inheritdoc />
-    public bool CanBeRefined(string value) => TryRefine(value, out _);
+    public bool CanBeRefined(string value, [NotNullWhen(false)] out string? failureMessage) =>
+        TryRefine(value, out _, out failureMessage);
 
     /// <inheritdoc />
-    public bool TryRefine(string value, [NotNullWhen(true)] out System.Uri? refinedValue)
+    public bool TryRefine(
+        string value,
+        [NotNullWhen(true)] out System.Uri? refinedValue,
+        [NotNullWhen(false)] out string? failureMessage
+    )
     {
         if (System.Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out var uri))
         {
             refinedValue = uri;
+            failureMessage = null;
             return true;
         }
 
         refinedValue = null;
+        failureMessage = "Value must be a valid URI";
         return false;
     }
-
-    /// <inheritdoc />
-    public string BuildFailureMessage(string value) => "Value must be a valid URI";
 }
 
 /// <summary>
 /// Represents a <see cref="UriKind.Absolute"/> at the type level
 /// </summary>
-public readonly struct UriKindAbsolute : IConstant<UriKindAbsolute, UriKind>
+public readonly struct AbsoluteKind : IConstant<AbsoluteKind, UriKind>
 {
     /// <inheritdoc />
     public UriKind Value => UriKind.Absolute;
@@ -65,7 +74,7 @@ public readonly struct UriKindAbsolute : IConstant<UriKindAbsolute, UriKind>
 /// <summary>
 /// Represents a <see cref="UriKind.Relative"/> at the type level
 /// </summary>
-public readonly struct UriKindRelative : IConstant<UriKindRelative, UriKind>
+public readonly struct RelativeKind : IConstant<RelativeKind, UriKind>
 {
     /// <inheritdoc />
     public UriKind Value => UriKind.Relative;

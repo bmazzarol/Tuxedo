@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 
 namespace Tuxedo;
 
@@ -11,21 +12,32 @@ public readonly struct MatchesRegex<TRegex>
     where TRegex : struct, IConstant<TRegex, string>
 {
     /// <inheritdoc />
-    public bool CanBeRefined(string value) => TryRefine(value, out _);
+    public bool CanBeRefined(string value, [NotNullWhen(false)] out string? failureMessage) =>
+        TryRefine(value, out _, out failureMessage);
 
     /// <inheritdoc />
-    public bool TryRefine(string value, out MatchCollection refinedValue)
+    public bool TryRefine(
+        string value,
+        [NotNullWhen(true)] out MatchCollection? refinedValue,
+        [NotNullWhen(false)] out string? failureMessage
+    )
     {
-        refinedValue = Regex.Matches(
+        var matches = Regex.Matches(
             value,
             default(TRegex).Value,
             RegexOptions.None,
             TimeSpan.FromSeconds(30)
         );
-        return refinedValue.Count > 0;
-    }
 
-    /// <inheritdoc />
-    public string BuildFailureMessage(string value) =>
-        $"Value must match the regular expression '{default(TRegex).Value}'";
+        if (matches.Count > 0)
+        {
+            refinedValue = matches;
+            failureMessage = null;
+            return true;
+        }
+
+        refinedValue = null;
+        failureMessage = $"Value must match the regular expression '{default(TRegex).Value}'";
+        return false;
+    }
 }

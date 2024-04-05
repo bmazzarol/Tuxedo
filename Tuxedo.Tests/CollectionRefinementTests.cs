@@ -99,7 +99,7 @@ public static class CollectionRefinementTests
         act.Should()
             .Throw<RefinementFailureException>()
             .WithMessage(
-                "The values size failed refinement: Value must be an even number, but found 0"
+                "The values size failed refinement: Value must be an even number, but found 3"
             )
             .And.Value.Should()
             .BeOfType<string[]>()

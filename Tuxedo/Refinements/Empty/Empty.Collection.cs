@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Tuxedo;
 
@@ -7,21 +8,36 @@ namespace Tuxedo;
 /// </summary>
 public readonly struct Empty : IRefinement<Empty, IEnumerable>
 {
-    bool IRefinement<Empty, IEnumerable>.CanBeRefined(IEnumerable? value)
+    bool IRefinement<Empty, IEnumerable>.CanBeRefined(
+        IEnumerable? value,
+        [NotNullWhen(false)] out string? failureMessage
+    )
     {
+        bool isEmpty;
         switch (value)
         {
             case null:
-                return true;
+                isEmpty = true;
+                break;
             case ICollection collection:
-                return collection.Count == 0;
+                isEmpty = collection.Count == 0;
+                break;
+            default:
+            {
+                var enumerator = value.GetEnumerator();
+                using var disposable = enumerator as IDisposable;
+                isEmpty = !enumerator.MoveNext();
+                break;
+            }
         }
 
-        var enumerator = value.GetEnumerator();
-        using var disposable = enumerator as IDisposable;
-        return !enumerator.MoveNext();
-    }
+        if (isEmpty)
+        {
+            failureMessage = null;
+            return true;
+        }
 
-    string IRefinement<Empty, IEnumerable>.BuildFailureMessage(IEnumerable value) =>
-        "Value must be empty";
+        failureMessage = "Value must be empty";
+        return false;
+    }
 }

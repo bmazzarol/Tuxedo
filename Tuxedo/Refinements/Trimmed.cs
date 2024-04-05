@@ -7,28 +7,28 @@ namespace Tuxedo;
 /// </summary>
 public readonly struct Trimmed : IRefinement<Trimmed, string, string>
 {
-    /// <summary>
-    /// Determines if the value is trimmed
-    /// </summary>
-    /// <param name="value">The value to check</param>
-    /// <returns>True if the value is trimmed, otherwise false</returns>
-    public bool CanBeRefined(string value)
+    /// <inheritdoc />
+    public bool CanBeRefined(string value, [NotNullWhen(false)] out string? failureMessage)
     {
-        return string.Equals(value.Trim(), value, StringComparison.Ordinal);
+        if (string.Equals(value.Trim(), value, StringComparison.Ordinal))
+        {
+            failureMessage = null;
+            return true;
+        }
+
+        failureMessage = $"Value must be trimmed, but found '{value}'";
+        return false;
     }
 
-    /// <summary>
-    /// Builds a failure message
-    /// </summary>
-    /// <param name="value">The value that failed the refinement</param>
-    /// <returns>A message describing the failure</returns>
-    public string BuildFailureMessage(string value) =>
-        $"Value must be trimmed, but found '{value}'";
-
     /// <inheritdoc />
-    public bool TryRefine(string value, [NotNullWhen(true)] out string? refinedValue)
+    public bool TryRefine(
+        string value,
+        [NotNullWhen(true)] out string? refinedValue,
+        [NotNullWhen(false)] out string? failureMessage
+    )
     {
         refinedValue = value.Trim();
+        failureMessage = null;
         return true;
     }
 }

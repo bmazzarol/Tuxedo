@@ -99,9 +99,7 @@ public static class StringRefinementTests
         var act = () => (Refined<string, And<string, NonEmpty, Trimmed>>)" Hello, World! ";
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage(
-                "Value cannot be empty and Value must be trimmed, but found ' Hello, World! '"
-            )
+            .WithMessage("Value must be trimmed, but found ' Hello, World! '")
             .And.Value.Should()
             .Be(" Hello, World! ");
     }
@@ -133,23 +131,20 @@ public static class StringRefinementTests
     [Fact(DisplayName = "A absolute uri can be refined")]
     public static void Case14()
     {
-        Refined<string, Uri<UriKindAbsolute>> refined = "https://www.bmazzarol.com.au";
+        Refined<string, Uri<AbsoluteKind>> refined = "https://www.bmazzarol.com.au";
         ((string)refined).Should().Be("https://www.bmazzarol.com.au");
         Refined
-            .TryRefine<string, Uri<UriKindAbsolute>>("https://www.bmazzarol.com.au", out _)
+            .TryRefine<string, Uri<AbsoluteKind>>("https://www.bmazzarol.com.au", out _)
             .Should()
             .BeTrue();
 
-        Refined<string, System.Uri, Uri<UriKindAbsolute>> refined2 = "http://www.bmazzarol.com.au";
+        Refined<string, System.Uri, Uri<AbsoluteKind>> refined2 = "http://www.bmazzarol.com.au";
         ((string)refined2).Should().Be("http://www.bmazzarol.com.au");
         ((System.Uri)refined2)
             .Should()
             .Be(new System.Uri("http://www.bmazzarol.com.au", UriKind.Absolute));
         Refined
-            .TryRefine<string, System.Uri, Uri<UriKindAbsolute>>(
-                "http://www.bmazzarol.com.au",
-                out _
-            )
+            .TryRefine<string, System.Uri, Uri<AbsoluteKind>>("http://www.bmazzarol.com.au", out _)
             .Should()
             .BeTrue();
     }
@@ -157,14 +152,14 @@ public static class StringRefinementTests
     [Fact(DisplayName = "A absolute uri cannot be refined and throws")]
     public static void Case15()
     {
-        var act = () => (Refined<string, Uri<UriKindAbsolute>>)"/some/path";
+        var act = () => (Refined<string, Uri<AbsoluteKind>>)"/some/path";
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be a valid URI")
+            .WithMessage("Value must be a valid absolute URI")
             .And.Value.Should()
             .Be("/some/path");
         Refined
-            .TryRefine<string, System.Uri, Uri<UriKindAbsolute>>("/some/path", out _)
+            .TryRefine<string, System.Uri, Uri<AbsoluteKind>>("/some/path", out _)
             .Should()
             .BeFalse();
     }
@@ -172,18 +167,18 @@ public static class StringRefinementTests
     [Fact(DisplayName = "A relative uri can be refined")]
     public static void Case16()
     {
-        Refined<string, Uri<UriKindRelative>> refined = "/some/path";
+        Refined<string, Uri<RelativeKind>> refined = "/some/path";
         ((string)refined).Should().Be("/some/path");
-        Refined.TryRefine<string, Uri<UriKindRelative>>("/some/path", out _).Should().BeTrue();
+        Refined.TryRefine<string, Uri<RelativeKind>>("/some/path", out _).Should().BeTrue();
     }
 
     [Fact(DisplayName = "A relative uri cannot be refined and throws")]
     public static void Case17()
     {
-        var act = () => (Refined<string, Uri<UriKindRelative>>)"https://www.bmazzarol.com.au";
+        var act = () => (Refined<string, Uri<RelativeKind>>)"https://www.bmazzarol.com.au";
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be a valid URI")
+            .WithMessage("Value must be a valid relative URI")
             .And.Value.Should()
             .Be("https://www.bmazzarol.com.au");
     }
@@ -265,12 +260,20 @@ public static class StringRefinementTests
     [Fact(DisplayName = "A string cannot be refined using a starts with refinement and throws")]
     public static void Case23()
     {
-        var act = () => (Refined<string, StartsWith<HelloPrefix>>)"Hi, World!";
-        act.Should()
-            .Throw<RefinementFailureException>()
-            .WithMessage("Value must start with 'Hello'")
-            .And.Value.Should()
-            .Be("Hi, World!");
+        RefinementFailureException? e = null;
+
+        try
+        {
+            Refined<string, StartsWith<HelloPrefix>> _ = "Hi, World!";
+        }
+        catch (RefinementFailureException ex)
+        {
+            e = ex;
+        }
+
+        e!.Message.Should().Be("Value must start with 'Hello' but started with 'Hi, W'");
+        e.Value.Should().Be("Hi, World!");
+        e.StackTrace.Should().StartWith("   at Tuxedo.Tests.StringRefinementTests.Case23()");
     }
 
     [Fact(DisplayName = "An empty string can be refined using empty")]

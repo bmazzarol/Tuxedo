@@ -1,17 +1,26 @@
-﻿namespace Tuxedo;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Tuxedo;
 
 /// <summary>
 /// Inverts a refinement
 /// </summary>
-/// <typeparam name="TRefinement">refinement to invert</typeparam>
 /// <typeparam name="T">type of value</typeparam>
+/// <typeparam name="TRefinement">refinement to invert</typeparam>
 public readonly struct Not<T, TRefinement> : IRefinement<Not<T, TRefinement>, T>
     where TRefinement : struct, IRefinement<TRefinement, T>
 {
     /// <inheritdoc />
-    public bool CanBeRefined(T value) => !default(TRefinement).CanBeRefined(value);
+    public bool CanBeRefined(T value, [NotNullWhen(false)] out string? failureMessage)
+    {
+        if (!default(TRefinement).CanBeRefined(value, out _))
+        {
+            failureMessage = null;
+            return true;
+        }
 
-    /// <inheritdoc />
-    public string BuildFailureMessage(T value) =>
-        $"Not: {default(TRefinement).BuildFailureMessage(value)}";
+        failureMessage =
+            $"Refinement '{default(TRefinement).GetType().Name}' passed when it should have failed";
+        return false;
+    }
 }

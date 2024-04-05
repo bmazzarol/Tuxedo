@@ -95,7 +95,7 @@ public static class IntRefinementTests
         var act = () => Refined.Refine<int, Not<int, Even>>(2);
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Not: Value must be an even number, but found 2")
+            .WithMessage("Refinement 'Even' passed when it should have failed")
             .And.Value.Should()
             .Be(2);
     }

@@ -17,15 +17,9 @@ public interface IRefinement<TThis, in T>
     /// Tests if the value can be refined by this instance.
     /// </summary>
     /// <param name="value">value to test for refinement</param>
+    /// <param name="failureMessage">failure message returned if the value cannot be refined</param>
     /// <returns>true if the value can be refined; otherwise, false</returns>
-    bool CanBeRefined(T value);
-
-    /// <summary>
-    /// Builds a failure message for the given value when it cannot be refined.
-    /// </summary>
-    /// <param name="value">value that cannot be refined</param>
-    /// <returns>failure message</returns>
-    string BuildFailureMessage(T value);
+    bool CanBeRefined(T value, [NotNullWhen(false)] out string? failureMessage);
 }
 
 /// <summary>
@@ -42,6 +36,11 @@ public interface IRefinement<TThis, in TIn, TOut> : IRefinement<TThis, TIn>
     /// </summary>
     /// <param name="value">value to test for refinement</param>
     /// <param name="refinedValue">refined value</param>
+    /// <param name="failureMessage">failure message returned if the value cannot be refined</param>
     /// <returns>true if the value can be refined; otherwise, false</returns>
-    bool TryRefine(TIn value, [NotNullWhen(true)] out TOut? refinedValue);
+    bool TryRefine(
+        TIn value,
+        [NotNullWhen(true)] out TOut? refinedValue,
+        [NotNullWhen(false)] out string? failureMessage
+    );
 }

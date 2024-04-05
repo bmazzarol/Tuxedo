@@ -1,4 +1,6 @@
-﻿namespace Tuxedo;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Tuxedo;
 
 /// <summary>
 /// Enforces that a value is not empty
@@ -6,11 +8,20 @@
 public readonly struct NonEmpty<T, TComparer> : IRefinement<NonEmpty<T, TComparer>, T>
     where TComparer : struct, IConstant<TComparer, IEqualityComparer<T?>>
 {
-    bool IRefinement<NonEmpty<T, TComparer>, T>.CanBeRefined(T value) =>
-        !default(TComparer).Value.Equals(value, default);
+    bool IRefinement<NonEmpty<T, TComparer>, T>.CanBeRefined(
+        T value,
+        [NotNullWhen(false)] out string? failureMessage
+    )
+    {
+        if (!default(TComparer).Value.Equals(value, default))
+        {
+            failureMessage = null;
+            return true;
+        }
 
-    string IRefinement<NonEmpty<T, TComparer>, T>.BuildFailureMessage(T value) =>
-        "Value cannot be empty";
+        failureMessage = "Value cannot be empty";
+        return false;
+    }
 }
 
 /// <summary>
@@ -18,10 +29,20 @@ public readonly struct NonEmpty<T, TComparer> : IRefinement<NonEmpty<T, TCompare
 /// </summary>
 public readonly struct NonEmpty<T> : IRefinement<NonEmpty<T>, T>
 {
-    bool IRefinement<NonEmpty<T>, T>.CanBeRefined(T value) =>
-        !default(DefaultComparer<T?>).Value!.Equals(value, default);
+    bool IRefinement<NonEmpty<T>, T>.CanBeRefined(
+        T value,
+        [NotNullWhen(false)] out string? failureMessage
+    )
+    {
+        if (!default(DefaultComparer<T?>).Value!.Equals(value, default))
+        {
+            failureMessage = null;
+            return true;
+        }
 
-    string IRefinement<NonEmpty<T>, T>.BuildFailureMessage(T value) => "Value cannot be empty";
+        failureMessage = "Value cannot be empty";
+        return false;
+    }
 }
 
 /// <summary>

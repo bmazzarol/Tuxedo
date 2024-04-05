@@ -84,7 +84,7 @@ public static class BooleanRefinementTests
         var act = () => (Refined<bool, Not<bool, True>>)true;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Not: Value must be true")
+            .WithMessage("Refinement 'True' passed when it should have failed")
             .And.Value.Should()
             .BeOfType<bool>()
             .Which.Should()
