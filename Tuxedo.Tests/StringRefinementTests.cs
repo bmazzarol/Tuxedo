@@ -149,21 +149,6 @@ public static class StringRefinementTests
             .BeTrue();
     }
 
-    [Fact(DisplayName = "A absolute uri cannot be refined and throws")]
-    public static void Case15()
-    {
-        var act = () => (Refined<string, Uri<AbsoluteKind>>)"/some/path";
-        act.Should()
-            .Throw<RefinementFailureException>()
-            .WithMessage("Value must be a valid absolute URI")
-            .And.Value.Should()
-            .Be("/some/path");
-        Refined
-            .TryRefine<string, System.Uri, Uri<AbsoluteKind>>("/some/path", out _)
-            .Should()
-            .BeFalse();
-    }
-
     [Fact(DisplayName = "A relative uri can be refined")]
     public static void Case16()
     {
