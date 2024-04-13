@@ -1,4 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
+    
+    <Import Project="..\Tuxedo\build\Tuxedo.props"/>
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
