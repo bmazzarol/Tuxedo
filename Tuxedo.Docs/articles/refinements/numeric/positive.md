@@ -1,7 +1,7 @@
 ﻿# Positive
 
-Enforces that a
-[numeric type](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/built-in-types)
+The [positive refinement](xref:Tuxedo.Positive) enforces that a
+[any numeric type](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/built-in-types)
 is positive.
 
 For example,

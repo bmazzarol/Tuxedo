@@ -1,6 +1,6 @@
 ﻿# Negative
 
-Enforces that a
+The [negative refinement](xref:Tuxedo.Negative) Enforces that a
 [signed or floating point numeric type](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/built-in-types)
 is negative.
 

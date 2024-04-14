@@ -2,36 +2,10 @@
 <Project>
     <ItemGroup Condition="'$(Language)' == 'C#' AND ('$(ImplicitUsings)' == 'true' or '$(ImplicitUsings)' == 'enable')">
         <Using Include="Tuxedo"/>
-        <!-- Number Refinments -->
-        <!-- Positive  -->
-        <Using Include="Tuxedo.Refined&lt;sbyte, Tuxedo.Positive&gt;" Alias="PositiveSByte"/>
-        <Using Include="Tuxedo.Refined&lt;short, Tuxedo.Positive&gt;" Alias="PositiveShort"/>
-        <Using Include="Tuxedo.Refined&lt;int, Tuxedo.Positive&gt;" Alias="PositiveInt"/>
-        <Using Include="Tuxedo.Refined&lt;long, Tuxedo.Positive&gt;" Alias="PositiveLong"/>
-        <Using Include="Tuxedo.Refined&lt;byte, Tuxedo.Positive&gt;" Alias="PositiveByte"/>
-        <Using Include="Tuxedo.Refined&lt;ushort, Tuxedo.Positive&gt;" Alias="PositiveUShort"/>
-        <Using Include="Tuxedo.Refined&lt;uint, Tuxedo.Positive&gt;" Alias="PositiveUInt"/>
-        <Using Include="Tuxedo.Refined&lt;ulong, Tuxedo.Positive&gt;" Alias="PositiveULong"/>
-        <Using Include="Tuxedo.Refined&lt;float, Tuxedo.Positive&gt;" Alias="PositiveFloat"/>
-        <Using Include="Tuxedo.Refined&lt;double, Tuxedo.Positive&gt;" Alias="PositiveDouble"/>
-        <Using Include="Tuxedo.Refined&lt;decimal, Tuxedo.Positive&gt;" Alias="PositiveDecimal"/>
-        <!-- Negative  -->
-        <Using Include="Tuxedo.Refined&lt;sbyte, Tuxedo.Negative&gt;" Alias="NegativeSByte"/>
-        <Using Include="Tuxedo.Refined&lt;short, Tuxedo.Negative&gt;" Alias="NegativeShort"/>
-        <Using Include="Tuxedo.Refined&lt;int, Tuxedo.Negative&gt;" Alias="NegativeInt"/>
-        <Using Include="Tuxedo.Refined&lt;long, Tuxedo.Negative&gt;" Alias="NegativeLong"/>
-        <Using Include="Tuxedo.Refined&lt;float, Tuxedo.Negative&gt;" Alias="NegativeFloat"/>
-        <Using Include="Tuxedo.Refined&lt;double, Tuxedo.Negative&gt;" Alias="NegativeDouble"/>
-        <Using Include="Tuxedo.Refined&lt;decimal, Tuxedo.Negative&gt;" Alias="NegativeDecimal"/>
-        <!-- Even -->
-        <Using Include="Tuxedo.Refined&lt;sbyte, Tuxedo.Even&gt;" Alias="EvenSByte"/>
-        <Using Include="Tuxedo.Refined&lt;short, Tuxedo.Even&gt;" Alias="EvenShort"/>
-        <Using Include="Tuxedo.Refined&lt;int, Tuxedo.Even&gt;" Alias="EvenInt"/>
-        <Using Include="Tuxedo.Refined&lt;long, Tuxedo.Even&gt;" Alias="EvenLong"/>
-        <Using Include="Tuxedo.Refined&lt;byte, Tuxedo.Even&gt;" Alias="EvenByte"/>
-        <Using Include="Tuxedo.Refined&lt;ushort, Tuxedo.Even&gt;" Alias="EvenUShort"/>
-        <Using Include="Tuxedo.Refined&lt;uint, Tuxedo.Even&gt;" Alias="EvenUInt"/>
-        <Using Include="Tuxedo.Refined&lt;ulong, Tuxedo.Even&gt;" Alias="EvenULong"/>
-        
     </ItemGroup>
+    
+    <Import Project="./Numeric/Even.props"/>
+    <Import Project="./Numeric/Negative.props"/>
+    <Import Project="./Numeric/Positive.props"/>
+    
 </Project>
