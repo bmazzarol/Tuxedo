@@ -6,6 +6,7 @@
 # Tuxedo
 
 [:running: **_Getting Started_**](https://bmazzarol.github.io/Tuxedo/articles/getting-started.html)
+|
 [:books: **_Documentation_**](https://bmazzarol.github.io/Tuxedo)
 
 [![Nuget](https://img.shields.io/nuget/v/tuxedo)](https://www.nuget.org/packages/tuxedo/)
