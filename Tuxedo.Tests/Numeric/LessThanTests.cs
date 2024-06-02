@@ -1,4 +1,5 @@
 ﻿using static Tuxedo.NaturalNumber;
+using static Tuxedo.NaturalNumber.Operations;
 
 namespace Tuxedo.Tests.Numeric;
 
@@ -292,5 +293,31 @@ public static class LessThanTests
             .And.Value.Should()
             .BeOfType<decimal>()
             .And.Be(5);
+    }
+
+    [Fact(DisplayName = "A int less than 1000 can be refined")]
+    public static void Case34()
+    {
+        Refined<int, LessThan<Multiply<OneHundred, Ten>>> refined = 999;
+        ((int)refined).Should().Be(999);
+        Refined.TryRefine<int, LessThan<Multiply<OneHundred, Ten>>>(999, out _).Should().BeTrue();
+    }
+
+    [Fact(DisplayName = "A int greater than 1000 cannot be refined")]
+    public static void Case35()
+    {
+        Refined.TryRefine<int, LessThan<Multiply<OneHundred, Ten>>>(1000, out _).Should().BeFalse();
+    }
+
+    [Fact(DisplayName = "A int greater than 1000 cannot be refined and throws")]
+    public static void Case36()
+    {
+        var act = () => (Refined<int, LessThan<Multiply<OneHundred, Ten>>>)1000;
+        act.Should()
+            .Throw<RefinementFailureException>()
+            .WithMessage("Value must be less than 1000, but found 1000")
+            .And.Value.Should()
+            .BeOfType<int>()
+            .And.Be(1000);
     }
 }

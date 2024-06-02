@@ -16,11 +16,12 @@ public sealed class RefinementFailureException : Exception
     /// <summary>
     /// Type of the value that could not be refined
     /// </summary>
-    public Type? ValueType => Value?.GetType();
+    public Type? ValueType { get; }
 
     internal RefinementFailureException(object? value, string message)
         : base(message)
     {
         Value = value;
+        ValueType = value?.GetType();
     }
 }

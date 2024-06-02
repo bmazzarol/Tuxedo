@@ -1,516 +1,587 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+using System.Diagnostics.CodeAnalysis;
+
 namespace Tuxedo;
 
 /// <summary>
 /// The natural numbers to use in refinements
 /// </summary>
 [ExcludeFromCodeCoverage]
-public static class NaturalNumber
+public static partial class NaturalNumber
 {
     public readonly struct Zero : IConstant<Zero, long>
     {
-        public long Value => 0;
+        long IConstant<Zero, long>.Value => 0;
     }
 
     public readonly struct One : IConstant<One, long>
     {
-        public long Value => 1;
+        long IConstant<One, long>.Value => 1;
     }
 
     public readonly struct Two : IConstant<Two, long>
     {
-        public long Value => 2;
+        long IConstant<Two, long>.Value => 2;
     }
 
     public readonly struct Three : IConstant<Three, long>
     {
-        public long Value => 3;
+        long IConstant<Three, long>.Value => 3;
     }
 
     public readonly struct Four : IConstant<Four, long>
     {
-        public long Value => 4;
+        long IConstant<Four, long>.Value => 4;
     }
 
     public readonly struct Five : IConstant<Five, long>
     {
-        public long Value => 5;
+        long IConstant<Five, long>.Value => 5;
     }
 
     public readonly struct Six : IConstant<Six, long>
     {
-        public long Value => 6;
+        long IConstant<Six, long>.Value => 6;
     }
 
     public readonly struct Seven : IConstant<Seven, long>
     {
-        public long Value => 7;
+        long IConstant<Seven, long>.Value => 7;
     }
 
     public readonly struct Eight : IConstant<Eight, long>
     {
-        public long Value => 8;
+        long IConstant<Eight, long>.Value => 8;
     }
 
     public readonly struct Nine : IConstant<Nine, long>
     {
-        public long Value => 9;
+        long IConstant<Nine, long>.Value => 9;
     }
 
     public readonly struct Ten : IConstant<Ten, long>
     {
-        public long Value => 10;
+        long IConstant<Ten, long>.Value => 10;
     }
 
     public readonly struct Eleven : IConstant<Eleven, long>
     {
-        public long Value => 11;
+        long IConstant<Eleven, long>.Value => 11;
     }
 
     public readonly struct Twelve : IConstant<Twelve, long>
     {
-        public long Value => 12;
+        long IConstant<Twelve, long>.Value => 12;
     }
 
     public readonly struct Thirteen : IConstant<Thirteen, long>
     {
-        public long Value => 13;
+        long IConstant<Thirteen, long>.Value => 13;
     }
 
     public readonly struct Fourteen : IConstant<Fourteen, long>
     {
-        public long Value => 14;
+        long IConstant<Fourteen, long>.Value => 14;
     }
 
     public readonly struct Fifteen : IConstant<Fifteen, long>
     {
-        public long Value => 15;
+        long IConstant<Fifteen, long>.Value => 15;
     }
 
     public readonly struct Sixteen : IConstant<Sixteen, long>
     {
-        public long Value => 16;
+        long IConstant<Sixteen, long>.Value => 16;
     }
 
     public readonly struct Seventeen : IConstant<Seventeen, long>
     {
-        public long Value => 17;
+        long IConstant<Seventeen, long>.Value => 17;
     }
 
     public readonly struct Eighteen : IConstant<Eighteen, long>
     {
-        public long Value => 18;
+        long IConstant<Eighteen, long>.Value => 18;
     }
 
     public readonly struct Nineteen : IConstant<Nineteen, long>
     {
-        public long Value => 19;
+        long IConstant<Nineteen, long>.Value => 19;
     }
 
     public readonly struct Twenty : IConstant<Twenty, long>
     {
-        public long Value => 20;
+        long IConstant<Twenty, long>.Value => 20;
     }
 
     public readonly struct TwentyOne : IConstant<TwentyOne, long>
     {
-        public long Value => 21;
+        long IConstant<TwentyOne, long>.Value => 21;
     }
 
     public readonly struct TwentyTwo : IConstant<TwentyTwo, long>
     {
-        public long Value => 22;
+        long IConstant<TwentyTwo, long>.Value => 22;
     }
 
     public readonly struct TwentyThree : IConstant<TwentyThree, long>
     {
-        public long Value => 23;
+        long IConstant<TwentyThree, long>.Value => 23;
     }
 
     public readonly struct TwentyFour : IConstant<TwentyFour, long>
     {
-        public long Value => 24;
+        long IConstant<TwentyFour, long>.Value => 24;
     }
 
     public readonly struct TwentyFive : IConstant<TwentyFive, long>
     {
-        public long Value => 25;
+        long IConstant<TwentyFive, long>.Value => 25;
     }
 
     public readonly struct TwentySix : IConstant<TwentySix, long>
     {
-        public long Value => 26;
+        long IConstant<TwentySix, long>.Value => 26;
     }
 
     public readonly struct TwentySeven : IConstant<TwentySeven, long>
     {
-        public long Value => 27;
+        long IConstant<TwentySeven, long>.Value => 27;
     }
 
     public readonly struct TwentyEight : IConstant<TwentyEight, long>
     {
-        public long Value => 28;
+        long IConstant<TwentyEight, long>.Value => 28;
     }
 
     public readonly struct TwentyNine : IConstant<TwentyNine, long>
     {
-        public long Value => 29;
+        long IConstant<TwentyNine, long>.Value => 29;
     }
 
     public readonly struct Thirty : IConstant<Thirty, long>
     {
-        public long Value => 30;
+        long IConstant<Thirty, long>.Value => 30;
     }
 
     public readonly struct ThirtyOne : IConstant<ThirtyOne, long>
     {
-        public long Value => 31;
+        long IConstant<ThirtyOne, long>.Value => 31;
     }
 
     public readonly struct ThirtyTwo : IConstant<ThirtyTwo, long>
     {
-        public long Value => 32;
+        long IConstant<ThirtyTwo, long>.Value => 32;
     }
 
     public readonly struct ThirtyThree : IConstant<ThirtyThree, long>
     {
-        public long Value => 33;
+        long IConstant<ThirtyThree, long>.Value => 33;
     }
 
     public readonly struct ThirtyFour : IConstant<ThirtyFour, long>
     {
-        public long Value => 34;
+        long IConstant<ThirtyFour, long>.Value => 34;
     }
 
     public readonly struct ThirtyFive : IConstant<ThirtyFive, long>
     {
-        public long Value => 35;
+        long IConstant<ThirtyFive, long>.Value => 35;
     }
 
     public readonly struct ThirtySix : IConstant<ThirtySix, long>
     {
-        public long Value => 36;
+        long IConstant<ThirtySix, long>.Value => 36;
     }
 
     public readonly struct ThirtySeven : IConstant<ThirtySeven, long>
     {
-        public long Value => 37;
+        long IConstant<ThirtySeven, long>.Value => 37;
     }
 
     public readonly struct ThirtyEight : IConstant<ThirtyEight, long>
     {
-        public long Value => 38;
+        long IConstant<ThirtyEight, long>.Value => 38;
     }
 
     public readonly struct ThirtyNine : IConstant<ThirtyNine, long>
     {
-        public long Value => 39;
+        long IConstant<ThirtyNine, long>.Value => 39;
     }
 
     public readonly struct Forty : IConstant<Forty, long>
     {
-        public long Value => 40;
+        long IConstant<Forty, long>.Value => 40;
     }
 
     public readonly struct FortyOne : IConstant<FortyOne, long>
     {
-        public long Value => 41;
+        long IConstant<FortyOne, long>.Value => 41;
     }
 
     public readonly struct FortyTwo : IConstant<FortyTwo, long>
     {
-        public long Value => 42;
+        long IConstant<FortyTwo, long>.Value => 42;
     }
 
     public readonly struct FortyThree : IConstant<FortyThree, long>
     {
-        public long Value => 43;
+        long IConstant<FortyThree, long>.Value => 43;
     }
 
     public readonly struct FortyFour : IConstant<FortyFour, long>
     {
-        public long Value => 44;
+        long IConstant<FortyFour, long>.Value => 44;
     }
 
     public readonly struct FortyFive : IConstant<FortyFive, long>
     {
-        public long Value => 45;
+        long IConstant<FortyFive, long>.Value => 45;
     }
 
     public readonly struct FortySix : IConstant<FortySix, long>
     {
-        public long Value => 46;
+        long IConstant<FortySix, long>.Value => 46;
     }
 
     public readonly struct FortySeven : IConstant<FortySeven, long>
     {
-        public long Value => 47;
+        long IConstant<FortySeven, long>.Value => 47;
     }
 
     public readonly struct FortyEight : IConstant<FortyEight, long>
     {
-        public long Value => 48;
+        long IConstant<FortyEight, long>.Value => 48;
     }
 
     public readonly struct FortyNine : IConstant<FortyNine, long>
     {
-        public long Value => 49;
+        long IConstant<FortyNine, long>.Value => 49;
     }
 
     public readonly struct Fifty : IConstant<Fifty, long>
     {
-        public long Value => 50;
+        long IConstant<Fifty, long>.Value => 50;
     }
 
     public readonly struct FiftyOne : IConstant<FiftyOne, long>
     {
-        public long Value => 51;
+        long IConstant<FiftyOne, long>.Value => 51;
     }
 
     public readonly struct FiftyTwo : IConstant<FiftyTwo, long>
     {
-        public long Value => 52;
+        long IConstant<FiftyTwo, long>.Value => 52;
     }
 
     public readonly struct FiftyThree : IConstant<FiftyThree, long>
     {
-        public long Value => 53;
+        long IConstant<FiftyThree, long>.Value => 53;
     }
 
     public readonly struct FiftyFour : IConstant<FiftyFour, long>
     {
-        public long Value => 54;
+        long IConstant<FiftyFour, long>.Value => 54;
     }
 
     public readonly struct FiftyFive : IConstant<FiftyFive, long>
     {
-        public long Value => 55;
+        long IConstant<FiftyFive, long>.Value => 55;
     }
 
     public readonly struct FiftySix : IConstant<FiftySix, long>
     {
-        public long Value => 56;
+        long IConstant<FiftySix, long>.Value => 56;
     }
 
     public readonly struct FiftySeven : IConstant<FiftySeven, long>
     {
-        public long Value => 57;
+        long IConstant<FiftySeven, long>.Value => 57;
     }
 
     public readonly struct FiftyEight : IConstant<FiftyEight, long>
     {
-        public long Value => 58;
+        long IConstant<FiftyEight, long>.Value => 58;
     }
 
     public readonly struct FiftyNine : IConstant<FiftyNine, long>
     {
-        public long Value => 59;
+        long IConstant<FiftyNine, long>.Value => 59;
     }
 
     public readonly struct Sixty : IConstant<Sixty, long>
     {
-        public long Value => 60;
+        long IConstant<Sixty, long>.Value => 60;
     }
 
     public readonly struct SixtyOne : IConstant<SixtyOne, long>
     {
-        public long Value => 61;
+        long IConstant<SixtyOne, long>.Value => 61;
     }
 
     public readonly struct SixtyTwo : IConstant<SixtyTwo, long>
     {
-        public long Value => 62;
+        long IConstant<SixtyTwo, long>.Value => 62;
     }
 
     public readonly struct SixtyThree : IConstant<SixtyThree, long>
     {
-        public long Value => 63;
+        long IConstant<SixtyThree, long>.Value => 63;
     }
 
     public readonly struct SixtyFour : IConstant<SixtyFour, long>
     {
-        public long Value => 64;
+        long IConstant<SixtyFour, long>.Value => 64;
     }
 
     public readonly struct SixtyFive : IConstant<SixtyFive, long>
     {
-        public long Value => 65;
+        long IConstant<SixtyFive, long>.Value => 65;
     }
 
     public readonly struct SixtySix : IConstant<SixtySix, long>
     {
-        public long Value => 66;
+        long IConstant<SixtySix, long>.Value => 66;
     }
 
     public readonly struct SixtySeven : IConstant<SixtySeven, long>
     {
-        public long Value => 67;
+        long IConstant<SixtySeven, long>.Value => 67;
     }
 
     public readonly struct SixtyEight : IConstant<SixtyEight, long>
     {
-        public long Value => 68;
+        long IConstant<SixtyEight, long>.Value => 68;
     }
 
     public readonly struct SixtyNine : IConstant<SixtyNine, long>
     {
-        public long Value => 69;
+        long IConstant<SixtyNine, long>.Value => 69;
     }
 
     public readonly struct Seventy : IConstant<Seventy, long>
     {
-        public long Value => 70;
+        long IConstant<Seventy, long>.Value => 70;
     }
 
     public readonly struct SeventyOne : IConstant<SeventyOne, long>
     {
-        public long Value => 71;
+        long IConstant<SeventyOne, long>.Value => 71;
     }
 
     public readonly struct SeventyTwo : IConstant<SeventyTwo, long>
     {
-        public long Value => 72;
+        long IConstant<SeventyTwo, long>.Value => 72;
     }
 
     public readonly struct SeventyThree : IConstant<SeventyThree, long>
     {
-        public long Value => 73;
+        long IConstant<SeventyThree, long>.Value => 73;
     }
 
     public readonly struct SeventyFour : IConstant<SeventyFour, long>
     {
-        public long Value => 74;
+        long IConstant<SeventyFour, long>.Value => 74;
     }
 
     public readonly struct SeventyFive : IConstant<SeventyFive, long>
     {
-        public long Value => 75;
+        long IConstant<SeventyFive, long>.Value => 75;
     }
 
     public readonly struct SeventySix : IConstant<SeventySix, long>
     {
-        public long Value => 76;
+        long IConstant<SeventySix, long>.Value => 76;
     }
 
     public readonly struct SeventySeven : IConstant<SeventySeven, long>
     {
-        public long Value => 77;
+        long IConstant<SeventySeven, long>.Value => 77;
     }
 
     public readonly struct SeventyEight : IConstant<SeventyEight, long>
     {
-        public long Value => 78;
+        long IConstant<SeventyEight, long>.Value => 78;
     }
 
     public readonly struct SeventyNine : IConstant<SeventyNine, long>
     {
-        public long Value => 79;
+        long IConstant<SeventyNine, long>.Value => 79;
     }
 
     public readonly struct Eighty : IConstant<Eighty, long>
     {
-        public long Value => 80;
+        long IConstant<Eighty, long>.Value => 80;
     }
 
     public readonly struct EightyOne : IConstant<EightyOne, long>
     {
-        public long Value => 81;
+        long IConstant<EightyOne, long>.Value => 81;
     }
 
     public readonly struct EightyTwo : IConstant<EightyTwo, long>
     {
-        public long Value => 82;
+        long IConstant<EightyTwo, long>.Value => 82;
     }
 
     public readonly struct EightyThree : IConstant<EightyThree, long>
     {
-        public long Value => 83;
+        long IConstant<EightyThree, long>.Value => 83;
     }
 
     public readonly struct EightyFour : IConstant<EightyFour, long>
     {
-        public long Value => 84;
+        long IConstant<EightyFour, long>.Value => 84;
     }
 
     public readonly struct EightyFive : IConstant<EightyFive, long>
     {
-        public long Value => 85;
+        long IConstant<EightyFive, long>.Value => 85;
     }
 
     public readonly struct EightySix : IConstant<EightySix, long>
     {
-        public long Value => 86;
+        long IConstant<EightySix, long>.Value => 86;
     }
 
     public readonly struct EightySeven : IConstant<EightySeven, long>
     {
-        public long Value => 87;
+        long IConstant<EightySeven, long>.Value => 87;
     }
 
     public readonly struct EightyEight : IConstant<EightyEight, long>
     {
-        public long Value => 88;
+        long IConstant<EightyEight, long>.Value => 88;
     }
 
     public readonly struct EightyNine : IConstant<EightyNine, long>
     {
-        public long Value => 89;
+        long IConstant<EightyNine, long>.Value => 89;
     }
 
     public readonly struct Ninety : IConstant<Ninety, long>
     {
-        public long Value => 90;
+        long IConstant<Ninety, long>.Value => 90;
     }
 
     public readonly struct NinetyOne : IConstant<NinetyOne, long>
     {
-        public long Value => 91;
+        long IConstant<NinetyOne, long>.Value => 91;
     }
 
     public readonly struct NinetyTwo : IConstant<NinetyTwo, long>
     {
-        public long Value => 92;
+        long IConstant<NinetyTwo, long>.Value => 92;
     }
 
     public readonly struct NinetyThree : IConstant<NinetyThree, long>
     {
-        public long Value => 93;
+        long IConstant<NinetyThree, long>.Value => 93;
     }
 
     public readonly struct NinetyFour : IConstant<NinetyFour, long>
     {
-        public long Value => 94;
+        long IConstant<NinetyFour, long>.Value => 94;
     }
 
     public readonly struct NinetyFive : IConstant<NinetyFive, long>
     {
-        public long Value => 95;
+        long IConstant<NinetyFive, long>.Value => 95;
     }
 
     public readonly struct NinetySix : IConstant<NinetySix, long>
     {
-        public long Value => 96;
+        long IConstant<NinetySix, long>.Value => 96;
     }
 
     public readonly struct NinetySeven : IConstant<NinetySeven, long>
     {
-        public long Value => 97;
+        long IConstant<NinetySeven, long>.Value => 97;
     }
 
     public readonly struct NinetyEight : IConstant<NinetyEight, long>
     {
-        public long Value => 98;
+        long IConstant<NinetyEight, long>.Value => 98;
     }
 
     public readonly struct NinetyNine : IConstant<NinetyNine, long>
     {
-        public long Value => 99;
+        long IConstant<NinetyNine, long>.Value => 99;
     }
 
     public readonly struct OneHundred : IConstant<OneHundred, long>
     {
-        public long Value => 100;
+        long IConstant<OneHundred, long>.Value => 100;
+    }
+
+    public readonly struct MaxInt : IConstant<MaxInt, long>
+    {
+        long IConstant<MaxInt, long>.Value => int.MaxValue;
+    }
+
+    public readonly struct MaxLong : IConstant<MaxLong, long>
+    {
+        long IConstant<MaxLong, long>.Value => long.MaxValue;
+    }
+
+    public readonly struct MinInt : IConstant<MinInt, long>
+    {
+        long IConstant<MinInt, long>.Value => int.MinValue;
+    }
+
+    public readonly struct MinLong : IConstant<MinLong, long>
+    {
+        long IConstant<MinLong, long>.Value => long.MinValue;
+    }
+
+    public readonly struct MaxByte : IConstant<MaxByte, long>
+    {
+        long IConstant<MaxByte, long>.Value => byte.MaxValue;
+    }
+
+    public readonly struct MaxSByte : IConstant<MaxSByte, long>
+    {
+        long IConstant<MaxSByte, long>.Value => sbyte.MaxValue;
+    }
+
+    public readonly struct MaxShort : IConstant<MaxShort, long>
+    {
+        long IConstant<MaxShort, long>.Value => short.MaxValue;
+    }
+
+    public readonly struct MaxUShort : IConstant<MaxUShort, long>
+    {
+        long IConstant<MaxUShort, long>.Value => ushort.MaxValue;
+    }
+
+    public readonly struct MaxUInt : IConstant<MaxUInt, long>
+    {
+        long IConstant<MaxUInt, long>.Value => uint.MaxValue;
+    }
+
+    public readonly struct MinByte : IConstant<MinByte, long>
+    {
+        long IConstant<MinByte, long>.Value => byte.MinValue;
+    }
+
+    public readonly struct MinSByte : IConstant<MinSByte, long>
+    {
+        long IConstant<MinSByte, long>.Value => sbyte.MinValue;
+    }
+
+    public readonly struct MinShort : IConstant<MinShort, long>
+    {
+        long IConstant<MinShort, long>.Value => short.MinValue;
+    }
+
+    public readonly struct MinUShort : IConstant<MinUShort, long>
+    {
+        long IConstant<MinUShort, long>.Value => ushort.MinValue;
+    }
+
+    public readonly struct MinUInt : IConstant<MinUInt, long>
+    {
+        long IConstant<MinUInt, long>.Value => uint.MinValue;
     }
 }

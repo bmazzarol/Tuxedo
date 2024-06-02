@@ -8,8 +8,10 @@ namespace Tuxedo.Extensions;
 
 internal static class ExceptionExtensions
 {
-    internal static Exception WithStackTrace(this Exception target, StackTrace stack) =>
-        SetStackTraceFunction(target, stack);
+    internal static Exception WithStackTrace(this Exception target, StackTrace stack)
+    {
+        return SetStackTraceFunction(target, stack);
+    }
 
     private static readonly Func<Exception, StackTrace, Exception> SetStackTraceFunction = new Func<
         Func<Exception, StackTrace, Exception>
