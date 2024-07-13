@@ -17,7 +17,7 @@ public static class DigitTests
         Action act = () => _ = (Refined<char, Digit>)'a';
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be a digit, instead found 'a'")
+            .WithMessage("The character must be a digit, instead found 'a'")
             .And.StackTrace.Should()
             .StartWith("   at Tuxedo.Tests.DigitTests");
     }

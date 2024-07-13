@@ -77,4 +77,10 @@
         </AssemblyAttribute>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Tuxedo.SourceGenerators\Tuxedo.SourceGenerators.csproj"
+                        OutputItemType="Analyzer"
+                        ReferenceOutputAssembly="false"/>
+    </ItemGroup>
+
 </Project>
