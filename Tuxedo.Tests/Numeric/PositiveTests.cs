@@ -22,7 +22,7 @@ public static class PositiveTests
         var act = () => (PositiveSByte)0;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be positive, but found 0")
+            .WithMessage("Number must be positive, but found 0")
             .And.Value.Should()
             .BeOfType<sbyte>()
             .And.Be(0);
@@ -48,7 +48,7 @@ public static class PositiveTests
         var act = () => (PositiveShort)0;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be positive, but found 0")
+            .WithMessage("Number must be positive, but found 0")
             .And.Value.Should()
             .BeOfType<short>()
             .And.Be(0);
@@ -76,7 +76,7 @@ public static class PositiveTests
         var act = () => (PositiveInt)0;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be positive, but found 0")
+            .WithMessage("Number must be positive, but found 0")
             .And.Value.Should()
             .BeOfType<int>()
             .And.Be(0);
@@ -104,7 +104,7 @@ public static class PositiveTests
         var act = () => (PositiveLong)0;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be positive, but found 0")
+            .WithMessage("Number must be positive, but found 0")
             .And.Value.Should()
             .BeOfType<long>()
             .And.Be(0);
@@ -130,7 +130,7 @@ public static class PositiveTests
         var act = () => (PositiveByte)0;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be positive, but found 0")
+            .WithMessage("Number must be positive, but found 0")
             .And.Value.Should()
             .BeOfType<byte>()
             .And.Be(0);
@@ -156,7 +156,7 @@ public static class PositiveTests
         var act = () => (PositiveUShort)0;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be positive, but found 0")
+            .WithMessage("Number must be positive, but found 0")
             .And.Value.Should()
             .BeOfType<ushort>()
             .And.Be(0);
@@ -182,7 +182,7 @@ public static class PositiveTests
         var act = () => (PositiveUInt)0;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be positive, but found 0")
+            .WithMessage("Number must be positive, but found 0")
             .And.Value.Should()
             .BeOfType<uint>()
             .And.Be(0);
@@ -208,7 +208,7 @@ public static class PositiveTests
         var act = () => (PositiveULong)0;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be positive, but found 0")
+            .WithMessage("Number must be positive, but found 0")
             .And.Value.Should()
             .BeOfType<ulong>()
             .And.Be(0);
@@ -234,7 +234,7 @@ public static class PositiveTests
         var act = () => (PositiveFloat)0;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be positive, but found 0")
+            .WithMessage("Number must be positive, but found 0")
             .And.Value.Should()
             .BeOfType<float>()
             .And.Be(0);
@@ -260,7 +260,7 @@ public static class PositiveTests
         var act = () => (PositiveDouble)0;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be positive, but found 0")
+            .WithMessage("Number must be positive, but found 0")
             .And.Value.Should()
             .BeOfType<double>()
             .And.Be(0);
@@ -286,7 +286,7 @@ public static class PositiveTests
         var act = () => (PositiveDecimal)0;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be positive, but found 0")
+            .WithMessage("Number must be positive, but found 0")
             .And.Value.Should()
             .BeOfType<decimal>()
             .And.Be(0);

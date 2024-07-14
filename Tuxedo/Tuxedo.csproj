@@ -83,4 +83,8 @@
                         ReferenceOutputAssembly="false"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Refinements\Numeric\LessThan.cs" />
+    </ItemGroup>
+
 </Project>

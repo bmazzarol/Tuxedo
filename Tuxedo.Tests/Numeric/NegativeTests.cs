@@ -22,7 +22,7 @@ public static class NegativeTests
         var act = () => (NegativeSByte)1;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be negative, but found 1")
+            .WithMessage("Number must be negative, but found 1")
             .And.Value.Should()
             .BeOfType<sbyte>()
             .And.Be(1);
@@ -48,7 +48,7 @@ public static class NegativeTests
         var act = () => (NegativeShort)1;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be negative, but found 1")
+            .WithMessage("Number must be negative, but found 1")
             .And.Value.Should()
             .BeOfType<short>()
             .And.Be(1);
@@ -76,7 +76,7 @@ public static class NegativeTests
         var act = () => (NegativeInt)1;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be negative, but found 1")
+            .WithMessage("Number must be negative, but found 1")
             .And.Value.Should()
             .BeOfType<int>()
             .And.Be(1);
@@ -104,7 +104,7 @@ public static class NegativeTests
         var act = () => (NegativeLong)1;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be negative, but found 1")
+            .WithMessage("Number must be negative, but found 1")
             .And.Value.Should()
             .BeOfType<long>()
             .And.Be(1);
@@ -130,7 +130,7 @@ public static class NegativeTests
         var act = () => (NegativeFloat)1;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be negative, but found 1")
+            .WithMessage("Number must be negative, but found 1")
             .And.Value.Should()
             .BeOfType<float>()
             .And.Be(1);
@@ -156,7 +156,7 @@ public static class NegativeTests
         var act = () => (NegativeDouble)1;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be negative, but found 1")
+            .WithMessage("Number must be negative, but found 1")
             .And.Value.Should()
             .BeOfType<double>()
             .And.Be(1);
@@ -182,7 +182,7 @@ public static class NegativeTests
         var act = () => (NegativeDecimal)1;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be negative, but found 1")
+            .WithMessage("Number must be negative, but found 1")
             .And.Value.Should()
             .BeOfType<decimal>()
             .And.Be(1);

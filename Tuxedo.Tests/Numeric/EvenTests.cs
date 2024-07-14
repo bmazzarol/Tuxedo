@@ -22,7 +22,7 @@ public static class EvenTests
         var act = () => (EvenSByte)1;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be an even number, but found 1")
+            .WithMessage("Number must be an even number, but found 1")
             .And.Value.Should()
             .BeOfType<sbyte>()
             .And.Be(1);
@@ -48,7 +48,7 @@ public static class EvenTests
         var act = () => (EvenShort)1;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be an even number, but found 1")
+            .WithMessage("Number must be an even number, but found 1")
             .And.Value.Should()
             .BeOfType<short>()
             .And.Be(1);
@@ -76,7 +76,7 @@ public static class EvenTests
         var act = () => (EvenInt)1;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be an even number, but found 1")
+            .WithMessage("Number must be an even number, but found 1")
             .And.Value.Should()
             .BeOfType<int>()
             .And.Be(1);
@@ -104,7 +104,7 @@ public static class EvenTests
         var act = () => (EvenLong)1;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be an even number, but found 1")
+            .WithMessage("Number must be an even number, but found 1")
             .And.Value.Should()
             .BeOfType<long>()
             .And.Be(1);
@@ -130,7 +130,7 @@ public static class EvenTests
         var act = () => (EvenByte)1;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be an even number, but found 1")
+            .WithMessage("Number must be an even number, but found 1")
             .And.Value.Should()
             .BeOfType<byte>()
             .And.Be(1);
@@ -156,7 +156,7 @@ public static class EvenTests
         var act = () => (EvenUShort)1;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be an even number, but found 1")
+            .WithMessage("Number must be an even number, but found 1")
             .And.Value.Should()
             .BeOfType<ushort>()
             .And.Be(1);
@@ -182,7 +182,7 @@ public static class EvenTests
         var act = () => (EvenUInt)1;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be an even number, but found 1")
+            .WithMessage("Number must be an even number, but found 1")
             .And.Value.Should()
             .BeOfType<uint>()
             .And.Be(1);
@@ -208,7 +208,7 @@ public static class EvenTests
         var act = () => (EvenULong)1;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be an even number, but found 1")
+            .WithMessage("Number must be an even number, but found 1")
             .And.Value.Should()
             .BeOfType<ulong>()
             .And.Be(1);

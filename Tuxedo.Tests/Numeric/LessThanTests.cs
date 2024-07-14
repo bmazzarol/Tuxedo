@@ -25,7 +25,7 @@ public static class LessThanTests
         var act = () => (Refined<sbyte, LessThan<Five>>)5;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be less than 5, but found 5")
+            .WithMessage("Number must be less than 5, but found 5")
             .And.Value.Should()
             .BeOfType<sbyte>()
             .And.Be(5);
@@ -51,7 +51,7 @@ public static class LessThanTests
         var act = () => (Refined<short, LessThan<OneHundred>>)101;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be less than 100, but found 101")
+            .WithMessage("Number must be less than 100, but found 101")
             .And.Value.Should()
             .BeOfType<short>()
             .And.Be(101);
@@ -79,7 +79,7 @@ public static class LessThanTests
         var act = () => (Refined<int, LessThan<FiftyThree>>)54;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be less than 53, but found 54")
+            .WithMessage("Number must be less than 53, but found 54")
             .And.Value.Should()
             .BeOfType<int>()
             .And.Be(54);
@@ -107,7 +107,7 @@ public static class LessThanTests
         var act = () => (Refined<long, LessThan<Five>>)5;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be less than 5, but found 5")
+            .WithMessage("Number must be less than 5, but found 5")
             .And.Value.Should()
             .BeOfType<long>()
             .And.Be(5);
@@ -133,7 +133,7 @@ public static class LessThanTests
         var act = () => (Refined<byte, LessThan<Five>>)5;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be less than 5, but found 5")
+            .WithMessage("Number must be less than 5, but found 5")
             .And.Value.Should()
             .BeOfType<byte>()
             .And.Be(5);
@@ -159,7 +159,7 @@ public static class LessThanTests
         var act = () => (Refined<ushort, LessThan<OneHundred>>)100;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be less than 100, but found 100")
+            .WithMessage("Number must be less than 100, but found 100")
             .And.Value.Should()
             .BeOfType<ushort>()
             .And.Be(100);
@@ -185,7 +185,7 @@ public static class LessThanTests
         var act = () => (Refined<uint, LessThan<FiftyThree>>)53;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be less than 53, but found 53")
+            .WithMessage("Number must be less than 53, but found 53")
             .And.Value.Should()
             .BeOfType<uint>()
             .And.Be(53);
@@ -211,7 +211,7 @@ public static class LessThanTests
         var act = () => (Refined<ulong, LessThan<Five>>)5;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be less than 5, but found 5")
+            .WithMessage("Number must be less than 5, but found 5")
             .And.Value.Should()
             .BeOfType<ulong>()
             .And.Be(5);
@@ -237,7 +237,7 @@ public static class LessThanTests
         var act = () => (Refined<float, LessThan<Five>>)5;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be less than 5, but found 5")
+            .WithMessage("Number must be less than 5, but found 5")
             .And.Value.Should()
             .BeOfType<float>()
             .And.Be(5);
@@ -263,7 +263,7 @@ public static class LessThanTests
         var act = () => (Refined<double, LessThan<Five>>)5;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be less than 5, but found 5")
+            .WithMessage("Number must be less than 5, but found 5")
             .And.Value.Should()
             .BeOfType<double>()
             .And.Be(5);
@@ -289,7 +289,7 @@ public static class LessThanTests
         var act = () => (Refined<decimal, LessThan<Five>>)5;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be less than 5, but found 5")
+            .WithMessage("Number must be less than 5, but found 5")
             .And.Value.Should()
             .BeOfType<decimal>()
             .And.Be(5);
@@ -315,7 +315,7 @@ public static class LessThanTests
         var act = () => (Refined<int, LessThan<Multiply<OneHundred, Ten>>>)1000;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be less than 1000, but found 1000")
+            .WithMessage("Number must be less than 1000, but found 1000")
             .And.Value.Should()
             .BeOfType<int>()
             .And.Be(1000);

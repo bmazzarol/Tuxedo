@@ -30,7 +30,7 @@ public static class BooleanRefinementTests
         var act = () => (Refined<bool, True>)false;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be true")
+            .WithMessage("The boolean value must be 'True', instead found 'False'")
             .And.Value.Should()
             .BeOfType<bool>()
             .Which.Should()
@@ -57,7 +57,7 @@ public static class BooleanRefinementTests
         var act = () => (Refined<bool, False>)true;
         act.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be false")
+            .WithMessage("The boolean value must be 'False', instead found 'True'")
             .And.Value.Should()
             .BeOfType<bool>()
             .Which.Should()
