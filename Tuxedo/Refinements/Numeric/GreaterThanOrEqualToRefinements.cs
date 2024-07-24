@@ -1,84 +1,48 @@
 ﻿namespace Tuxedo;
 
-/// <summary>
-/// Refinements to ensure that a numeric value is greater than or equal to another numeric value
-/// </summary>
-public static class GreaterThanOrEqualToRefinements
+internal static class GreaterThanOrEqualToRefinements
 {
-    /// <summary>
-    /// Ensures that a numeric value is greater than or equal to another numeric value
-    /// </summary>
     [Refinement("Number must be greater than {default(T).Value}, but found {value}")]
-    public static bool GreaterThanOrEqualTo<T>(sbyte value)
+    internal static bool GreaterThanOrEqualTo<T>(sbyte value)
         where T : struct, IConstant<T, long> => value >= default(T).Value;
 
-    /// <summary>
-    /// Ensures that a numeric value is greater than or equal to another numeric value
-    /// </summary>
     [Refinement("Number must be greater than {default(T).Value}, but found {value}")]
-    public static bool GreaterThanOrEqualTo<T>(short value)
+    internal static bool GreaterThanOrEqualTo<T>(short value)
         where T : struct, IConstant<T, long> => value >= default(T).Value;
 
-    /// <summary>
-    /// Ensures that a numeric value is greater than or equal to another numeric value
-    /// </summary>
     [Refinement("Number must be greater than {default(T).Value}, but found {value}")]
-    public static bool GreaterThanOrEqualTo<T>(int value)
+    internal static bool GreaterThanOrEqualTo<T>(int value)
         where T : struct, IConstant<T, long> => value >= default(T).Value;
 
-    /// <summary>
-    /// Ensures that a numeric value is greater than or equal to another numeric value
-    /// </summary>
     [Refinement("Number must be greater than {default(T).Value}, but found {value}")]
-    public static bool GreaterThanOrEqualTo<T>(long value)
+    internal static bool GreaterThanOrEqualTo<T>(long value)
         where T : struct, IConstant<T, long> => value >= default(T).Value;
 
-    /// <summary>
-    /// Ensures that a numeric value is greater than or equal to another numeric value
-    /// </summary>
     [Refinement("Number must be greater than {default(T).Value}, but found {value}")]
-    public static bool GreaterThanOrEqualTo<T>(byte value)
+    internal static bool GreaterThanOrEqualTo<T>(byte value)
         where T : struct, IConstant<T, long> => value >= default(T).Value;
 
-    /// <summary>
-    /// Ensures that a numeric value is greater than or equal to another numeric value
-    /// </summary>
     [Refinement("Number must be greater than {default(T).Value}, but found {value}")]
-    public static bool GreaterThanOrEqualTo<T>(ushort value)
+    internal static bool GreaterThanOrEqualTo<T>(ushort value)
         where T : struct, IConstant<T, long> => value >= default(T).Value;
 
-    /// <summary>
-    /// Ensures that a numeric value is greater than or equal to another numeric value
-    /// </summary>
     [Refinement("Number must be greater than {default(T).Value}, but found {value}")]
-    public static bool GreaterThanOrEqualTo<T>(uint value)
+    internal static bool GreaterThanOrEqualTo<T>(uint value)
         where T : struct, IConstant<T, long> => value >= default(T).Value;
 
-    /// <summary>
-    /// Ensures that a numeric value is greater than or equal to another numeric value
-    /// </summary>
     [Refinement("Number must be greater than {default(T).Value}, but found {value}")]
-    public static bool GreaterThanOrEqualTo<T>(ulong value)
+    internal static bool GreaterThanOrEqualTo<T>(ulong value)
         where T : struct, IConstant<T, long> => value >= (ulong)default(T).Value;
 
-    /// <summary>
-    /// Ensures that a numeric value is greater than or equal to another numeric value
-    /// </summary>
     [Refinement("Number must be greater than {default(T).Value}, but found {value}")]
-    public static bool GreaterThanOrEqualTo<T>(float value)
+    internal static bool GreaterThanOrEqualTo<T>(float value)
         where T : struct, IConstant<T, long> => value >= default(T).Value;
 
-    /// <summary>
-    /// Ensures that a numeric value is greater than or equal to another numeric value
-    /// </summary>
     [Refinement("Number must be greater than {default(T).Value}, but found {value}")]
-    public static bool GreaterThanOrEqualTo<T>(double value)
+    internal static bool GreaterThanOrEqualTo<T>(double value)
         where T : struct, IConstant<T, long> => value >= default(T).Value;
 
-    /// <summary>
-    /// Ensures that a numeric value is greater than or equal to another numeric value
-    /// </summary>
     [Refinement("Number must be greater than {default(T).Value}, but found {value}")]
-    public static bool GreaterThanOrEqualTo<T>(decimal value)
+    internal static bool GreaterThanOrEqualTo<T>(decimal value)
         where T : struct, IConstant<T, long> => value >= default(T).Value;
 }

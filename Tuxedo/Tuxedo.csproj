@@ -81,6 +81,7 @@
       <ProjectReference Include="..\Tuxedo.SourceGenerators\Tuxedo.SourceGenerators.csproj"
                         OutputItemType="Analyzer"
                         ReferenceOutputAssembly="false"/>
+        <None Include="..\Tuxedo.SourceGenerators\bin\$(Configuration)\$(TargetFramework)\Tuxedo.SourceGenerators.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     </ItemGroup>
 
     <ItemGroup>

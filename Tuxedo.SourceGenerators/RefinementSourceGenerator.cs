@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.Text;
 namespace Tuxedo.SourceGenerators;
 
 [Generator]
-public class RefinementSourceGenerator : IIncrementalGenerator
+public sealed class RefinementSourceGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
