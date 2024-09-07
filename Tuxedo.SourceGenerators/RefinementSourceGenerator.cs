@@ -65,7 +65,12 @@ public sealed class RefinementSourceGenerator : IIncrementalGenerator
                 .Expression.ToString();
 
             // get the first parameter type
-            var parameterType = methodDeclaration.ParameterList.Parameters.First().Type!.ToString();
+            var parameterTypeSemanticModel = compilation.GetSemanticModel(
+                methodDeclaration.ParameterList.Parameters.First().Type!.SyntaxTree
+            );
+            var parameterType = parameterTypeSemanticModel
+                .GetTypeInfo(methodDeclaration.ParameterList.Parameters.First().Type!)
+                .Type!.ToDisplayString();
 
             // get the generic type arguments
             var genericTypeArguments = methodSymbol.TypeArguments;
