@@ -26,7 +26,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFramework>netstandard2.1</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -34,24 +34,17 @@
         <OutputType>library</OutputType>
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
-    
+
     <ItemGroup>
-        <PackageReference Include="Polyfill" Version="6.4.1">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
-    
-    <ItemGroup>
-        <None Include="README.md" Pack="true" PackagePath="\" />
-        <None Include="..\jacket-icon.png" Pack="true" PackagePath="\" />
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+        <None Include="README.md" Pack="true" PackagePath="\"/>
+        <None Include="..\jacket-icon.png" Pack="true" PackagePath="\"/>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
     </ItemGroup>
 
     <ItemGroup>
         <Content Include="build\**" Pack="true" PackagePath="build"/>
     </ItemGroup>
-    
+
     <ItemGroup>
         <PackageReference Include="AsyncFixer" Version="1.6.0">
             <PrivateAssets>all</PrivateAssets>
@@ -76,16 +69,14 @@
             <_Parameter1>Tuxedo.Tests</_Parameter1>
         </AssemblyAttribute>
     </ItemGroup>
-
+    
+    <Target Name="BeforePack" AfterTargets="Build">
+        <Message Importance="high" Text="Building Tuxedo.SourceGenerators"/>
+        <Exec Command="dotnet build -c $(Configuration) ..\Tuxedo.SourceGenerators\Tuxedo.SourceGenerators.csproj"/>
+    </Target>
+    
     <ItemGroup>
-      <ProjectReference Include="..\Tuxedo.SourceGenerators\Tuxedo.SourceGenerators.csproj"
-                        OutputItemType="Analyzer"
-                        ReferenceOutputAssembly="false"/>
-        <None Include="..\Tuxedo.SourceGenerators\bin\$(Configuration)\$(TargetFramework)\Tuxedo.SourceGenerators.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Remove="Refinements\Numeric\LessThan.cs" />
+        <None Include="..\Tuxedo.SourceGenerators\bin\$(Configuration)\netstandard2.0\Tuxedo.SourceGenerators.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
     </ItemGroup>
 
 </Project>
