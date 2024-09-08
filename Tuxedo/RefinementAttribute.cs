@@ -10,13 +10,19 @@ public sealed class RefinementAttribute : Attribute
     /// The message to display when the refinement fails.
     /// The `value` parameter is available for string interpolation.
     /// </summary>
-    public string FailureMessage { get; set; }
+    public string FailureMessage { get; }
+
+    /// <summary>
+    /// Indicates whether the refinement is public
+    /// </summary>
+    public bool IsPublic { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RefinementAttribute"/> class.
     /// </summary>
-    public RefinementAttribute(string failureMessage)
+    public RefinementAttribute(string failureMessage, bool isPublic = true)
     {
         FailureMessage = failureMessage;
+        IsPublic = isPublic;
     }
 }
