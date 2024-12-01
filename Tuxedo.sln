@@ -6,8 +6,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tuxedo.Tests", "Tuxedo.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tuxedo.Docs", "Tuxedo.Docs\Tuxedo.Docs.csproj", "{46FB68E3-DF07-42F7-AD0F-AC1E423CB66D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tuxedo.SourceGenerators", "Tuxedo.SourceGenerators\Tuxedo.SourceGenerators.csproj", "{DCA9A8E2-9122-47F7-BD78-8DE0FD863E9A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,9 +24,5 @@ Global
 		{46FB68E3-DF07-42F7-AD0F-AC1E423CB66D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46FB68E3-DF07-42F7-AD0F-AC1E423CB66D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46FB68E3-DF07-42F7-AD0F-AC1E423CB66D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DCA9A8E2-9122-47F7-BD78-8DE0FD863E9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DCA9A8E2-9122-47F7-BD78-8DE0FD863E9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DCA9A8E2-9122-47F7-BD78-8DE0FD863E9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DCA9A8E2-9122-47F7-BD78-8DE0FD863E9A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

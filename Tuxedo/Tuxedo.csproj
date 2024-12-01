@@ -26,7 +26,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -68,15 +68,6 @@
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
             <_Parameter1>Tuxedo.Tests</_Parameter1>
         </AssemblyAttribute>
-    </ItemGroup>
-    
-    <Target Name="BeforePack" AfterTargets="Build">
-        <Message Importance="high" Text="Building Tuxedo.SourceGenerators"/>
-        <Exec Command="dotnet build -c $(Configuration) ..\Tuxedo.SourceGenerators\Tuxedo.SourceGenerators.csproj"/>
-    </Target>
-    
-    <ItemGroup>
-        <None Include="..\Tuxedo.SourceGenerators\bin\$(Configuration)\netstandard2.0\Tuxedo.SourceGenerators.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
     </ItemGroup>
 
 </Project>

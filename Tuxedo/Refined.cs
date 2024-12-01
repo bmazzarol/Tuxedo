@@ -1,17 +1,17 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
-using Tuxedo.Extensions;
 
 namespace Tuxedo;
 
 /// <summary>
-/// Represents a refined type, the refinement is enforced by the TRefinement type which is an implementation of <see cref="IRefinement{TThis,T}"/>
+/// Represents a refined type, the refinement is enforced by the TRefinement type which is an implementation of <see cref="Refinement{TThis,T}"/>
 /// </summary>
-/// <typeparam name="T">refined type</typeparam>
 /// <typeparam name="TRefinement">refinement on the type</typeparam>
-public readonly record struct Refined<T, TRefinement>
-    where TRefinement : struct, IRefinement<TRefinement, T>
+/// <typeparam name="T">refined type</typeparam>
+public readonly record struct Refined<TRefinement, T>
+    where TRefinement : Refinement<TRefinement, T>, new()
 {
     /// <summary>
     /// The underlying value of the refined type
@@ -28,7 +28,10 @@ public readonly record struct Refined<T, TRefinement>
     /// </summary>
     /// <param name="refinedValue">refined value</param>
     /// <returns>underlying value</returns>
-    public static implicit operator T(Refined<T, TRefinement> refinedValue) => refinedValue.Value;
+    public static implicit operator T(Refined<TRefinement, T> refinedValue)
+    {
+        return refinedValue.Value;
+    }
 
     /// <summary>
     /// Explicitly converts the underlying value to a refined type
@@ -36,28 +39,21 @@ public readonly record struct Refined<T, TRefinement>
     /// <param name="value">value to refine</param>
     /// <returns>refined value</returns>
     /// <exception cref="RefinementFailureException">thrown if the value cannot be refined</exception>
-    public static implicit operator Refined<T, TRefinement>(T value) =>
-        Refined.Refine<T, TRefinement>(value);
-
-    /// <summary>
-    /// Deconstructs the refined value
-    /// </summary>
-    /// <param name="value">underlying raw value</param>
-    public void Deconstruct(out T value)
+    public static implicit operator Refined<TRefinement, T>(T value)
     {
-        value = Value;
+        return Refined.Refine<TRefinement, T>(value);
     }
 }
 
 /// <summary>
-/// Represents a refined type, the refinement is enforced by the TRefinement type which is an implementation of <see cref="IRefinement{TThis,T}"/>
+/// Represents a refined type, the refinement is enforced by the TRefinement type which is an implementation of <see cref="Refinement{TThis,T}"/>
 /// </summary>
+/// <typeparam name="TRefinement">refinement on the type</typeparam>
 /// <typeparam name="TRaw">raw refined type</typeparam>
 /// <typeparam name="TRefined">refined type</typeparam>
-/// <typeparam name="TRefinement">refinement on the type</typeparam>
 [StructLayout(LayoutKind.Auto)]
-public readonly record struct Refined<TRaw, TRefined, TRefinement>
-    where TRefinement : struct, IRefinement<TRefinement, TRaw, TRefined>
+public readonly record struct Refined<TRefinement, TRaw, TRefined>
+    where TRefinement : Refinement<TRefinement, TRaw, TRefined>, new()
 {
     /// <summary>
     /// The underlying value of the refined type
@@ -65,7 +61,7 @@ public readonly record struct Refined<TRaw, TRefined, TRefinement>
     public TRaw RawValue { get; }
 
     /// <summary>
-    /// The  value of the refined type
+    /// The value of the refined type
     /// </summary>
     public TRefined RefinedValue { get; }
 
@@ -80,7 +76,7 @@ public readonly record struct Refined<TRaw, TRefined, TRefinement>
     /// </summary>
     /// <param name="refinedValue">refined value</param>
     /// <returns>underlying raw value</returns>
-    public static implicit operator TRaw(Refined<TRaw, TRefined, TRefinement> refinedValue) =>
+    public static implicit operator TRaw(Refined<TRefinement, TRaw, TRefined> refinedValue) =>
         refinedValue.RawValue;
 
     /// <summary>
@@ -88,7 +84,7 @@ public readonly record struct Refined<TRaw, TRefined, TRefinement>
     /// </summary>
     /// <param name="refinedValue">refined value</param>
     /// <returns>underlying refined value</returns>
-    public static implicit operator TRefined(Refined<TRaw, TRefined, TRefinement> refinedValue) =>
+    public static implicit operator TRefined(Refined<TRefinement, TRaw, TRefined> refinedValue) =>
         refinedValue.RefinedValue;
 
     /// <summary>
@@ -97,8 +93,8 @@ public readonly record struct Refined<TRaw, TRefined, TRefinement>
     /// <param name="value">value to refine</param>
     /// <returns>refined value</returns>
     /// <exception cref="RefinementFailureException">thrown if the value cannot be refined</exception>
-    public static implicit operator Refined<TRaw, TRefined, TRefinement>(TRaw value) =>
-        Refined.Refine<TRaw, TRefined, TRefinement>(value);
+    public static implicit operator Refined<TRefinement, TRaw, TRefined>(TRaw value) =>
+        Refined.Refine<TRefinement, TRaw, TRefined>(value);
 
     /// <summary>
     /// Deconstructs the refined value
@@ -122,20 +118,24 @@ public static class Refined
     /// </summary>
     /// <param name="value">value to refine</param>
     /// <param name="refined">refined value</param>
-    /// <typeparam name="T">type to refine</typeparam>
+    /// <param name="failureMessage">failure message if the value cannot be refined</param>
     /// <typeparam name="TRefinement">refinement applied to the type</typeparam>
+    /// <typeparam name="T">type to refine</typeparam>
     /// <returns>true if the value was refined; otherwise, false</returns>
-    public static bool TryRefine<T, TRefinement>(T value, out Refined<T, TRefinement> refined)
-        where TRefinement : struct, IRefinement<TRefinement, T>
+    public static bool TryRefine<TRefinement, T>(
+        T value,
+        out Refined<TRefinement, T> refined,
+        [NotNullWhen(false)] out string? failureMessage
+    )
+        where TRefinement : Refinement<TRefinement, T>, new()
     {
-        var refinement = default(TRefinement);
-        if (!refinement.CanBeRefined(value, out _))
+        if (!Refinement<TRefinement, T>.Value.CanBeRefined(value, out failureMessage))
         {
             refined = default;
             return false;
         }
 
-        refined = new Refined<T, TRefinement>(value);
+        refined = new Refined<TRefinement, T>(value);
         return true;
     }
 
@@ -144,33 +144,43 @@ public static class Refined
     /// </summary>
     /// <param name="value">value to refine</param>
     /// <param name="refined">refined value</param>
+    /// <param name="failureMessage">failure message if the value cannot be refined</param>
+    /// <typeparam name="TRefinement">refinement applied to the type</typeparam>
     /// <typeparam name="TRaw">raw type to refine</typeparam>
     /// <typeparam name="TRefined">refined type</typeparam>
-    /// <typeparam name="TRefinement">refinement applied to the type</typeparam>
     /// <returns>true if the value was refined; otherwise, false</returns>
-    public static bool TryRefine<TRaw, TRefined, TRefinement>(
+    public static bool TryRefine<TRefinement, TRaw, TRefined>(
         TRaw value,
-        out Refined<TRaw, TRefined, TRefinement> refined
+        out Refined<TRefinement, TRaw, TRefined> refined,
+        [NotNullWhen(false)] out string? failureMessage
     )
-        where TRefinement : struct, IRefinement<TRefinement, TRaw, TRefined>
+        where TRefinement : Refinement<TRefinement, TRaw, TRefined>, new()
     {
-        var refinement = default(TRefinement);
-        if (!refinement.TryRefine(value, out var refinedValue, out _))
+        if (
+            !Refinement<TRefinement, TRaw, TRefined>.Value.CanBeRefined(
+                value,
+                out var refinedValue,
+                out failureMessage
+            )
+        )
         {
             refined = default;
             return false;
         }
 
-        refined = new Refined<TRaw, TRefined, TRefinement>(value, refinedValue);
+        refined = new Refined<TRefinement, TRaw, TRefined>(value, refinedValue);
         return true;
     }
 
     [DoesNotReturn]
     private static void Throw<T>(T value, string message)
     {
-        throw new RefinementFailureException(value, message).WithStackTrace(
-            new StackTrace(skipFrames: 3)
+        var exception = new RefinementFailureException(value, message);
+        ExceptionDispatchInfo.SetRemoteStackTrace(
+            exception,
+            new StackTrace(skipFrames: 3).ToString()
         );
+        throw exception;
     }
 
     /// <summary>
@@ -181,13 +191,12 @@ public static class Refined
     /// <typeparam name="TRefinement">refinement applied to the type</typeparam>
     /// <returns>refined value</returns>
     /// <exception cref="RefinementFailureException">thrown if the value cannot be refined</exception>
-    public static Refined<T, TRefinement> Refine<T, TRefinement>(T value)
-        where TRefinement : struct, IRefinement<TRefinement, T>
+    public static Refined<TRefinement, T> Refine<TRefinement, T>(T value)
+        where TRefinement : Refinement<TRefinement, T>, new()
     {
-        var refinement = default(TRefinement);
-        if (refinement.CanBeRefined(value, out var failureMessage))
+        if (Refinement<TRefinement, T>.Value.CanBeRefined(value, out var failureMessage))
         {
-            return new Refined<T, TRefinement>(value);
+            return new Refined<TRefinement, T>(value);
         }
 
         Throw(value, failureMessage);
@@ -198,20 +207,25 @@ public static class Refined
     /// Refines a value to a refined type
     /// </summary>
     /// <param name="value">value to refine</param>
+    /// <typeparam name="TRefinement">refinement applied to the type</typeparam>
     /// <typeparam name="TRaw">raw type to refine</typeparam>
     /// <typeparam name="TRefined">refined type</typeparam>
-    /// <typeparam name="TRefinement">refinement applied to the type</typeparam>
     /// <returns>refined value</returns>
     /// <exception cref="RefinementFailureException">thrown if the value cannot be refined</exception>
-    public static Refined<TRaw, TRefined, TRefinement> Refine<TRaw, TRefined, TRefinement>(
+    public static Refined<TRefinement, TRaw, TRefined> Refine<TRefinement, TRaw, TRefined>(
         TRaw value
     )
-        where TRefinement : struct, IRefinement<TRefinement, TRaw, TRefined>
+        where TRefinement : Refinement<TRefinement, TRaw, TRefined>, new()
     {
-        var refinement = default(TRefinement);
-        if (refinement.TryRefine(value, out var refinedValue, out var failureMessage))
+        if (
+            Refinement<TRefinement, TRaw, TRefined>.Value.CanBeRefined(
+                value,
+                out var refinedValue,
+                out var failureMessage
+            )
+        )
         {
-            return new Refined<TRaw, TRefined, TRefinement>(value, refinedValue);
+            return new Refined<TRefinement, TRaw, TRefined>(value, refinedValue);
         }
 
         Throw(value, failureMessage);
