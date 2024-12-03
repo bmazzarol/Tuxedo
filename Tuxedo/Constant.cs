@@ -11,10 +11,10 @@ public abstract class Constant<TThis, T>
     /// <summary>
     /// Singleton instance of the constant
     /// </summary>
-    public static TThis Value { get; } = new();
+    internal static TThis Inst { get; } = new();
 
     /// <summary>
     /// Constant value
     /// </summary>
-    public abstract T ConstValue { get; }
+    public abstract T Value { get; }
 }

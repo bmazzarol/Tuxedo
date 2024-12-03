@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Tuxedo.Refinements;
+﻿namespace Tuxedo.Refinements;
 
 /// <summary>
 /// Refinement that enforces a value to be equal to a constant
@@ -12,16 +10,9 @@ public sealed class Equal<T, TOther> : Refinement<Equal<T, TOther>, T>
     where TOther : Constant<TOther, T>, new()
 {
     /// <inheritdoc />
-    public override bool CanBeRefined(T value, [NotNullWhen(false)] out string? failureMessage)
-    {
-        var other = Constant<TOther, T>.Value.ConstValue;
-        if (value.Equals(other))
-        {
-            failureMessage = null;
-            return true;
-        }
+    protected override bool IsRefined(T value) => value.Equals(Constant<TOther, T>.Inst.Value);
 
-        failureMessage = $"Value must be equal to {other}, but was {value}";
-        return false;
-    }
+    /// <inheritdoc />
+    protected override string BuildFailureMessage(T value) =>
+        $"Value must be equal to '{Constant<TOther, T>.Inst.Value}', but was '{value}'";
 }

@@ -33,11 +33,11 @@ public class NegativeRefinementTests
         var op = () => (NegativeFloat)(1.0f);
         op.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be negative, but was 1");
+            .WithMessage("Value must be negative, but was '1'");
         Refined
             .TryRefine<Negative<float>, float>(1.0f, out _, out var failureMessage)
             .Should()
             .BeFalse();
-        failureMessage.Should().Be("Value must be negative, but was 1");
+        failureMessage.Should().Be("Value must be negative, but was '1'");
     }
 }

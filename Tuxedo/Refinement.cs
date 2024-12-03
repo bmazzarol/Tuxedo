@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 namespace Tuxedo;
 
@@ -14,7 +15,7 @@ public abstract class Refinement<TThis, T>
     /// <summary>
     /// Singleton instance of the refinement
     /// </summary>
-    public static TThis Value { get; } = new();
+    internal static TThis Inst { get; } = new();
 
     /// <summary>
     /// Tests if the value can be refined by this instance.
@@ -22,7 +23,33 @@ public abstract class Refinement<TThis, T>
     /// <param name="value">value to test for refinement</param>
     /// <param name="failureMessage">failure message returned if the value cannot be refined</param>
     /// <returns>true if the value can be refined; otherwise, false</returns>
-    public abstract bool CanBeRefined(T value, [NotNullWhen(false)] out string? failureMessage);
+    public virtual bool CanBeRefined(T value, [NotNullWhen(false)] out string? failureMessage)
+    {
+        if (IsRefined(value))
+        {
+            failureMessage = null;
+            return true;
+        }
+
+        failureMessage = BuildFailureMessage(value);
+        return false;
+    }
+
+    /// <summary>
+    /// Returns true if the value is refined
+    /// </summary>
+    /// <param name="value">value to test</param>
+    /// <returns>true if the value is refined; otherwise, false</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    protected abstract bool IsRefined(T value);
+
+    /// <summary>
+    /// Builds a failure message for the non-refined value
+    /// </summary>
+    /// <param name="value">value to refine</param>
+    /// <returns>failure message</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    protected abstract string BuildFailureMessage(T value);
 
     /// <summary>
     /// Refines the value to a refined type
@@ -63,7 +90,7 @@ public abstract class Refinement<TThis, TIn, TOut>
     /// <summary>
     /// Singleton instance of the refinement
     /// </summary>
-    public static TThis Value { get; } = new();
+    public static TThis Inst { get; } = new();
 
     /// <summary>
     /// Tests if the value can be refined by this instance, returning the refined value
@@ -72,11 +99,38 @@ public abstract class Refinement<TThis, TIn, TOut>
     /// <param name="refinedValue">refined value</param>
     /// <param name="failureMessage">failure message returned if the value cannot be refined</param>
     /// <returns>true if the value can be refined; otherwise, false</returns>
-    public abstract bool CanBeRefined(
+    public virtual bool CanBeRefined(
         TIn value,
         [NotNullWhen(true)] out TOut? refinedValue,
         [NotNullWhen(false)] out string? failureMessage
-    );
+    )
+    {
+        if (IsRefined(value, out refinedValue))
+        {
+            failureMessage = null;
+            return true;
+        }
+
+        failureMessage = BuildFailureMessage(value);
+        return false;
+    }
+
+    /// <summary>
+    /// Returns true if the value is refined, and returns the refined value
+    /// </summary>
+    /// <param name="value">value to test</param>
+    /// <param name="refinedValue">refined value</param>
+    /// <returns>true if the value is refined; otherwise, false</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    protected abstract bool IsRefined(TIn value, [NotNullWhen(true)] out TOut refinedValue);
+
+    /// <summary>
+    /// Builds a failure message for the non-refined value
+    /// </summary>
+    /// <param name="value">value to refine</param>
+    /// <returns>failure message</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    protected abstract string BuildFailureMessage(TIn value);
 
     /// <summary>
     /// Refines the value to a refined type

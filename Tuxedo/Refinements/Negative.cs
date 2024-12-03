@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace Tuxedo.Refinements;
 
@@ -11,15 +10,9 @@ public sealed class Negative<T> : Refinement<Negative<T>, T>
     where T : INumber<T>
 {
     /// <inheritdoc />
-    public override bool CanBeRefined(T value, [NotNullWhen(false)] out string? failureMessage)
-    {
-        if (value < T.Zero)
-        {
-            failureMessage = null;
-            return true;
-        }
+    protected override bool IsRefined(T value) => value < T.Zero;
 
-        failureMessage = $"Value must be negative, but was {value}";
-        return false;
-    }
+    /// <inheritdoc />
+    protected override string BuildFailureMessage(T value) =>
+        $"Value must be negative, but was '{value}'";
 }

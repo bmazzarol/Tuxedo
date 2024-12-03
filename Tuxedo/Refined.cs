@@ -129,7 +129,7 @@ public static class Refined
     )
         where TRefinement : Refinement<TRefinement, T>, new()
     {
-        if (!Refinement<TRefinement, T>.Value.CanBeRefined(value, out failureMessage))
+        if (!Refinement<TRefinement, T>.Inst.CanBeRefined(value, out failureMessage))
         {
             refined = default;
             return false;
@@ -157,7 +157,7 @@ public static class Refined
         where TRefinement : Refinement<TRefinement, TRaw, TRefined>, new()
     {
         if (
-            !Refinement<TRefinement, TRaw, TRefined>.Value.CanBeRefined(
+            !Refinement<TRefinement, TRaw, TRefined>.Inst.CanBeRefined(
                 value,
                 out var refinedValue,
                 out failureMessage
@@ -194,7 +194,7 @@ public static class Refined
     public static Refined<TRefinement, T> Refine<TRefinement, T>(T value)
         where TRefinement : Refinement<TRefinement, T>, new()
     {
-        if (Refinement<TRefinement, T>.Value.CanBeRefined(value, out var failureMessage))
+        if (Refinement<TRefinement, T>.Inst.CanBeRefined(value, out var failureMessage))
         {
             return new Refined<TRefinement, T>(value);
         }
@@ -218,7 +218,7 @@ public static class Refined
         where TRefinement : Refinement<TRefinement, TRaw, TRefined>, new()
     {
         if (
-            Refinement<TRefinement, TRaw, TRefined>.Value.CanBeRefined(
+            Refinement<TRefinement, TRaw, TRefined>.Inst.CanBeRefined(
                 value,
                 out var refinedValue,
                 out var failureMessage

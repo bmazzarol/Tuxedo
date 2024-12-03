@@ -31,8 +31,8 @@ public sealed class ZeroRefinementTests
         var op = () => (ZeroByte)(1);
         op.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be zero, but was 1");
+            .WithMessage("Value must be zero, but was '1'");
         Refined.TryRefine<Zero<byte>, byte>(1, out _, out var failureMessage).Should().BeFalse();
-        failureMessage.Should().Be("Value must be zero, but was 1");
+        failureMessage.Should().Be("Value must be zero, but was '1'");
     }
 }

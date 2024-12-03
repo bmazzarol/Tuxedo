@@ -40,11 +40,11 @@ public class PositiveRefinementTests
         var op = () => (PositiveInt)(-1);
         var failure = op.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be positive, but was -1")
+            .WithMessage("Value must be positive, but was '-1'")
             .Which;
         failure.Value.Should().Be(-1);
         failure.ValueType.Should().Be<int>();
         Refined.TryRefine<Positive<int>, int>(-1, out _, out var failureMessage).Should().BeFalse();
-        failureMessage.Should().Be("Value must be positive, but was -1");
+        failureMessage.Should().Be("Value must be positive, but was '-1'");
     }
 }

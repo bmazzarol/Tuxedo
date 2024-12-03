@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Tuxedo.Tests;
 
-using ValidGuid = Refined<GuidString, string, Guid>;
+using ValidGuid = Refined<AsA<Guid>, string, Guid>;
 
 public sealed class GuidStringRefinementTests
 {
@@ -38,12 +38,12 @@ public sealed class GuidStringRefinementTests
         a.Should().Be("00000000-0000-0000-0000-000000000000");
         b.Should().Be(new Guid("00000000-0000-0000-0000-000000000000"));
 
-        refined = GuidString.Refine("00000000-0000-0000-0000-000000000000");
+        refined = AsA<Guid>.Refine("00000000-0000-0000-0000-000000000000");
         refined.RawValue.Should().Be("00000000-0000-0000-0000-000000000000");
         refined.RefinedValue.Should().Be(new Guid("00000000-0000-0000-0000-000000000000"));
 
         Refined
-            .TryRefine<GuidString, string, Guid>(
+            .TryRefine<AsA<Guid>, string, Guid>(
                 "00000000-0000-0000-0000-000000000000",
                 out var refinedValue,
                 out var failureMessage
@@ -54,7 +54,7 @@ public sealed class GuidStringRefinementTests
         refinedValue.RefinedValue.Should().Be(new Guid("00000000-0000-0000-0000-000000000000"));
         failureMessage.Should().BeNull();
 
-        GuidString
+        AsA<Guid>
             .TryRefine("00000000-0000-0000-0000-000000000000", out refinedValue, out failureMessage)
             .Should()
             .BeTrue();
@@ -66,13 +66,13 @@ public sealed class GuidStringRefinementTests
         var op = () => (ValidGuid)("invalid");
         op.Should()
             .Throw<RefinementFailureException>()
-            .WithMessage("Value must be a valid GUID, but was invalid")
+            .WithMessage("Value must be a valid Guid, but was 'invalid'")
             .Which.Value.Should()
             .Be("invalid");
         Refined
-            .TryRefine<GuidString, string, Guid>("invalid", out _, out var failureMessage)
+            .TryRefine<AsA<Guid>, string, Guid>("invalid", out _, out var failureMessage)
             .Should()
             .BeFalse();
-        failureMessage.Should().Be("Value must be a valid GUID, but was invalid");
+        failureMessage.Should().Be("Value must be a valid Guid, but was 'invalid'");
     }
 }
