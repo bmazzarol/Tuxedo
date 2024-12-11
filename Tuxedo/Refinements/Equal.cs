@@ -5,12 +5,11 @@
 /// </summary>
 /// <typeparam name="T">type of the value</typeparam>
 /// <typeparam name="TOther">type of the constant</typeparam>
-public sealed class Equal<T, TOther> : IRefinement<Equal<T, TOther>, T>
+public readonly struct Equal<T, TOther> : IRefinement<Equal<T, TOther>, T>
     where T : IComparable<T>
     where TOther : IConstant<TOther, T>, new()
 {
-    static IRefinement<Equal<T, TOther>, T> IRefinement<Equal<T, TOther>, T>.Value { get; } =
-        new Equal<T, TOther>();
+    static Equal<T, TOther> IRefinement<Equal<T, TOther>, T>.Value { get; }
 
     bool IRefinement<Equal<T, TOther>, T>.IsRefined(T value)
     {

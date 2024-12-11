@@ -5,10 +5,9 @@ namespace Tuxedo.Refinements;
 /// <summary>
 /// Refinement that enforces a value to be non-empty
 /// </summary>
-public sealed class NonEmpty : IRefinement<NonEmpty, IEnumerable>
+public readonly struct NonEmpty : IRefinement<NonEmpty, IEnumerable>
 {
-    static IRefinement<NonEmpty, IEnumerable> IRefinement<NonEmpty, IEnumerable>.Value { get; } =
-        new NonEmpty();
+    static NonEmpty IRefinement<NonEmpty, IEnumerable>.Value { get; }
 
     bool IRefinement<NonEmpty, IEnumerable>.IsRefined(IEnumerable value)
     {

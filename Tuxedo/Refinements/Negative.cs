@@ -6,11 +6,10 @@ namespace Tuxedo.Refinements;
 /// Refinement that enforces a <see cref="INumber{TSelf}"/> to be negative
 /// </summary>
 /// <typeparam name="T">type of the number</typeparam>
-public sealed class Negative<T> : IRefinement<Negative<T>, T>
+public readonly struct Negative<T> : IRefinement<Negative<T>, T>
     where T : INumber<T>
 {
-    static IRefinement<Negative<T>, T> IRefinement<Negative<T>, T>.Value { get; } =
-        new Negative<T>();
+    static Negative<T> IRefinement<Negative<T>, T>.Value { get; }
 
     bool IRefinement<Negative<T>, T>.IsRefined(T value)
     {

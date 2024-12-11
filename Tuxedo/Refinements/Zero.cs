@@ -6,10 +6,10 @@ namespace Tuxedo.Refinements;
 /// Refinement that enforces a <see cref="INumber{TSelf}"/> to be <see cref="INumberBase{TSelf}.Zero"/>
 /// </summary>
 /// <typeparam name="T">type of the number</typeparam>
-public sealed class Zero<T> : IRefinement<Zero<T>, T>
+public readonly struct Zero<T> : IRefinement<Zero<T>, T>
     where T : INumber<T>
 {
-    static IRefinement<Zero<T>, T> IRefinement<Zero<T>, T>.Value { get; } = new Zero<T>();
+    static Zero<T> IRefinement<Zero<T>, T>.Value { get; }
 
     bool IRefinement<Zero<T>, T>.IsRefined(T value)
     {

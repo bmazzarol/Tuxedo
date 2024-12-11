@@ -6,11 +6,10 @@ namespace Tuxedo.Refinements;
 /// Refinement that enforces a <see cref="INumber{TSelf}"/> to be positive
 /// </summary>
 /// <typeparam name="T">type of the number</typeparam>
-public sealed class Positive<T> : IRefinement<Positive<T>, T>
+public readonly struct Positive<T> : IRefinement<Positive<T>, T>
     where T : INumber<T>
 {
-    static IRefinement<Positive<T>, T> IRefinement<Positive<T>, T>.Value { get; } =
-        new Positive<T>();
+    static Positive<T> IRefinement<Positive<T>, T>.Value { get; }
 
     bool IRefinement<Positive<T>, T>.IsRefined(T value)
     {

@@ -5,11 +5,10 @@ namespace Tuxedo.Refinements;
 /// <summary>
 /// Refinement that enforces a value to be a valid T
 /// </summary>
-public sealed class AsA<T> : IRefinement<AsA<T>, string, T>
+public readonly struct AsA<T> : IRefinement<AsA<T>, string, T>
     where T : IParsable<T>
 {
-    static IRefinement<AsA<T>, string, T> IRefinement<AsA<T>, string, T>.Value { get; } =
-        new AsA<T>();
+    static AsA<T> IRefinement<AsA<T>, string, T>.Value { get; }
 
     bool IRefinement<AsA<T>, string, T>.IsRefined(string value, out T refinedValue)
     {

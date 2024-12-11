@@ -9,13 +9,13 @@ namespace Tuxedo;
 /// </summary>
 /// <typeparam name="TThis">type of the refinement</typeparam>
 /// <typeparam name="T">type to refine</typeparam>
-public interface IRefinement<TThis, in T>
+public interface IRefinement<out TThis, in T>
     where TThis : IRefinement<TThis, T>
 {
     /// <summary>
     /// Singleton instance of the refinement
     /// </summary>
-    public static abstract IRefinement<TThis, T> Value { get; }
+    public static abstract TThis Value { get; }
 
     /// <summary>
     /// Tests if the value can be refined by this instance.
@@ -58,13 +58,13 @@ public interface IRefinement<TThis, in T>
 /// <typeparam name="TThis">type of the refinement</typeparam>
 /// <typeparam name="TIn">input type to refine</typeparam>
 /// <typeparam name="TOut">result of the refinement</typeparam>
-public interface IRefinement<TThis, in TIn, TOut>
+public interface IRefinement<out TThis, in TIn, TOut>
     where TThis : IRefinement<TThis, TIn, TOut>
 {
     /// <summary>
     /// Singleton instance of the refinement
     /// </summary>
-    static abstract IRefinement<TThis, TIn, TOut> Value { get; }
+    static abstract TThis Value { get; }
 
     /// <summary>
     /// Tests if the value can be refined by this instance, returning the refined value
