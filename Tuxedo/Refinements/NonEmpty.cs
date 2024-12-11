@@ -5,20 +5,34 @@ namespace Tuxedo.Refinements;
 /// <summary>
 /// Refinement that enforces a value to be non-empty
 /// </summary>
-public sealed class NonEmpty<T> : Refinement<NonEmpty<T>, T>
+public sealed class NonEmpty : IRefinement<NonEmpty, IEnumerable>
 {
-    /// <inheritdoc />
-    protected override bool IsRefined(T value)
+    static IRefinement<NonEmpty, IEnumerable> IRefinement<NonEmpty, IEnumerable>.Value { get; } =
+        new NonEmpty();
+
+    bool IRefinement<NonEmpty, IEnumerable>.IsRefined(IEnumerable value)
     {
-        return value switch
+        switch (value)
         {
-            string s => !string.IsNullOrEmpty(s),
-            ICollection c => c.Count > 0,
-            IEnumerable e => e.GetEnumerator().MoveNext(),
-            _ => value is not null,
-        };
+            case string s:
+                return !string.IsNullOrEmpty(s);
+            case ICollection collection:
+                return collection.Count > 0;
+            default:
+            {
+                var enumerator = value.GetEnumerator();
+                var result = enumerator.MoveNext();
+                if (enumerator is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+                return result;
+            }
+        }
     }
 
-    /// <inheritdoc />
-    protected override string BuildFailureMessage(T value) => "Value must be non-empty";
+    string IRefinement<NonEmpty, IEnumerable>.BuildFailureMessage(IEnumerable value)
+    {
+        return "Value must be non-empty";
+    }
 }

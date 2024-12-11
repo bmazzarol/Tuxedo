@@ -6,13 +6,19 @@ namespace Tuxedo.Refinements;
 /// Refinement that enforces a <see cref="INumber{TSelf}"/> to be positive
 /// </summary>
 /// <typeparam name="T">type of the number</typeparam>
-public sealed class Positive<T> : Refinement<Positive<T>, T>
+public sealed class Positive<T> : IRefinement<Positive<T>, T>
     where T : INumber<T>
 {
-    /// <inheritdoc />
-    protected override bool IsRefined(T value) => value > T.Zero;
+    static IRefinement<Positive<T>, T> IRefinement<Positive<T>, T>.Value { get; } =
+        new Positive<T>();
 
-    /// <inheritdoc />
-    protected override string BuildFailureMessage(T value) =>
-        $"Value must be positive, but was '{value}'";
+    bool IRefinement<Positive<T>, T>.IsRefined(T value)
+    {
+        return value > T.Zero;
+    }
+
+    string IRefinement<Positive<T>, T>.BuildFailureMessage(T value)
+    {
+        return $"Value must be positive, but was '{value}'";
+    }
 }

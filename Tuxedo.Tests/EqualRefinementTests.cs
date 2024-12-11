@@ -6,9 +6,9 @@ namespace Tuxedo.Tests;
 
 using ExactlyFiveMinutes = Refined<Equal<TimeSpan, FiveMinutes>, TimeSpan>;
 
-public sealed class FiveMinutes : Constant<FiveMinutes, TimeSpan>
+public sealed class FiveMinutes : IConstant<FiveMinutes, TimeSpan>
 {
-    public override TimeSpan Value => TimeSpan.FromMinutes(5);
+    public static TimeSpan Value { get; } = TimeSpan.FromMinutes(5);
 }
 
 public sealed class EqualRefinementTests
@@ -17,9 +17,6 @@ public sealed class EqualRefinementTests
     public void Case1()
     {
         ExactlyFiveMinutes refined = TimeSpan.FromMinutes(5);
-        refined.Value.Should().Be(TimeSpan.FromMinutes(5));
-
-        refined = Equal<TimeSpan, FiveMinutes>.Refine(TimeSpan.FromMinutes(5));
         refined.Value.Should().Be(TimeSpan.FromMinutes(5));
 
         Refined

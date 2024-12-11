@@ -38,10 +38,6 @@ public sealed class GuidStringRefinementTests
         a.Should().Be("00000000-0000-0000-0000-000000000000");
         b.Should().Be(new Guid("00000000-0000-0000-0000-000000000000"));
 
-        refined = AsA<Guid>.Refine("00000000-0000-0000-0000-000000000000");
-        refined.RawValue.Should().Be("00000000-0000-0000-0000-000000000000");
-        refined.RefinedValue.Should().Be(new Guid("00000000-0000-0000-0000-000000000000"));
-
         Refined
             .TryRefine<AsA<Guid>, string, Guid>(
                 "00000000-0000-0000-0000-000000000000",
@@ -53,11 +49,6 @@ public sealed class GuidStringRefinementTests
         refinedValue.RawValue.Should().Be("00000000-0000-0000-0000-000000000000");
         refinedValue.RefinedValue.Should().Be(new Guid("00000000-0000-0000-0000-000000000000"));
         failureMessage.Should().BeNull();
-
-        AsA<Guid>
-            .TryRefine("00000000-0000-0000-0000-000000000000", out refinedValue, out failureMessage)
-            .Should()
-            .BeTrue();
     }
 
     [Fact(DisplayName = "An invalid GUID string cannot be refined")]

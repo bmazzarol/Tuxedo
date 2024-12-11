@@ -6,12 +6,12 @@ using System.Runtime.InteropServices;
 namespace Tuxedo;
 
 /// <summary>
-/// Represents a refined type, the refinement is enforced by the TRefinement type which is an implementation of <see cref="Refinement{TThis,T}"/>
+/// Represents a refined type, the refinement is enforced by the TRefinement type which is an implementation of <see cref="IRefinement{TThis,T}"/>
 /// </summary>
 /// <typeparam name="TRefinement">refinement on the type</typeparam>
 /// <typeparam name="T">refined type</typeparam>
 public readonly record struct Refined<TRefinement, T>
-    where TRefinement : Refinement<TRefinement, T>, new()
+    where TRefinement : IRefinement<TRefinement, T>
 {
     /// <summary>
     /// The underlying value of the refined type
@@ -46,14 +46,14 @@ public readonly record struct Refined<TRefinement, T>
 }
 
 /// <summary>
-/// Represents a refined type, the refinement is enforced by the TRefinement type which is an implementation of <see cref="Refinement{TThis,T}"/>
+/// Represents a refined type, the refinement is enforced by the TRefinement type which is an implementation of <see cref="IRefinement{TThis,T}"/>
 /// </summary>
 /// <typeparam name="TRefinement">refinement on the type</typeparam>
 /// <typeparam name="TRaw">raw refined type</typeparam>
 /// <typeparam name="TRefined">refined type</typeparam>
 [StructLayout(LayoutKind.Auto)]
 public readonly record struct Refined<TRefinement, TRaw, TRefined>
-    where TRefinement : Refinement<TRefinement, TRaw, TRefined>, new()
+    where TRefinement : IRefinement<TRefinement, TRaw, TRefined>
 {
     /// <summary>
     /// The underlying value of the refined type
@@ -127,9 +127,9 @@ public static class Refined
         out Refined<TRefinement, T> refined,
         [NotNullWhen(false)] out string? failureMessage
     )
-        where TRefinement : Refinement<TRefinement, T>, new()
+        where TRefinement : IRefinement<TRefinement, T>
     {
-        if (!Refinement<TRefinement, T>.Inst.CanBeRefined(value, out failureMessage))
+        if (!TRefinement.Value.CanBeRefined(value, out failureMessage))
         {
             refined = default;
             return false;
@@ -154,15 +154,9 @@ public static class Refined
         out Refined<TRefinement, TRaw, TRefined> refined,
         [NotNullWhen(false)] out string? failureMessage
     )
-        where TRefinement : Refinement<TRefinement, TRaw, TRefined>, new()
+        where TRefinement : IRefinement<TRefinement, TRaw, TRefined>
     {
-        if (
-            !Refinement<TRefinement, TRaw, TRefined>.Inst.CanBeRefined(
-                value,
-                out var refinedValue,
-                out failureMessage
-            )
-        )
+        if (!TRefinement.Value.CanBeRefined(value, out var refinedValue, out failureMessage))
         {
             refined = default;
             return false;
@@ -192,9 +186,9 @@ public static class Refined
     /// <returns>refined value</returns>
     /// <exception cref="RefinementFailureException">thrown if the value cannot be refined</exception>
     public static Refined<TRefinement, T> Refine<TRefinement, T>(T value)
-        where TRefinement : Refinement<TRefinement, T>, new()
+        where TRefinement : IRefinement<TRefinement, T>
     {
-        if (Refinement<TRefinement, T>.Inst.CanBeRefined(value, out var failureMessage))
+        if (TRefinement.Value.CanBeRefined(value, out var failureMessage))
         {
             return new Refined<TRefinement, T>(value);
         }
@@ -215,15 +209,9 @@ public static class Refined
     public static Refined<TRefinement, TRaw, TRefined> Refine<TRefinement, TRaw, TRefined>(
         TRaw value
     )
-        where TRefinement : Refinement<TRefinement, TRaw, TRefined>, new()
+        where TRefinement : IRefinement<TRefinement, TRaw, TRefined>
     {
-        if (
-            Refinement<TRefinement, TRaw, TRefined>.Inst.CanBeRefined(
-                value,
-                out var refinedValue,
-                out var failureMessage
-            )
-        )
+        if (TRefinement.Value.CanBeRefined(value, out var refinedValue, out var failureMessage))
         {
             return new Refined<TRefinement, TRaw, TRefined>(value, refinedValue);
         }

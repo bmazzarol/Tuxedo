@@ -14,9 +14,6 @@ public sealed class ZeroRefinementTests
         ZeroByte refined = 0;
         refined.Value.Should().Be(0);
 
-        refined = Zero<byte>.Refine(0);
-        refined.Value.Should().Be(0);
-
         Refined
             .TryRefine<Zero<byte>, byte>(0, out var refinedValue, out var failureMessage)
             .Should()
@@ -28,7 +25,7 @@ public sealed class ZeroRefinementTests
     [Fact(DisplayName = "A non-zero byte cannot be refined")]
     public void Case2()
     {
-        var op = () => (ZeroByte)(1);
+        var op = () => (ZeroByte)1;
         op.Should()
             .Throw<RefinementFailureException>()
             .WithMessage("Value must be zero, but was '1'");

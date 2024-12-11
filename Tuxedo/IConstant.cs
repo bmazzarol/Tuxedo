@@ -5,16 +5,11 @@
 /// </summary>
 /// <typeparam name="TThis">the type of the constant</typeparam>
 /// <typeparam name="T">the type of the constant</typeparam>
-public abstract class Constant<TThis, T>
-    where TThis : Constant<TThis, T>, new()
+public interface IConstant<TThis, out T>
+    where TThis : IConstant<TThis, T>
 {
     /// <summary>
     /// Singleton instance of the constant
     /// </summary>
-    internal static TThis Inst { get; } = new();
-
-    /// <summary>
-    /// Constant value
-    /// </summary>
-    public abstract T Value { get; }
+    public static abstract T Value { get; }
 }

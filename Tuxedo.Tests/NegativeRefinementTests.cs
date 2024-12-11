@@ -14,17 +14,12 @@ public class NegativeRefinementTests
         NegativeFloat refined = -1.0f;
         refined.Value.Should().Be(-1.0f);
 
-        refined = Negative<float>.Refine(-2.0f);
-        refined.Value.Should().Be(-2.0f);
-
         Refined
-            .TryRefine<Negative<float>, float>(-2.0f, out var refinedValue, out var failureMessage)
+            .TryRefine<Negative<float>, float>(-1.0f, out var refinedValue, out var failureMessage)
             .Should()
             .BeTrue();
         refinedValue.Should().Be(refined);
         failureMessage.Should().BeNull();
-
-        Negative<float>.TryRefine(-2.0f, out refinedValue, out failureMessage).Should().BeTrue();
     }
 
     [Fact(DisplayName = "A positive float cannot be refined")]

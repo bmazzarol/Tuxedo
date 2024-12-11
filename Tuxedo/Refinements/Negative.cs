@@ -6,13 +6,19 @@ namespace Tuxedo.Refinements;
 /// Refinement that enforces a <see cref="INumber{TSelf}"/> to be negative
 /// </summary>
 /// <typeparam name="T">type of the number</typeparam>
-public sealed class Negative<T> : Refinement<Negative<T>, T>
+public sealed class Negative<T> : IRefinement<Negative<T>, T>
     where T : INumber<T>
 {
-    /// <inheritdoc />
-    protected override bool IsRefined(T value) => value < T.Zero;
+    static IRefinement<Negative<T>, T> IRefinement<Negative<T>, T>.Value { get; } =
+        new Negative<T>();
 
-    /// <inheritdoc />
-    protected override string BuildFailureMessage(T value) =>
-        $"Value must be negative, but was '{value}'";
+    bool IRefinement<Negative<T>, T>.IsRefined(T value)
+    {
+        return value < T.Zero;
+    }
+
+    string IRefinement<Negative<T>, T>.BuildFailureMessage(T value)
+    {
+        return $"Value must be negative, but was '{value}'";
+    }
 }

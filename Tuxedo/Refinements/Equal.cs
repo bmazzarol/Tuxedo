@@ -5,14 +5,20 @@
 /// </summary>
 /// <typeparam name="T">type of the value</typeparam>
 /// <typeparam name="TOther">type of the constant</typeparam>
-public sealed class Equal<T, TOther> : Refinement<Equal<T, TOther>, T>
+public sealed class Equal<T, TOther> : IRefinement<Equal<T, TOther>, T>
     where T : IComparable<T>
-    where TOther : Constant<TOther, T>, new()
+    where TOther : IConstant<TOther, T>, new()
 {
-    /// <inheritdoc />
-    protected override bool IsRefined(T value) => value.Equals(Constant<TOther, T>.Inst.Value);
+    static IRefinement<Equal<T, TOther>, T> IRefinement<Equal<T, TOther>, T>.Value { get; } =
+        new Equal<T, TOther>();
 
-    /// <inheritdoc />
-    protected override string BuildFailureMessage(T value) =>
-        $"Value must be equal to '{Constant<TOther, T>.Inst.Value}', but was '{value}'";
+    bool IRefinement<Equal<T, TOther>, T>.IsRefined(T value)
+    {
+        return value.Equals(TOther.Value);
+    }
+
+    string IRefinement<Equal<T, TOther>, T>.BuildFailureMessage(T value)
+    {
+        return $"Value must be equal to '{TOther.Value}', but was '{value}'";
+    }
 }

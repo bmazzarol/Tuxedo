@@ -23,11 +23,8 @@ public class PositiveRefinementTests
             throw new Xunit.Sdk.XunitException("Pattern match failed");
         }
 
-        refined = Positive<int>.Refine(2);
-        refined.Value.Should().Be(2);
-
         Refined
-            .TryRefine<Positive<int>, int>(2, out var refinedValue, out var failureMessage)
+            .TryRefine<Positive<int>, int>(1, out var refinedValue, out var failureMessage)
             .Should()
             .BeTrue();
         refinedValue.Should().Be(refined);

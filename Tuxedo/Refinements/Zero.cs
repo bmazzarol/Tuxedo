@@ -5,14 +5,19 @@ namespace Tuxedo.Refinements;
 /// <summary>
 /// Refinement that enforces a <see cref="INumber{TSelf}"/> to be <see cref="INumberBase{TSelf}.Zero"/>
 /// </summary>
-/// <typeparam name="T"></typeparam>
-public sealed class Zero<T> : Refinement<Zero<T>, T>
+/// <typeparam name="T">type of the number</typeparam>
+public sealed class Zero<T> : IRefinement<Zero<T>, T>
     where T : INumber<T>
 {
-    /// <inheritdoc />
-    protected override bool IsRefined(T value) => value == T.Zero;
+    static IRefinement<Zero<T>, T> IRefinement<Zero<T>, T>.Value { get; } = new Zero<T>();
 
-    /// <inheritdoc />
-    protected override string BuildFailureMessage(T value) =>
-        $"Value must be zero, but was '{value}'";
+    bool IRefinement<Zero<T>, T>.IsRefined(T value)
+    {
+        return value == T.Zero;
+    }
+
+    string IRefinement<Zero<T>, T>.BuildFailureMessage(T value)
+    {
+        return $"Value must be zero, but was '{value}'";
+    }
 }
