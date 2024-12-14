@@ -1,17 +1,16 @@
 ﻿using FluentAssertions;
 using Tuxedo.Refinements;
+using Tuxedo.Types;
 using Xunit;
 
 namespace Tuxedo.Tests;
-
-using ValidGuid = Refined<Formatted<Guid>, string, Guid>;
 
 public sealed class GuidStringRefinementTests
 {
     [Fact(DisplayName = "A valid GUID string can be refined")]
     public void Case1()
     {
-        ValidGuid refined = "00000000-0000-0000-0000-000000000000";
+        GuidString refined = "00000000-0000-0000-0000-000000000000";
         refined.RawValue.Should().Be("00000000-0000-0000-0000-000000000000");
         refined.RefinedValue.Should().Be(new Guid("00000000-0000-0000-0000-000000000000"));
 
@@ -54,7 +53,7 @@ public sealed class GuidStringRefinementTests
     [Fact(DisplayName = "An invalid GUID string cannot be refined")]
     public void Case2()
     {
-        var op = () => (ValidGuid)("invalid");
+        var op = () => (GuidString)"invalid";
         op.Should()
             .Throw<RefinementFailureException>()
             .WithMessage("Value must be a valid Guid, but was 'invalid'")

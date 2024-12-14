@@ -1,10 +1,9 @@
 ﻿using FluentAssertions;
 using Tuxedo.Refinements;
+using Tuxedo.Types;
 using Xunit;
 
 namespace Tuxedo.Tests;
-
-using PositiveInt = Refined<Positive<int>, int>;
 
 public class PositiveRefinementTests
 {
@@ -27,7 +26,7 @@ public class PositiveRefinementTests
             .TryRefine<Positive<int>, int>(1, out var refinedValue, out var failureMessage)
             .Should()
             .BeTrue();
-        refinedValue.Should().Be(refined);
+        refinedValue.Value.Should().Be(refined.Value);
         failureMessage.Should().BeNull();
     }
 
