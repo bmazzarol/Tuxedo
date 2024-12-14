@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Tuxedo.Tests;
 
-using ValidGuid = Refined<AsA<Guid>, string, Guid>;
+using ValidGuid = Refined<Formatted<Guid>, string, Guid>;
 
 public sealed class GuidStringRefinementTests
 {
@@ -39,7 +39,7 @@ public sealed class GuidStringRefinementTests
         b.Should().Be(new Guid("00000000-0000-0000-0000-000000000000"));
 
         Refined
-            .TryRefine<AsA<Guid>, string, Guid>(
+            .TryRefine<Formatted<Guid>, string, Guid>(
                 "00000000-0000-0000-0000-000000000000",
                 out var refinedValue,
                 out var failureMessage
@@ -61,7 +61,7 @@ public sealed class GuidStringRefinementTests
             .Which.Value.Should()
             .Be("invalid");
         Refined
-            .TryRefine<AsA<Guid>, string, Guid>("invalid", out _, out var failureMessage)
+            .TryRefine<Formatted<Guid>, string, Guid>("invalid", out _, out var failureMessage)
             .Should()
             .BeFalse();
         failureMessage.Should().Be("Value must be a valid Guid, but was 'invalid'");
