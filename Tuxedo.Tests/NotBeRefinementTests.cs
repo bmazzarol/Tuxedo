@@ -11,7 +11,7 @@ public sealed class NotBeRefinementTests
     [Fact(DisplayName = "Not be can be used to negate a refinement")]
     public void Case1()
     {
-        NotZeroByte refined = 1;
+        var refined = (NotZeroByte)1;
         refined.Value.Should().Be(1);
 
         Refined

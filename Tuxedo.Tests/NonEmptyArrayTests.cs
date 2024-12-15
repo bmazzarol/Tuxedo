@@ -9,7 +9,7 @@ public sealed class NonEmptyArrayTests
     [Fact(DisplayName = "A non-empty array can be refined")]
     public void Case1()
     {
-        NonEmptyArray<int> refined = new[] { 1, 2, 3 };
+        var refined = (NonEmptyArray<int>)new[] { 1, 2, 3 };
         refined.Value.Should().BeEquivalentTo([1, 2, 3]);
 
         int[] value = refined;

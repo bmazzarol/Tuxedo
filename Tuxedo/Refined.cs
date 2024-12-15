@@ -27,7 +27,7 @@ public readonly record struct Refined<TRefinement, T>
     }
 
     /// <inheritdoc />
-    public static implicit operator Refined<TRefinement, T>(T value)
+    public static explicit operator Refined<TRefinement, T>(T value)
     {
         return IRefinedType<Refined<TRefinement, T>, TRefinement, T>.Refine(value);
     }
@@ -36,6 +36,20 @@ public readonly record struct Refined<TRefinement, T>
     public static Refined<TRefinement, T> CreateUnsafe(T value)
     {
         return new(value);
+    }
+
+    /// <inheritdoc />
+    public static bool TryCreate(
+        T value,
+        out Refined<TRefinement, T> refined,
+        [NotNullWhen(false)] out string? failureMessage
+    )
+    {
+        return IRefinedType<Refined<TRefinement, T>, TRefinement, T>.TryRefine(
+            value,
+            out refined,
+            out failureMessage
+        );
     }
 }
 
@@ -69,7 +83,7 @@ public readonly record struct Refined<TRefinement, TRaw, TRefined>
     }
 
     /// <inheritdoc />
-    public static implicit operator Refined<TRefinement, TRaw, TRefined>(TRaw value)
+    public static explicit operator Refined<TRefinement, TRaw, TRefined>(TRaw value)
     {
         return IRefinedType<
             Refined<TRefinement, TRaw, TRefined>,
@@ -92,6 +106,21 @@ public readonly record struct Refined<TRefinement, TRaw, TRefined>
     )
     {
         return new(value, refinedValue);
+    }
+
+    /// <inheritdoc />
+    public static bool TryCreate(
+        TRaw value,
+        out Refined<TRefinement, TRaw, TRefined> refined,
+        [NotNullWhen(false)] out string? failureMessage
+    )
+    {
+        return IRefinedType<
+            Refined<TRefinement, TRaw, TRefined>,
+            TRefinement,
+            TRaw,
+            TRefined
+        >.TryRefine(value, out refined, out failureMessage);
     }
 
     /// <inheritdoc />

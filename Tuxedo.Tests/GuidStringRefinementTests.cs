@@ -10,7 +10,7 @@ public sealed class GuidStringRefinementTests
     [Fact(DisplayName = "A valid GUID string can be refined")]
     public void Case1()
     {
-        GuidString refined = "00000000-0000-0000-0000-000000000000";
+        var refined = (GuidString)"00000000-0000-0000-0000-000000000000";
         refined.RawValue.Should().Be("00000000-0000-0000-0000-000000000000");
         refined.RefinedValue.Should().Be(new Guid("00000000-0000-0000-0000-000000000000"));
 

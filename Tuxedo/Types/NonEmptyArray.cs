@@ -1,4 +1,5 @@
-﻿using Tuxedo.Refinements;
+﻿using System.Diagnostics.CodeAnalysis;
+using Tuxedo.Refinements;
 
 namespace Tuxedo.Types;
 
@@ -28,7 +29,7 @@ public readonly struct NonEmptyArray<T> : IRefinedType<NonEmptyArray<T>, NonEmpt
     }
 
     /// <inheritdoc />
-    public static implicit operator NonEmptyArray<T>(T[] value)
+    public static explicit operator NonEmptyArray<T>(T[] value)
     {
         return IRefinedType<NonEmptyArray<T>, NonEmpty, T[]>.Refine(value);
     }
@@ -37,5 +38,19 @@ public readonly struct NonEmptyArray<T> : IRefinedType<NonEmptyArray<T>, NonEmpt
     public static NonEmptyArray<T> CreateUnsafe(T[] value)
     {
         return new(value);
+    }
+
+    /// <inheritdoc />
+    public static bool TryCreate(
+        T[] value,
+        out NonEmptyArray<T> refined,
+        [NotNullWhen(false)] out string? failureMessage
+    )
+    {
+        return IRefinedType<NonEmptyArray<T>, NonEmpty, T[]>.TryRefine(
+            value,
+            out refined,
+            out failureMessage
+        );
     }
 }

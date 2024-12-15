@@ -10,7 +10,7 @@ public class PositiveRefinementTests
     [Fact(DisplayName = "A positive integer can be refined")]
     public void Case1()
     {
-        PositiveInt refined = 1;
+        var refined = (PositiveInt)1;
         refined.Value.Should().Be(1);
 
         int value = refined;

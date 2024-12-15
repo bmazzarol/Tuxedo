@@ -1,4 +1,6 @@
-﻿namespace Tuxedo.Types;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Tuxedo.Types;
 
 /// <summary>
 /// Represents a string that is a valid absolute or relative URI
@@ -33,7 +35,7 @@ public readonly struct UriString<TKind>
     }
 
     /// <inheritdoc />
-    public static implicit operator UriString<TKind>(string value)
+    public static explicit operator UriString<TKind>(string value)
     {
         return IRefinedType<UriString<TKind>, UriString<TKind>, string, Uri>.Refine(value);
     }
@@ -42,6 +44,20 @@ public readonly struct UriString<TKind>
     public static UriString<TKind> CreateUnsafe(string value, Uri refinedValue)
     {
         return new(value, refinedValue);
+    }
+
+    /// <inheritdoc />
+    public static bool TryCreate(
+        string value,
+        out UriString<TKind> refined,
+        [NotNullWhen(false)] out string? failureMessage
+    )
+    {
+        return IRefinedType<UriString<TKind>, UriString<TKind>, string, Uri>.TryRefine(
+            value,
+            out refined,
+            out failureMessage
+        );
     }
 
     /// <inheritdoc />

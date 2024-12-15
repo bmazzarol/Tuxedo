@@ -11,7 +11,7 @@ public sealed class ZeroRefinementTests
     [Fact(DisplayName = "A zero byte can be refined")]
     public void Case1()
     {
-        ZeroByte refined = 0;
+        var refined = (ZeroByte)0;
         refined.Value.Should().Be(0);
 
         Refined

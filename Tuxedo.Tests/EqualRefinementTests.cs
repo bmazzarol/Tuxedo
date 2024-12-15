@@ -16,7 +16,7 @@ public sealed class EqualRefinementTests
     [Fact(DisplayName = "A time span of five minutes can be refined")]
     public void Case1()
     {
-        ExactlyFiveMinutes refined = TimeSpan.FromMinutes(5);
+        var refined = (ExactlyFiveMinutes)TimeSpan.FromMinutes(5);
         refined.Value.Should().Be(TimeSpan.FromMinutes(5));
 
         Refined

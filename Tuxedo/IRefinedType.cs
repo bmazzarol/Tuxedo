@@ -29,10 +29,13 @@ public interface IRefinedType<TThis, TRefinement, T>
     /// <summary>
     /// Explicitly converts the underlying value to a refined type
     /// </summary>
+    /// <remarks>
+    /// This auto implemented by <see cref="Refine"/>. Access it via the <see cref="IRefinedType{TThis,TRefinement,T}"/> that TThis implements
+    /// </remarks>
     /// <param name="value">value to refine</param>
     /// <returns>refined value</returns>
     /// <exception cref="RefinementFailureException">thrown if the value cannot be refined</exception>
-    static abstract implicit operator TThis(T value);
+    static abstract explicit operator TThis(T value);
 
     /// <summary>
     /// Creates the refined type without checking if the value can be refined, this should only be used when the value has already been checked.
@@ -41,6 +44,22 @@ public interface IRefinedType<TThis, TRefinement, T>
     /// <param name="value">value to refine</param>
     /// <returns>potentially refined value</returns>
     static abstract TThis CreateUnsafe(T value);
+
+    /// <summary>
+    /// Try to create a refined type from a value
+    /// </summary>
+    /// <remarks>
+    /// This auto implemented by <see cref="TryRefine"/>. Access it via the <see cref="IRefinedType{TThis,TRefinement,T}"/> that TThis implements
+    /// </remarks>
+    /// <param name="value">value to refine</param>
+    /// <param name="refined">refined value</param>
+    /// <param name="failureMessage">failure message if the value cannot be refined</param>
+    /// <returns>true if the value was refined; otherwise, false</returns>
+    static abstract bool TryCreate(
+        T value,
+        [NotNullWhen(true)] out TThis? refined,
+        [NotNullWhen(false)] out string? failureMessage
+    );
 
     /// <summary>
     /// Tries to refine a value to a refined type
@@ -125,10 +144,13 @@ public interface IRefinedType<TThis, TRefinement, TRaw, TRefined>
     /// <summary>
     /// Explicitly converts the underlying value to a refined type
     /// </summary>
+    /// <remarks>
+    /// This auto implemented by <see cref="Refine"/>. Access it via the <see cref="IRefinedType{TThis,TRefinement,T,T}"/> that TThis implements
+    /// </remarks>
     /// <param name="value">value to refine</param>
     /// <returns>refined value</returns>
     /// <exception cref="RefinementFailureException">thrown if the value cannot be refined</exception>
-    static abstract implicit operator TThis(TRaw value);
+    static abstract explicit operator TThis(TRaw value);
 
     /// <summary>
     /// Creates the refined type without checking if the value can be refined, this should only be used when the value has already been checked.
@@ -138,6 +160,22 @@ public interface IRefinedType<TThis, TRefinement, TRaw, TRefined>
     /// <param name="refinedValue">refined value</param>
     /// <returns>potentially refined value</returns>
     static abstract TThis CreateUnsafe(TRaw value, TRefined refinedValue);
+
+    /// <summary>
+    /// Try to create a refined type from a value
+    /// </summary>
+    /// <remarks>
+    /// This auto implemented by <see cref="TryRefine"/>. Access it via the <see cref="IRefinedType{TThis,TRefinement,T,T}"/>
+    /// </remarks>
+    /// <param name="value">value to refine</param>
+    /// <param name="refined">refined value</param>
+    /// <param name="failureMessage">failure message if the value cannot be refined</param>
+    /// <returns>true if the value was refined; otherwise, false</returns>
+    static abstract bool TryCreate(
+        TRaw value,
+        [NotNullWhen(true)] out TThis? refined,
+        [NotNullWhen(false)] out string? failureMessage
+    );
 
     /// <summary>
     /// Tries to refine a value to a refined type

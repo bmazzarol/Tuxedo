@@ -1,4 +1,5 @@
-﻿using Tuxedo.Refinements;
+﻿using System.Diagnostics.CodeAnalysis;
+using Tuxedo.Refinements;
 using static Tuxedo.IRefinedType<Tuxedo.Types.PositiveInt, Tuxedo.Refinements.Positive<int>, int>;
 
 namespace Tuxedo.Types;
@@ -25,7 +26,7 @@ public readonly struct PositiveInt : IRefinedType<PositiveInt, Positive<int>, in
     }
 
     /// <inheritdoc />
-    public static implicit operator PositiveInt(int value)
+    public static explicit operator PositiveInt(int value)
     {
         return Refine(value);
     }
@@ -34,5 +35,15 @@ public readonly struct PositiveInt : IRefinedType<PositiveInt, Positive<int>, in
     public static PositiveInt CreateUnsafe(int value)
     {
         return new(value);
+    }
+
+    /// <inheritdoc />
+    public static bool TryCreate(
+        int value,
+        out PositiveInt refined,
+        [NotNullWhen(false)] out string? failureMessage
+    )
+    {
+        return TryRefine(value, out refined, out failureMessage);
     }
 }

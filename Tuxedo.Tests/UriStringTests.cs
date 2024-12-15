@@ -10,7 +10,7 @@ public sealed class UriStringTests
     [Fact(DisplayName = "A valid URI string can be refined")]
     public void Case1()
     {
-        UriString<AbsoluteUriKind> refined = "https://example.com";
+        var refined = (UriString<AbsoluteUriKind>)"https://example.com";
         refined.RawValue.Should().Be("https://example.com");
         refined.RefinedValue.Should().Be(new Uri("https://example.com"));
 
@@ -64,7 +64,7 @@ public sealed class UriStringTests
     [Fact(DisplayName = "A valid URI string can be refined with a relative URI kind")]
     public void Case3()
     {
-        UriString<RelativeUriKind> refined = "/path/to/resource";
+        var refined = (UriString<RelativeUriKind>)"/path/to/resource";
         refined.RawValue.Should().Be("/path/to/resource");
         refined.RefinedValue.Should().Be(new Uri("/path/to/resource", UriKind.Relative));
 
@@ -107,7 +107,7 @@ public sealed class UriStringTests
     [Fact(DisplayName = "A valid URI string can be refined with a relative or absolute URI kind")]
     public void Case4()
     {
-        UriString<AbsoluteOrRelativeUriKind> refined = "/path/to/resource";
+        var refined = (UriString<AbsoluteOrRelativeUriKind>)"/path/to/resource";
         refined.RawValue.Should().Be("/path/to/resource");
         refined.RefinedValue.Should().Be(new Uri("/path/to/resource", UriKind.Relative));
 

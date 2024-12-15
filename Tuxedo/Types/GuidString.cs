@@ -1,4 +1,5 @@
-﻿using Tuxedo.Refinements;
+﻿using System.Diagnostics.CodeAnalysis;
+using Tuxedo.Refinements;
 using static Tuxedo.IRefinedType<
     Tuxedo.Types.GuidString,
     Tuxedo.Refinements.Formatted<System.Guid>,
@@ -38,7 +39,7 @@ public readonly struct GuidString : IRefinedType<GuidString, Formatted<Guid>, st
     }
 
     /// <inheritdoc />
-    public static implicit operator GuidString(string value)
+    public static explicit operator GuidString(string value)
     {
         return Refine(value);
     }
@@ -47,6 +48,16 @@ public readonly struct GuidString : IRefinedType<GuidString, Formatted<Guid>, st
     public static GuidString CreateUnsafe(string value, Guid refinedValue)
     {
         return new(value, refinedValue);
+    }
+
+    /// <inheritdoc />
+    public static bool TryCreate(
+        string value,
+        out GuidString refined,
+        [NotNullWhen(false)] out string? failureMessage
+    )
+    {
+        return TryRefine(value, out refined, out failureMessage);
     }
 
     /// <inheritdoc />

@@ -11,7 +11,7 @@ public sealed class NonEmptyRefinementTests
     [Fact(DisplayName = "A non-empty string can be refined")]
     public void Case1()
     {
-        NonEmptyString refined = "a";
+        var refined = (NonEmptyString)"a";
         refined.Value.Should().Be("a");
 
         Refined
