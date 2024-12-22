@@ -97,7 +97,7 @@ public readonly struct Raw<T>
     /// Alternate result value produced from refinement of the raw value
     /// </summary>
     /// <typeparam name="TAlternate">alternative type</typeparam>
-    public readonly struct Produce<TAlternate>
+    public readonly struct Produces<TAlternate>
     {
         /// <summary>
         /// Refines the raw value with the given refinement

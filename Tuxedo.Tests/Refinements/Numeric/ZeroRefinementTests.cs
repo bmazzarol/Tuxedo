@@ -14,6 +14,9 @@ public sealed class ZeroRefinementTests
         var refined = (ZeroByte)0;
         refined.Value.Should().Be(0);
 
+        byte value = refined; // implicit conversion
+        value.Should().Be(0);
+        
         ZeroByte.TryParse(0, out var refinedValue, out var failureMessage).Should().BeTrue();
         refinedValue.Should().Be(refined);
         failureMessage.Should().BeNull();
