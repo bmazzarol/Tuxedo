@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Tuxedo.Tests;
 
-using LocationCodeString = Refined<Matches<LocationCodeRegex>, string>;
+using LocationCodeString = Raw<string>.Refined<Matches<LocationCodeRegex>>;
 
 public readonly partial struct LocationCodeRegex : IConstant<LocationCodeRegex, Regex>
 {
@@ -23,12 +23,8 @@ public sealed class MatchesRefinementTests
         var refined = (LocationCodeString)"1234";
         refined.Value.Should().Be("1234");
 
-        Refined
-            .TryRefine<Matches<LocationCodeRegex>, string>(
-                "1234",
-                out var refinedValue,
-                out var failureMessage
-            )
+        LocationCodeString
+            .TryParse("1234", out var refinedValue, out var failureMessage)
             .Should()
             .BeTrue();
         refinedValue.Should().Be(refined);
@@ -44,10 +40,7 @@ public sealed class MatchesRefinementTests
         op.Should()
             .Throw<RefinementFailureException>()
             .WithMessage("Value '12345' does not match the regex '^[1-9]{1}[0-9]{3}$'");
-        Refined
-            .TryRefine<Matches<LocationCodeRegex>, string>("12345", out _, out var failureMessage)
-            .Should()
-            .BeFalse();
+        LocationCodeString.TryParse("12345", out _, out var failureMessage).Should().BeFalse();
         failureMessage.Should().Be("Value '12345' does not match the regex '^[1-9]{1}[0-9]{3}$'");
     }
 }

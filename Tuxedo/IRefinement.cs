@@ -23,6 +23,7 @@ public interface IRefinement<out TThis, in T>
     /// <param name="value">value to test for refinement</param>
     /// <param name="failureMessage">failure message returned if the value cannot be refined</param>
     /// <returns>true if the value can be refined; otherwise, false</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     bool CanBeRefined(T value, [NotNullWhen(false)] out string? failureMessage)
     {
         if (IsRefined(value))
@@ -73,6 +74,7 @@ public interface IRefinement<out TThis, in TIn, TOut>
     /// <param name="refinedValue">refined value</param>
     /// <param name="failureMessage">failure message returned if the value cannot be refined</param>
     /// <returns>true if the value can be refined; otherwise, false</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     bool CanBeRefined(
         TIn value,
         [NotNullWhen(true)] out TOut? refinedValue,

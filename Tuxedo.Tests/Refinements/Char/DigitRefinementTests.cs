@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Tuxedo.Tests.Refinements.Char;
 
-using DigitChar = Refined<Digit, char>;
+using DigitChar = Raw<char>.Refined<Digit>;
 
 public sealed class DigitRefinementTests
 {
@@ -14,10 +14,7 @@ public sealed class DigitRefinementTests
         var refined = (DigitChar)'1';
         refined.Value.Should().Be('1');
 
-        Refined
-            .TryRefine<Digit, char>('1', out var refinedValue, out var failureMessage)
-            .Should()
-            .BeTrue();
+        DigitChar.TryParse('1', out var refinedValue, out var failureMessage).Should().BeTrue();
         refinedValue.Should().Be(refined);
         failureMessage.Should().BeNull();
     }
@@ -29,7 +26,7 @@ public sealed class DigitRefinementTests
         op.Should()
             .Throw<RefinementFailureException>()
             .WithMessage("Character must be a digit, but was 'a'");
-        Refined.TryRefine<Digit, char>('a', out _, out var failureMessage).Should().BeFalse();
+        DigitChar.TryParse('a', out _, out var failureMessage).Should().BeFalse();
         failureMessage.Should().Be("Character must be a digit, but was 'a'");
     }
 }

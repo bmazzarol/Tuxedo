@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Tuxedo.Tests;
 
-using NotZeroByte = Refined<NotBe<Zero<byte>, byte>, byte>;
+using NotZeroByte = Raw<byte>.Refined<NotBe<Zero<byte>, byte>>;
 
 public sealed class NotBeRefinementTests
 {
@@ -14,14 +14,7 @@ public sealed class NotBeRefinementTests
         var refined = (NotZeroByte)1;
         refined.Value.Should().Be(1);
 
-        Refined
-            .TryRefine<NotBe<Zero<byte>, byte>, byte>(
-                1,
-                out var refinedValue,
-                out var failureMessage
-            )
-            .Should()
-            .BeTrue();
+        NotZeroByte.TryParse(1, out var refinedValue, out var failureMessage).Should().BeTrue();
         refinedValue.Should().Be(refined);
         failureMessage.Should().BeNull();
     }
@@ -33,10 +26,7 @@ public sealed class NotBeRefinementTests
         op.Should()
             .Throw<RefinementFailureException>()
             .WithMessage("Value must not be zero, but was '0'");
-        Refined
-            .TryRefine<NotBe<Zero<byte>, byte>, byte>(0, out _, out var failureMessage)
-            .Should()
-            .BeFalse();
+        NotZeroByte.TryParse(0, out _, out var failureMessage).Should().BeFalse();
         failureMessage.Should().Be("Value must not be zero, but was '0'");
     }
 }

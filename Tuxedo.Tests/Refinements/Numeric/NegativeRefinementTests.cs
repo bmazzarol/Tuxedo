@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Tuxedo.Tests;
 
-using NegativeFloat = Refined<Negative<float>, float>;
+using NegativeFloat = Raw<float>.Refined<Negative<float>>;
 
 public class NegativeRefinementTests
 {
@@ -14,8 +14,8 @@ public class NegativeRefinementTests
         var refined = (NegativeFloat)(-1.0f);
         refined.Value.Should().Be(-1.0f);
 
-        Refined
-            .TryRefine<Negative<float>, float>(-1.0f, out var refinedValue, out var failureMessage)
+        NegativeFloat
+            .TryParse(-1.0f, out var refinedValue, out var failureMessage)
             .Should()
             .BeTrue();
         refinedValue.Should().Be(refined);
@@ -29,10 +29,7 @@ public class NegativeRefinementTests
         op.Should()
             .Throw<RefinementFailureException>()
             .WithMessage("Value must be negative, but was '1'");
-        Refined
-            .TryRefine<Negative<float>, float>(1.0f, out _, out var failureMessage)
-            .Should()
-            .BeFalse();
+        NegativeFloat.TryParse(1.0f, out _, out var failureMessage).Should().BeFalse();
         failureMessage.Should().Be("Value must be negative, but was '1'");
     }
 }

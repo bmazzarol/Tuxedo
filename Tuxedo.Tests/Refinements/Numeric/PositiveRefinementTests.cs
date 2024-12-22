@@ -1,9 +1,10 @@
 ﻿using FluentAssertions;
 using Tuxedo.Refinements;
-using Tuxedo.Types;
 using Xunit;
 
 namespace Tuxedo.Tests;
+
+using PositiveInt = Raw<int>.Refined<Positive<int>>;
 
 public class PositiveRefinementTests
 {
@@ -22,10 +23,7 @@ public class PositiveRefinementTests
             throw new Xunit.Sdk.XunitException("Pattern match failed");
         }
 
-        Refined
-            .TryRefine<Positive<int>, int>(1, out var refinedValue, out var failureMessage)
-            .Should()
-            .BeTrue();
+        PositiveInt.TryParse(1, out var refinedValue, out var failureMessage).Should().BeTrue();
         refinedValue.Value.Should().Be(refined.Value);
         failureMessage.Should().BeNull();
     }
@@ -40,7 +38,7 @@ public class PositiveRefinementTests
             .Which;
         failure.Value.Should().Be(-1);
         failure.ValueType.Should().Be<int>();
-        Refined.TryRefine<Positive<int>, int>(-1, out _, out var failureMessage).Should().BeFalse();
+        PositiveInt.TryParse(-1, out _, out var failureMessage).Should().BeFalse();
         failureMessage.Should().Be("Value must be positive, but was '-1'");
     }
 }

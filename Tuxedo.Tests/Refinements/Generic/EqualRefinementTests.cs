@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Tuxedo.Tests;
 
-using ExactlyFiveMinutes = Refined<Equal<TimeSpan, FiveMinutes>, TimeSpan>;
+using ExactlyFiveMinutes = Raw<TimeSpan>.Refined<Equal<TimeSpan, FiveMinutes>>;
 
 public sealed class FiveMinutes : IConstant<FiveMinutes, TimeSpan>
 {
@@ -19,12 +19,8 @@ public sealed class EqualRefinementTests
         var refined = (ExactlyFiveMinutes)TimeSpan.FromMinutes(5);
         refined.Value.Should().Be(TimeSpan.FromMinutes(5));
 
-        Refined
-            .TryRefine<Equal<TimeSpan, FiveMinutes>, TimeSpan>(
-                TimeSpan.FromMinutes(5),
-                out var refinedValue,
-                out var failureMessage
-            )
+        ExactlyFiveMinutes
+            .TryParse(TimeSpan.FromMinutes(5), out var refinedValue, out var failureMessage)
             .Should()
             .BeTrue();
         refinedValue.Should().Be(refined);
@@ -38,12 +34,8 @@ public sealed class EqualRefinementTests
         op.Should()
             .Throw<RefinementFailureException>()
             .WithMessage("Value must be equal to '00:05:00', but was '00:06:00'");
-        Refined
-            .TryRefine<Equal<TimeSpan, FiveMinutes>, TimeSpan>(
-                TimeSpan.FromMinutes(6),
-                out _,
-                out var failureMessage
-            )
+        ExactlyFiveMinutes
+            .TryParse(TimeSpan.FromMinutes(6), out _, out var failureMessage)
             .Should()
             .BeFalse();
         failureMessage.Should().Be("Value must be equal to '00:05:00', but was '00:06:00'");

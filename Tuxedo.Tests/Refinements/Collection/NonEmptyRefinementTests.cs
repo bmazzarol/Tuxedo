@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Tuxedo.Tests;
 
-using NonEmptyString = Refined<NonEmpty, string>;
+using NonEmptyString = Raw<string>.Refined<NonEmpty>;
 
 public sealed class NonEmptyRefinementTests
 {
@@ -14,8 +14,8 @@ public sealed class NonEmptyRefinementTests
         var refined = (NonEmptyString)"a";
         refined.Value.Should().Be("a");
 
-        Refined
-            .TryRefine<NonEmpty, string>("a", out var refinedValue, out var failureMessage)
+        NonEmptyString
+            .TryParse("a", out var refinedValue, out var failureMessage)
             .Should()
             .BeTrue();
         refinedValue.Should().Be(refined);
@@ -27,10 +27,7 @@ public sealed class NonEmptyRefinementTests
     {
         var op = () => (NonEmptyString)string.Empty;
         op.Should().Throw<RefinementFailureException>().WithMessage("Value must be non-empty");
-        Refined
-            .TryRefine<NonEmpty, string>(string.Empty, out _, out var failureMessage)
-            .Should()
-            .BeFalse();
+        NonEmptyString.TryParse(string.Empty, out _, out var failureMessage).Should().BeFalse();
         failureMessage.Should().Be("Value must be non-empty");
     }
 
@@ -38,8 +35,8 @@ public sealed class NonEmptyRefinementTests
     public void Case3()
     {
         var collection = new[] { 1, 2, 3 };
-        Refined
-            .TryRefine<NonEmpty, int[]>(collection, out var refinedValue, out var failureMessage)
+        Raw<int[]>
+            .Refined<NonEmpty>.TryParse(collection, out var refinedValue, out var failureMessage)
             .Should()
             .BeTrue();
         failureMessage.Should().BeNull();
@@ -49,8 +46,8 @@ public sealed class NonEmptyRefinementTests
     [Fact(DisplayName = "A non-empty enumerable can be refined")]
     public void Case4()
     {
-        Refined
-            .TryRefine<NonEmpty, IEnumerable<int>>(
+        Raw<IEnumerable<int>>
+            .Refined<NonEmpty>.TryParse(
                 Enumerable.Range(1, 3),
                 out var refinedValue,
                 out var failureMessage
