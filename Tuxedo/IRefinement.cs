@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 
 namespace Tuxedo;
 
@@ -23,7 +22,6 @@ public interface IRefinement<out TThis, in T>
     /// <param name="value">value to test for refinement</param>
     /// <param name="failureMessage">failure message returned if the value cannot be refined</param>
     /// <returns>true if the value can be refined; otherwise, false</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     bool CanBeRefined(T value, [NotNullWhen(false)] out string? failureMessage)
     {
         if (IsRefined(value))
@@ -41,7 +39,6 @@ public interface IRefinement<out TThis, in T>
     /// </summary>
     /// <param name="value">value to test</param>
     /// <returns>true if the value is refined; otherwise, false</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     bool IsRefined(T value);
 
     /// <summary>
@@ -49,7 +46,6 @@ public interface IRefinement<out TThis, in T>
     /// </summary>
     /// <param name="value">value to refine</param>
     /// <returns>failure message</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     string BuildFailureMessage(T value);
 }
 
@@ -74,7 +70,6 @@ public interface IRefinement<out TThis, in TIn, TOut>
     /// <param name="refinedValue">refined value</param>
     /// <param name="failureMessage">failure message returned if the value cannot be refined</param>
     /// <returns>true if the value can be refined; otherwise, false</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     bool CanBeRefined(
         TIn value,
         [NotNullWhen(true)] out TOut? refinedValue,
@@ -97,7 +92,6 @@ public interface IRefinement<out TThis, in TIn, TOut>
     /// <param name="value">value to test</param>
     /// <param name="refinedValue">refined value</param>
     /// <returns>true if the value is refined; otherwise, false</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     bool IsRefined(TIn value, [NotNullWhen(true)] out TOut refinedValue);
 
     /// <summary>
@@ -105,6 +99,5 @@ public interface IRefinement<out TThis, in TIn, TOut>
     /// </summary>
     /// <param name="value">value to refine</param>
     /// <returns>failure message</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     string BuildFailureMessage(TIn value);
 }
