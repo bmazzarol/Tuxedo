@@ -5,14 +5,8 @@ namespace Tuxedo.Tests;
 
 public static class GenericRefinements
 {
-    [Refinement("The value must be '{default(TOther).Value}', instead found '{value}'")]
-    internal static bool Equal<T, TOther>(T value)
-        where TOther : struct, IConstant<TOther, T> => Equals(value, default(TOther).Value);
-}
-
-public readonly record struct FortyTwo : IConstant<FortyTwo, int>
-{
-    public int Value => 42;
+    [Refinement("The value must be '42', instead found '{value}'")]
+    internal static bool FortyTwo(int value) => Equals(value, 42);
 }
 
 public sealed class GenericRefinementTests
@@ -21,7 +15,7 @@ public sealed class GenericRefinementTests
     public void Case1()
     {
         const int value = 42;
-        Refined<int, Equal<int, FortyTwo>> refined = value;
+        var refined = (FortyTwoInt)value;
         refined.Value.Should().Be(42);
     }
 
@@ -32,9 +26,9 @@ public sealed class GenericRefinementTests
     {
         const int value = 43;
         Assert
-            .Throws<RefinementFailureException>(() => (Refined<int, Equal<int, FortyTwo>>)value)
+            .Throws<RefinementFailureException>(() => (FortyTwoInt)value)
             .Message.Should()
             .Be("The value must be '42', instead found '43'");
-        Refined.TryRefine(value, out Refined<int, Equal<int, FortyTwo>> _).Should().BeFalse();
+        FortyTwoInt.TryParse(value, out _, out _).Should().BeFalse();
     }
 }

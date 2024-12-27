@@ -18,7 +18,7 @@ public class BoolRefinementsTests
     public void Case1()
     {
         const bool value = true;
-        Refined<bool, True> refined = value;
+        var refined = (TrueBool)value;
         refined.Value.Should().BeTrue();
     }
 
@@ -26,7 +26,7 @@ public class BoolRefinementsTests
     public void Case2()
     {
         const bool value = false;
-        Refined<bool, False> refined = value;
+        var refined = (FalseBool)value;
         refined.Value.Should().BeFalse();
     }
 
@@ -35,9 +35,9 @@ public class BoolRefinementsTests
     {
         const bool value = true;
         Assert
-            .Throws<RefinementFailureException>(() => (Refined<bool, False>)value)
+            .Throws<RefinementFailureException>(() => (FalseBool)value)
             .Message.Should()
             .Be("The boolean value must be 'False', instead found 'True'");
-        Refined.TryRefine(value, out Refined<bool, False> _).Should().BeFalse();
+        FalseBool.TryParse(value, out _, out _).Should().BeFalse();
     }
 }

@@ -5,21 +5,24 @@ namespace Tuxedo.Tests;
 
 public static class CustomAccessModifier
 {
-    [Refinement("`{value}` is not a whitespace character", isPublic: false)]
-    public static bool IsWhiteSpace(char value) => char.IsWhiteSpace(value);
+    [Refinement(
+        "`{value}` is not a whitespace character",
+        isInternal: true,
+        dropTypeFromName: false
+    )]
+    public static bool WhiteSpace(char value) => char.IsWhiteSpace(value);
 }
 
 public sealed class CustomAccessModifierTests
 {
-    private static string AppendWhiteSpace(char value, Refined<char, IsWhiteSpace> ws) =>
-        $"{value} {ws.Value}";
+    private static string AppendWhiteSpace(char value, WhiteSpaceChar ws) => $"{value} {ws.Value}";
 
     [Fact(DisplayName = "Internal refinements can be used in the same assembly")]
     public void Case1()
     {
         const char value = ' ';
-        Refined<char, IsWhiteSpace> ws = value;
+        var ws = (WhiteSpaceChar)value;
         AppendWhiteSpace(value, ws).Should().Be("   ");
-        typeof(IsWhiteSpace).IsPublic.Should().BeFalse();
+        typeof(WhiteSpaceChar).IsPublic.Should().BeFalse();
     }
 }

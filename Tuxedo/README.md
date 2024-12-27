@@ -1,3 +1,0 @@
-# Tuxedo
-
-Coming very soon!

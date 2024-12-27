@@ -11,7 +11,11 @@ namespace Tuxedo.Tests
 
     public static class CustomTypeRefinement
     {
-        [Refinement("The widget must have a valid Id and Name")]
+        [Refinement(
+            "The widget must have a valid Id and Name",
+            isInternal: false,
+            dropTypeFromName: true
+        )]
         public static bool ValidWidget(Widget widget) =>
             widget.Id > 0 && !string.IsNullOrWhiteSpace(widget.Name);
     }
@@ -22,7 +26,7 @@ namespace Tuxedo.Tests
         public void Case1()
         {
             var widget = new Widget(1, "Widget");
-            Refined<Widget, ValidWidget> refined = widget;
+            var refined = (ValidWidget)widget;
             refined.Value.Should().Be(widget);
             refined.Value.Id.Should().Be(1);
             refined.Value.Name.Should().Be("Widget");
@@ -33,10 +37,10 @@ namespace Tuxedo.Tests
         {
             var widget = new Widget(0, "Widget");
             Assert
-                .Throws<RefinementFailureException>(() => (Refined<Widget, ValidWidget>)widget)
+                .Throws<RefinementFailureException>(() => (ValidWidget)widget)
                 .Message.Should()
                 .Be("The widget must have a valid Id and Name");
-            Refined.TryRefine(widget, out Refined<Widget, ValidWidget> _).Should().BeFalse();
+            ValidWidget.TryParse(widget, out _, out _).Should().BeFalse();
         }
     }
 }
