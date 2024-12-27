@@ -26,7 +26,7 @@ public sealed class GenericRefinementTests
     {
         const int value = 43;
         Assert
-            .Throws<RefinementFailureException>(() => (FortyTwoInt)value)
+            .Throws<InvalidOperationException>(() => (FortyTwoInt)value)
             .Message.Should()
             .Be("The value must be '42', instead found '43'");
         FortyTwoInt.TryParse(value, out _, out _).Should().BeFalse();

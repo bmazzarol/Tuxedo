@@ -177,7 +177,7 @@ refined.IsEmpty.Should().BeFalse();
 ```
 
 If the alternative refined value is the same as the raw value, then only one
-implicit conversion method will be generated for the refined value. not the
+implicit conversion method will be generated for the refined value, not the
 raw value.
 
 ## Are these Refinement types?

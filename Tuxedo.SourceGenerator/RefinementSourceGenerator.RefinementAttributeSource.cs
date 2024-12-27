@@ -10,7 +10,7 @@ public sealed partial class RefinementSourceGenerator
         /// Marks a method as a refinement to a type
         /// </summary>
         [AttributeUsage(AttributeTargets.Method)]
-        public sealed class RefinementAttribute : Attribute
+        internal sealed class RefinementAttribute : Attribute
         {
             /// <summary>
             /// The message to display when the refinement fails.

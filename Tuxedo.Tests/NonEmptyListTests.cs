@@ -46,7 +46,7 @@ public class NonEmptyListTests
     {
         List<string> value = [];
         Assert
-            .Throws<RefinementFailureException>(() => (NonEmptyList<string>)value)
+            .Throws<InvalidOperationException>(() => (NonEmptyList<string>)value)
             .Message.Should()
             .Be("The list must not be empty.");
         NonEmptyList<string>.TryParse(value, out _, out _).Should().BeFalse();

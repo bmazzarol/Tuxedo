@@ -37,7 +37,7 @@ namespace Tuxedo.Tests
         {
             var widget = new Widget(0, "Widget");
             Assert
-                .Throws<RefinementFailureException>(() => (ValidWidget)widget)
+                .Throws<InvalidOperationException>(() => (ValidWidget)widget)
                 .Message.Should()
                 .Be("The widget must have a valid Id and Name");
             ValidWidget.TryParse(widget, out _, out _).Should().BeFalse();

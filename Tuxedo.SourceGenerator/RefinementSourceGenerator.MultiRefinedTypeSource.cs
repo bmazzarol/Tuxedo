@@ -83,6 +83,7 @@ public sealed partial class RefinementSourceGenerator
                 /// </summary>
                 /// <param name="value">raw value</param>
                 /// <returns>refined value</returns>
+                /// <exception cref="InvalidOperationException">if the refinement fails</exception>
                 public static explicit operator {{model.RefinedType}}{{model.Generics}}({{model.RawType}} value)
                 {
                     return Parse(value);
@@ -118,10 +119,10 @@ public sealed partial class RefinementSourceGenerator
                 /// </summary>
                 /// <param name="value">raw value</param>
                 /// <returns>refined value</returns>
-                /// <exception cref="RefinementFailureException">if the refinement fails</exception>
+                /// <exception cref="InvalidOperationException">if the refinement fails</exception>
                 public static {{model.RefinedType}}{{model.Generics}} Parse({{model.RawType}} value)
                 {
-                    return TryParse(value, out var result, out var failureMessage) ? result : throw new RefinementFailureException(value, failureMessage);
+                    return TryParse(value, out var result, out var failureMessage) ? result : throw new InvalidOperationException(failureMessage);
                 }
                 
                 /// <summary>

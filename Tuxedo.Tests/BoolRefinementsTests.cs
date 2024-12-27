@@ -35,7 +35,7 @@ public class BoolRefinementsTests
     {
         const bool value = true;
         Assert
-            .Throws<RefinementFailureException>(() => (FalseBool)value)
+            .Throws<InvalidOperationException>(() => (FalseBool)value)
             .Message.Should()
             .Be("The boolean value must be 'False', instead found 'True'");
         FalseBool.TryParse(value, out _, out _).Should().BeFalse();

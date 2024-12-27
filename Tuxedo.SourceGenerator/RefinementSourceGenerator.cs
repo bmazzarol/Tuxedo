@@ -1,5 +1,3 @@
-#pragma warning disable RS1038
-
 using System.Collections.Immutable;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -25,11 +23,7 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
 
         context.RegisterSourceOutput(
             context.CompilationProvider,
-            (ctx, _) =>
-            {
-                ctx.AddSource("RefinementAttribute.g", RefinementAttributeSource);
-                ctx.AddSource("RefinementFailureException.g", RefinementFailureExceptionSource);
-            }
+            (ctx, _) => ctx.AddSource("RefinementAttribute.g", RefinementAttributeSource)
         );
 
         context.RegisterSourceOutput(
