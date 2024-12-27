@@ -1,19 +1,5 @@
 {
-    "metadata": [
-        {
-            "src": [
-                {
-                    "files": [
-                        "**/Tuxedo.csproj"
-                    ],
-                    "src": "../../"
-                }
-            ],
-            "dest": "api",
-            "memberLayout": "separatePages",
-            "namespaceLayout": "nested"
-        }
-    ],
+    "metadata": [],
     "build": {
         "content": [
             {

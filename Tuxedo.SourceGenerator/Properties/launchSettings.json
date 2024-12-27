@@ -3,7 +3,7 @@
   "profiles": {
     "DebugRoslynSourceGenerator": {
       "commandName": "DebugRoslynComponent",
-      "targetProject": "../Tuxedo.SourceGenerators.Sample.csproj"
+      "targetProject": "../Tuxedo.Tests.csproj"
     }
   }
 }

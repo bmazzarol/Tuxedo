@@ -1,26 +1,10 @@
-<!-- markdownlint-disable MD033 MD041 -->
-<div align="center">
+<!-- markdownlint-disable MD013 -->
 
-<img src="jacket-icon.png" alt="Tuxedo" width="150px"/>
+# ![Tuxedo](https://raw.githubusercontent.com/bmazzarol/Tuxedo/main/jacket-small-icon.png) Tuxedo
 
-# Tuxedo
-
-[:running: **_Getting Started_**](https://bmazzarol.github.io/Tuxedo/articles/getting-started.html)
-|
-[:books: **_Documentation_**](https://bmazzarol.github.io/Tuxedo)
+<!-- markdownlint-enable MD013 -->
 
 [![Nuget](https://img.shields.io/nuget/v/tuxedo.sourcegenerator)](https://www.nuget.org/packages/tuxedo.sourcegenerator/)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=bmazzarol_Tuxedo&metric=coverage)](https://sonarcloud.io/summary/new_code?id=bmazzarol_Tuxedo)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bmazzarol_Tuxedo&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=bmazzarol_Tuxedo)
-[![CD Build](https://github.com/bmazzarol/tuxedo/actions/workflows/cd-build.yml/badge.svg)](https://github.com/bmazzarol/tuxedo/actions/workflows/cd-build.yml)
-[![Check Markdown](https://github.com/bmazzarol/tuxedo/actions/workflows/check-markdown.yml/badge.svg)](https://github.com/bmazzarol/tuxedo/actions/workflows/check-markdown.yml)
-
-Refined types for the suave :cocktail: .NET developer
-
-</div>
-<!-- markdownlint-enable MD033 MD041 -->
-
-## Why?
 
 More precise types can help to reduce the number of bugs in your code. Tuxedo
 provides a source generator that can turn simple conditions (predicates)

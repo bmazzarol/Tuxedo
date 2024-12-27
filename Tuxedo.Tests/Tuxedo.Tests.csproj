@@ -18,10 +18,7 @@
     </ItemGroup>
     
     <ItemGroup>
-        <ProjectReference Include="..\Tuxedo\Tuxedo.csproj" />
-        <ProjectReference Include="..\Tuxedo.SourceGenerators\Tuxedo.SourceGenerators.csproj"
-                          OutputItemType="Analyzer"
-                          ReferenceOutputAssembly="false"/>
+        <ProjectReference Include="..\Tuxedo.SourceGenerator\Tuxedo.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     </ItemGroup>
 
 </Project>

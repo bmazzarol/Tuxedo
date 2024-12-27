@@ -2,21 +2,18 @@
 
     <PropertyGroup>
         <Authors>Ben Mazzarol</Authors>
-        <RootNamespace>Tuxedo</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup>
-        <PackageId>Tuxedo</PackageId>
+        <PackageId>Tuxedo.SourceGenerator</PackageId>
         <Title>Tuxedo</Title>
-        <Description>Refinement types for .NET</Description>
-        <PackageTags>C#, Refinement types</PackageTags>
+        <Description>Refined types for .NET</Description>
+        <PackageTags>C#, Refined types, Source Generator</PackageTags>
         <PackageProjectUrl>https://bmazzarol.github.io/Tuxedo</PackageProjectUrl>
         <RepositoryUrl>https://github.com/bmazzarol/Tuxedo</RepositoryUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <Copyright>Copyright (c) Ben Mazzarol. All rights reserved.</Copyright>
         <ProjectGuid>f4cbe16e-9509-4e12-a511-fcc7aaf38756</ProjectGuid>
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <IsPackable>true</IsPackable>
@@ -26,23 +23,21 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        <TargetFramework>netstandard2.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <AnalysisMode>Recommended</AnalysisMode>
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
         <OutputType>library</OutputType>
         <LangVersion>latest</LangVersion>
+        <IsRoslynComponent>true</IsRoslynComponent>
     </PropertyGroup>
 
     <ItemGroup>
         <None Include="README.md" Pack="true" PackagePath="\"/>
         <None Include="..\jacket-icon.png" Pack="true" PackagePath="\"/>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <Content Include="build\**" Pack="true" PackagePath="build"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -63,20 +58,14 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
-
-    <ItemGroup>
-        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-            <_Parameter1>Tuxedo.Tests</_Parameter1>
-        </AssemblyAttribute>
-    </ItemGroup>
-    
-    <Target Name="BeforePack" AfterTargets="Build">
-        <Message Importance="high" Text="Building Tuxedo.SourceGenerators"/>
-        <Exec Command="dotnet build -c $(Configuration) ..\Tuxedo.SourceGenerators\Tuxedo.SourceGenerators.csproj"/>
-    </Target>
     
     <ItemGroup>
-        <None Include="..\Tuxedo.SourceGenerators\bin\$(Configuration)\netstandard2.0\Tuxedo.SourceGenerators.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.11.0"/>
     </ItemGroup>
 
 </Project>
