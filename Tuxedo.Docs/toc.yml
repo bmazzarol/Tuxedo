@@ -2,5 +2,6 @@ items:
   - name: About
     href: index.md
   - name: Getting Started
-    href: articles/getting-started.md
-    expanded: true
+    href: getting-started.md
+  - name: Examples
+    href: articles/

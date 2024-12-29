@@ -1,0 +1,7 @@
+items:
+  - name: Singleton Types
+    href: singleton-types.md
+  - name: Alternative Values
+    href: alternative-values.md
+  - name: Dependent Types
+    href: dependent-types.md
