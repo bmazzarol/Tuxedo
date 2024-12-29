@@ -1,5 +1,5 @@
 using FluentAssertions;
-using Xunit;
+using Tuxedo.Tests.Extensions;
 
 namespace Tuxedo.Tests;
 
@@ -60,4 +60,15 @@ public class DateOnlyExample
     }
 
     #endregion
+
+
+    [Fact(DisplayName = "DateOnlyString refinement snapshot is correct")]
+    public Task Case3()
+    {
+        return """
+            [Refinement("The value must be a valid date, but was '{value}'")]
+            private static bool DateOnly(string value, out DateOnly dateOnly) =>
+                System.DateOnly.TryParse(value, out dateOnly);
+            """.VerifyRefinement();
+    }
 }

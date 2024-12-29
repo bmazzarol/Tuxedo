@@ -48,7 +48,7 @@ public sealed partial class RefinementSourceGenerator
             /// A refined {{model.RawType.EscapeXml()}} based on the {{model.Predicate.EscapeXml()}} refinement predicate
             /// </summary>
             {{model.AccessModifier}} readonly partial struct {{model.RefinedType}}{{model.Generics}}
-            {{model.GenericConstraints}}
+                {{model.GenericConstraints}}
             {
                 private readonly {{model.RawType}}? _value;
 

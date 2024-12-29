@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Xunit;
+using Tuxedo.Tests.Extensions;
 
 namespace Tuxedo.Tests;
 
@@ -20,5 +20,14 @@ public sealed class CustomAccessModifierTests
         var ws = (WhiteSpaceChar)value;
         AppendWhiteSpace(value, ws).Should().Be("   ");
         typeof(WhiteSpaceChar).IsPublic.Should().BeFalse();
+    }
+
+    [Fact(DisplayName = "WhiteSpace refinement snapshot is correct and should be internal")]
+    public Task Case2()
+    {
+        return """
+            [Refinement("`{value}` is not a whitespace character", IsInternal = true)]
+            public static bool WhiteSpace(char value) => char.IsWhiteSpace(value);
+            """.VerifyRefinement();
     }
 }

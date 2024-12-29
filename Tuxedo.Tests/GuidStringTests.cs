@@ -1,5 +1,5 @@
 using FluentAssertions;
-using Xunit;
+using Tuxedo.Tests.Extensions;
 
 namespace Tuxedo.Tests;
 
@@ -53,5 +53,14 @@ public sealed class GuidStringTests
             .Message.Should()
             .Be("The value must be a valid GUID, but was 'not a guid'");
         GuidString.TryParse(value, out _, out _).Should().BeFalse();
+    }
+
+    [Fact(DisplayName = "GuidString refinement snapshot is correct")]
+    public Task Case3()
+    {
+        return """
+            [Refinement("The value must be a valid GUID, but was '{value}'")]
+            private static bool Guid(string value, out Guid guid) => System.Guid.TryParse(value, out guid);
+            """.VerifyRefinement();
     }
 }

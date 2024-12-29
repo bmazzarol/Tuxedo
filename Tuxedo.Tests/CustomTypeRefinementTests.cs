@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Tuxedo.Tests.Custom;
-using Xunit;
+using Tuxedo.Tests.Extensions;
 
 namespace Tuxedo.Tests
 {
@@ -37,6 +37,18 @@ namespace Tuxedo.Tests
                 .Message.Should()
                 .Be("The widget must have a valid Id and Name");
             ValidWidget.TryParse(widget, out _, out _).Should().BeFalse();
+        }
+
+        [Fact(
+            DisplayName = "ValidWidget refinement snapshot is correct and should be name via the attribute"
+        )]
+        public Task Case3()
+        {
+            return """
+                [Refinement("The widget must have a valid Id and Name", Name = nameof(ValidWidget))]
+                private static bool Predicate(Widget widget) =>
+                    widget.Id > 0 && !string.IsNullOrWhiteSpace(widget.Name);
+                """.VerifyRefinement();
         }
     }
 }

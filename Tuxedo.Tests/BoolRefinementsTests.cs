@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Xunit;
+using Tuxedo.Tests.Extensions;
 
 namespace Tuxedo.Tests;
 
@@ -39,5 +39,23 @@ public class BoolRefinementsTests
             .Message.Should()
             .Be("The boolean value must be 'False', instead found 'True'");
         FalseBool.TryParse(value, out _, out _).Should().BeFalse();
+    }
+
+    [Fact(DisplayName = "FalseBool refinement snapshot is correct")]
+    public Task Case4()
+    {
+        return """
+            [Refinement("The boolean value must be 'False', instead found '{value}'")]
+            internal static bool False(bool value) => !value;
+            """.VerifyRefinement();
+    }
+
+    [Fact(DisplayName = "TrueBool refinement snapshot is correct")]
+    public Task Case5()
+    {
+        return """
+            [Refinement("The boolean value must be 'True', instead found '{value}'")]
+            internal static bool True(bool value) => value;
+            """.VerifyRefinement();
     }
 }

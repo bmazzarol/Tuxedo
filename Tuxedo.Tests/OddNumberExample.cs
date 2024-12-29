@@ -1,5 +1,5 @@
 using FluentAssertions;
-using Xunit;
+using Tuxedo.Tests.Extensions;
 
 namespace Tuxedo.Tests;
 
@@ -52,5 +52,15 @@ public class OddNumberExample
         oddInt.Value.Should().Be(3f);
         failureMessage.Should().BeNull();
         (odd == oddInt).Should().BeTrue();
+    }
+
+    [Fact(DisplayName = "OddT refinement snapshot is correct with generics and constraints")]
+    public Task Case4()
+    {
+        return """
+            [Refinement("The number must be an odd number, but was '{value}'")]
+            internal static bool Odd<T>(T value)
+                where T : System.Numerics.INumberBase<T> => T.IsOddInteger(value);
+            """.VerifyRefinement();
     }
 }
