@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Tuxedo.SourceGenerator.Extensions;
 
 namespace Tuxedo.SourceGenerator;
 
@@ -6,18 +7,10 @@ public sealed partial class RefinementSourceGenerator
 {
     private readonly ref struct RefinementAttributeParts
     {
-        private static readonly Dictionary<int, string> ParameterNameLookup =
-            new()
-            {
-                [0] = nameof(FailureMessage),
-                [1] = nameof(IsInternal),
-                [2] = nameof(DropTypeFromName),
-            };
-
         public string FailureMessage { get; }
         private bool IsInternal { get; }
         public string AccessModifier => IsInternal ? "internal" : "public";
-        public bool DropTypeFromName { get; }
+        public string? Name { get; }
 
         public RefinementAttributeParts(MethodDeclarationSyntax methodDeclaration)
         {
@@ -28,24 +21,20 @@ public sealed partial class RefinementSourceGenerator
                 )
                 .ArgumentList!.Arguments;
 
-            var nameToArgs = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var kvp in ParameterNameLookup)
-            {
-                var argument = arguments.Count > kvp.Key ? arguments[kvp.Key] : null;
-                nameToArgs[kvp.Value] = argument?.Expression.ToString() ?? string.Empty;
-            }
-
-            FailureMessage = nameToArgs[nameof(FailureMessage)];
-            IsInternal = string.Equals(
-                nameToArgs[nameof(IsInternal)],
-                "true",
-                StringComparison.OrdinalIgnoreCase
-            );
-            DropTypeFromName = string.Equals(
-                nameToArgs[nameof(DropTypeFromName)],
-                "true",
-                StringComparison.OrdinalIgnoreCase
-            );
+            var nameToArgs = arguments
+                .Where(x => x.NameEquals is not null)
+                .ToDictionary(
+                    x => x.NameEquals?.Name.ToString(),
+                    syntax => syntax.Expression.ToString(),
+                    StringComparer.OrdinalIgnoreCase
+                );
+            FailureMessage = arguments[0].Expression.ToString();
+            IsInternal =
+                nameToArgs.TryGetValue(nameof(IsInternal), out var value)
+                && string.Equals(value, "true", StringComparison.Ordinal);
+            Name = nameToArgs.TryGetValue(nameof(Name), out var nameToName)
+                ? nameToName.StripOutNameOf()
+                : null;
         }
     }
 }

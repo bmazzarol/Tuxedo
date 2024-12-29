@@ -21,24 +21,21 @@ public sealed partial class RefinementSourceGenerator
             /// <summary>
             /// Indicates whether the refined type is internal, default is public
             /// </summary>
-            public bool IsInternal { get; }
+            public bool IsInternal { get; set; }
             
-            public bool DropTypeFromName { get; }
+            /// <summary>
+            /// Optional name of the refined type.
+            /// Defaults to the refinement method name + the raw type name.
+            /// </summary>
+            public string? Name { get; set; }
 
             /// <summary>
             /// Initializes a new instance of the <see cref="RefinementAttribute"/> class.
             /// </summary>
-            public RefinementAttribute(string failureMessage, bool isInternal, bool dropTypeFromName)
+            public RefinementAttribute(string failureMessage)
             {
                 FailureMessage = failureMessage;
-                IsInternal = isInternal;
-                DropTypeFromName = dropTypeFromName;
             }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="RefinementAttribute"/> class.
-            /// </summary>
-            public RefinementAttribute(string failureMessage): this(failureMessage, isInternal: false, dropTypeFromName: false) {}
         }    
         """;
 }

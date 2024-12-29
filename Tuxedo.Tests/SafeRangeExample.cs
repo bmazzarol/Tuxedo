@@ -6,18 +6,10 @@ namespace Tuxedo.Tests;
 #region DependentTypeExample
 
 // we need the predicate to not nest in the enclosing type, as it has the same name
-public static class RangePredicate
+public readonly partial struct PositiveInt
 {
-    [Refinement(
-        "The value must be a valid range where the start value is greater than the end value, '{value.End}' is not greater than '{value.Start}'",
-        isInternal: false,
-        // we need to do this here as a tuple will not produce a valid postfix to the type name
-        dropTypeFromName: true
-    )]
-    public static bool Range((int Start, int End) value) => value.Start < value.End;
-
     [Refinement("The value must be positive")]
-    public static bool Positive(int value) => value > 0;
+    private static bool Positive(int value) => value > 0;
 }
 
 /// <summary>
@@ -26,6 +18,12 @@ public static class RangePredicate
 /// </summary>
 public readonly partial struct Range
 {
+    [Refinement(
+        "The value must be a valid range where the start value is greater than the end value, '{value.End}' is not greater than '{value.Start}'",
+        Name = nameof(Range)
+    )]
+    private static bool Predicate((int Start, int End) value) => value.Start < value.End;
+
     /// <summary>
     /// Size of the range
     /// </summary>

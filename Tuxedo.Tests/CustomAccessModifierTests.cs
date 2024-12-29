@@ -5,11 +5,7 @@ namespace Tuxedo.Tests;
 
 public static class CustomAccessModifier
 {
-    [Refinement(
-        "`{value}` is not a whitespace character",
-        isInternal: true,
-        dropTypeFromName: false
-    )]
+    [Refinement("`{value}` is not a whitespace character", IsInternal = true)]
     public static bool WhiteSpace(char value) => char.IsWhiteSpace(value);
 }
 

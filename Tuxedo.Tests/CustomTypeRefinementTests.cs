@@ -9,14 +9,10 @@ namespace Tuxedo.Tests
         public sealed record Widget(int Id, string Name);
     }
 
-    public static class CustomTypeRefinement
+    public readonly partial struct ValidWidget
     {
-        [Refinement(
-            "The widget must have a valid Id and Name",
-            isInternal: false,
-            dropTypeFromName: true
-        )]
-        public static bool ValidWidget(Widget widget) =>
+        [Refinement("The widget must have a valid Id and Name", Name = nameof(ValidWidget))]
+        private static bool Predicate(Widget widget) =>
             widget.Id > 0 && !string.IsNullOrWhiteSpace(widget.Name);
     }
 

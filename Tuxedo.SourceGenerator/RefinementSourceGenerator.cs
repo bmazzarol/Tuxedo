@@ -16,16 +16,15 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
     /// <inheritdoc />
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        var provider = context.SyntaxProvider.CreateSyntaxProvider(
-            (s, _) => IsRefinementMethod(s),
-            (ctx, _) => (MethodDeclarationSyntax)ctx.Node
-        );
-
         context.RegisterSourceOutput(
             context.CompilationProvider,
             (ctx, _) => ctx.AddSource("RefinementAttribute.g", RefinementAttributeSource)
         );
 
+        var provider = context.SyntaxProvider.CreateSyntaxProvider(
+            (s, _) => IsRefinementMethod(s),
+            (ctx, _) => (MethodDeclarationSyntax)ctx.Node
+        );
         context.RegisterSourceOutput(
             context.CompilationProvider.Combine(provider.Collect()),
             (ctx, t) => GenerateRefinedTypes(ctx, t.Left, t.Right)
@@ -94,8 +93,8 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
             viewModel.RawType = firstParameterTypeInfo!.ToDisplayString();
 
             viewModel.RefinedType = BuildSafeStructName(
-                name,
-                attributeParts.DropTypeFromName ? null : viewModel.SafeRawTypeName()
+                attributeParts.Name ?? name,
+                attributeParts.Name is not null ? null : viewModel.SafeRawTypeName()
             );
 
             // try and see if there is a second out parameter

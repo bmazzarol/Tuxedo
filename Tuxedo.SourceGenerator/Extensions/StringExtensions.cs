@@ -20,4 +20,16 @@ internal static class StringExtensions
     {
         return value == null ? null : SecurityElement.Escape(value);
     }
+
+    public static string StripOutNameOf(this string value)
+    {
+        if (
+            value.StartsWith("nameof(", StringComparison.Ordinal)
+            && value.EndsWith(")", StringComparison.Ordinal)
+        )
+        {
+            return value.Substring(7, value.Length - 8);
+        }
+        return value;
+    }
 }
