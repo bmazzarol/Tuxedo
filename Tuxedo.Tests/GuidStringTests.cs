@@ -9,9 +9,9 @@ namespace Tuxedo.Tests;
 public readonly partial struct GuidString
 {
     // custom fields and methods can be added to the refined type
-    public byte[] Bytes => RefinedValue.ToByteArray();
+    public byte[] Bytes => AltValue.ToByteArray();
 
-    public bool IsEmpty => RefinedValue == System.Guid.Empty;
+    public bool IsEmpty => AltValue == System.Guid.Empty;
 
     [Refinement("The value must be a valid GUID, but was '{value}'")]
     private static bool Guid(string value, out Guid guid) => System.Guid.TryParse(value, out guid);
@@ -23,8 +23,8 @@ public sealed class GuidStringTests
     public static void Case1()
     {
         var refined = (GuidString)"6192C5ED-505C-4558-B87C-CA6E7D612B31";
-        refined.RawValue.Should().Be("6192C5ED-505C-4558-B87C-CA6E7D612B31");
-        refined.RefinedValue.Should().Be(new Guid("6192C5ED-505C-4558-B87C-CA6E7D612B31"));
+        refined.Value.Should().Be("6192C5ED-505C-4558-B87C-CA6E7D612B31");
+        refined.AltValue.Should().Be(new Guid("6192C5ED-505C-4558-B87C-CA6E7D612B31"));
         refined.Bytes.Should().NotBeEmpty();
         refined.IsEmpty.Should().BeFalse();
 

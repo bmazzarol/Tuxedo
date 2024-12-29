@@ -58,7 +58,7 @@ public class OddNumberExample
     public Task Case4()
     {
         return """
-            [Refinement("The number must be an odd number, but was '{value}'")]
+            [Refinement("The number must be an odd number, but was '{value}'", Name = "Odd")]
             internal static bool Odd<T>(T value)
                 where T : System.Numerics.INumberBase<T> => T.IsOddInteger(value);
             """.VerifyRefinement();

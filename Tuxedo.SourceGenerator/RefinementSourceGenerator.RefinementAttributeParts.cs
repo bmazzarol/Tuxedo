@@ -33,7 +33,7 @@ public sealed partial class RefinementSourceGenerator
                 nameToArgs.TryGetValue(nameof(IsInternal), out var value)
                 && string.Equals(value, "true", StringComparison.Ordinal);
             Name = nameToArgs.TryGetValue(nameof(Name), out var nameToName)
-                ? nameToName.StripOutNameOf()
+                ? nameToName.StripExpressionParts()
                 : null;
         }
     }

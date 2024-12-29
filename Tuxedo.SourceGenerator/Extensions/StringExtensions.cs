@@ -21,7 +21,7 @@ internal static class StringExtensions
         return value == null ? null : SecurityElement.Escape(value);
     }
 
-    public static string StripOutNameOf(this string value)
+    public static string StripExpressionParts(this string value)
     {
         if (
             value.StartsWith("nameof(", StringComparison.Ordinal)
@@ -30,6 +30,26 @@ internal static class StringExtensions
         {
             return value.Substring(7, value.Length - 8);
         }
-        return value;
+        return value.Replace("\"", string.Empty);
+    }
+
+    public static string? PrependIfNotNull(this string? value, string prepend)
+    {
+        return value == null ? value : $"{prepend}{value}";
+    }
+
+    public static string? RenderIfNotNull(this string? value, Func<string, string> render)
+    {
+        return value == null ? null : render(value);
+    }
+
+    public static string? LowercaseFirst(this string? value)
+    {
+        return value == null ? null : char.ToLowerInvariant(value[0]) + value.Substring(1);
+    }
+
+    public static string? UppercaseFirst(this string? value)
+    {
+        return value == null ? null : char.ToUpperInvariant(value[0]) + value.Substring(1);
     }
 }

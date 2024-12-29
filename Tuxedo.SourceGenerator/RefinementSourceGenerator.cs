@@ -1,3 +1,5 @@
+#pragma warning disable MA0051
+
 using System.Collections.Immutable;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -62,7 +64,7 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
     {
         foreach (var methodDeclaration in methodDeclarations)
         {
-            var viewModel = new MultiRefinedTypeModel();
+            var viewModel = new ViewModel();
 
             var model = compilation.GetSemanticModel(methodDeclaration.SyntaxTree);
             var methodSymbol = model.GetDeclaredSymbol(methodDeclaration)!;

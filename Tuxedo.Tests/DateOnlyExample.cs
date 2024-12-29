@@ -8,7 +8,7 @@ namespace Tuxedo.Tests;
 /// <summary>
 /// This is a refined string that must be a valid date
 /// </summary>
-public readonly partial struct DateOnlyString
+public readonly partial struct DateOnlyString : IEquatable<DateOnlyString>
 {
     [Refinement("The value must be a valid date, but was '{value}'")]
     private static bool DateOnly(string value, out DateOnly dateOnly) =>
@@ -17,7 +17,7 @@ public readonly partial struct DateOnlyString
     /// <summary>
     /// Some custom function that operates on the refined type
     /// </summary>
-    public bool IsWeekend => RefinedValue.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday;
+    public bool IsWeekend => AltValue.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday;
 }
 
 #endregion
@@ -31,9 +31,9 @@ public class DateOnlyExample
     {
         var refined = (DateOnlyString)"2021-02-28";
         // access the raw string
-        refined.RawValue.Should().Be("2021-02-28");
+        refined.Value.Should().Be("2021-02-28");
         // access the DateOnly value that was produced from the refinement process
-        refined.RefinedValue.Should().Be(DateOnly.Parse("2021-02-28"));
+        refined.AltValue.Should().Be(DateOnly.Parse("2021-02-28"));
         // they can also be split out like this
         (string str, DateOnly dte) = refined;
 
