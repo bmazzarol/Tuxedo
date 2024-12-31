@@ -49,9 +49,9 @@ public sealed class GuidStringTests
     {
         const string value = "not a guid";
         Assert
-            .Throws<InvalidOperationException>(() => (GuidString)value)
+            .Throws<ArgumentOutOfRangeException>(() => (GuidString)value)
             .Message.Should()
-            .Be("The value must be a valid GUID, but was 'not a guid'");
+            .StartWith("The value must be a valid GUID, but was 'not a guid'");
         GuidString.TryParse(value, out _, out _).Should().BeFalse();
     }
 

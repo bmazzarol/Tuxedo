@@ -45,9 +45,9 @@ public class NonEmptyListTests
     {
         List<string> value = [];
         Assert
-            .Throws<InvalidOperationException>(() => (NonEmptyList<string>)value)
+            .Throws<ArgumentOutOfRangeException>(() => (NonEmptyList<string>)value)
             .Message.Should()
-            .Be("The list must not be empty.");
+            .StartWith("The list must not be empty.");
         NonEmptyList<string>.TryParse(value, out _, out _).Should().BeFalse();
     }
 }

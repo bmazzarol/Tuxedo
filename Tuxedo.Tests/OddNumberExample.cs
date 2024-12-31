@@ -34,9 +34,9 @@ public class OddNumberExample
     public void Case2()
     {
         Assert
-            .Throws<InvalidOperationException>(() => (OddInt)2)
+            .Throws<ArgumentOutOfRangeException>(() => (OddInt)2)
             .Message.Should()
-            .Be("The number must be an odd number, but was '2'");
+            .StartWith("The number must be an odd number, but was '2'");
         OddInt.TryParse(2, out var refined, out var message).Should().BeFalse();
         message.Should().Be("The number must be an odd number, but was '2'");
         refined.Should().Be(default(OddInt));
@@ -52,6 +52,7 @@ public class OddNumberExample
         oddInt.Value.Should().Be(3f);
         failureMessage.Should().BeNull();
         (odd == oddInt).Should().BeTrue();
+        odd.Equals(oddInt).Should().BeTrue();
     }
 
     [Fact(DisplayName = "OddT refinement snapshot is correct with generics and constraints")]

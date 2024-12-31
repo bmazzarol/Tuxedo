@@ -39,7 +39,7 @@ internal readonly partial struct WhiteSpaceChar : IEquatable<WhiteSpaceChar>
     /// </summary>
     /// <param name="value">raw char</param>
     /// <returns>refined WhiteSpaceChar</returns>
-    /// <exception cref="InvalidOperationException">if the Test.WhiteSpace refinement fails</exception>
+    /// <exception cref="ArgumentOutOfRangeException">if the Test.WhiteSpace refinement fails</exception>
     public static explicit operator WhiteSpaceChar(char value)
     {
         return Parse(value);
@@ -50,10 +50,10 @@ internal readonly partial struct WhiteSpaceChar : IEquatable<WhiteSpaceChar>
     /// </summary>
     /// <param name="value">raw char</param>
     /// <returns>refined WhiteSpaceChar</returns>
-    /// <exception cref="InvalidOperationException">if the Test.WhiteSpace refinement fails</exception>
+    /// <exception cref="ArgumentOutOfRangeException">if the Test.WhiteSpace refinement fails</exception>
     public static WhiteSpaceChar Parse(char value)
     {
-        return TryParse(value, out var result, out var failureMessage) ? result : throw new InvalidOperationException(failureMessage);
+        return TryParse(value, out var result, out var failureMessage) ? result : throw new ArgumentOutOfRangeException(nameof(value), value, failureMessage);
     }
     
     /// <summary>

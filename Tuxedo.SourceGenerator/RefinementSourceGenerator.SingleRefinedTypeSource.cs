@@ -102,7 +102,7 @@ public sealed partial class RefinementSourceGenerator
                 /// </summary>
                 /// <param name="value">raw {{model.RawType.EscapeXml()}}</param>
                 /// <returns>refined {{model.RefinedTypeXmlSafeName}}</returns>
-                /// <exception cref="InvalidOperationException">if the {{model.Predicate.EscapeXml()}} refinement fails</exception>
+                /// <exception cref="ArgumentOutOfRangeException">if the {{model.Predicate.EscapeXml()}} refinement fails</exception>
                 public static explicit operator {{model.RefinedType}}{{model.Generics}}({{model.RawType}} value)
                 {
                     return Parse(value);
@@ -113,10 +113,10 @@ public sealed partial class RefinementSourceGenerator
                 /// </summary>
                 /// <param name="value">raw {{model.RawType.EscapeXml()}}</param>
                 /// <returns>refined {{model.RefinedTypeXmlSafeName}}</returns>
-                /// <exception cref="InvalidOperationException">if the {{model.Predicate.EscapeXml()}} refinement fails</exception>
+                /// <exception cref="ArgumentOutOfRangeException">if the {{model.Predicate.EscapeXml()}} refinement fails</exception>
                 public static {{model.RefinedType}}{{model.Generics}} Parse({{model.RawType}} value)
                 {
-                    return TryParse(value, out var result, out var failureMessage) ? result : throw new InvalidOperationException(failureMessage);
+                    return TryParse(value, out var result, out var failureMessage) ? result : throw new ArgumentOutOfRangeException(nameof(value), value, failureMessage);
                 }
             """;
     }

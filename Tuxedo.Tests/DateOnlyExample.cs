@@ -51,9 +51,9 @@ public class DateOnlyExample
     public void Case2()
     {
         Assert
-            .Throws<InvalidOperationException>(() => (DateOnlyString)"not a date")
+            .Throws<ArgumentOutOfRangeException>(() => (DateOnlyString)"not a date")
             .Message.Should()
-            .Be("The value must be a valid date, but was 'not a date'");
+            .StartWith("The value must be a valid date, but was 'not a date'");
         DateOnlyString.TryParse("not a date", out var refined, out var message).Should().BeFalse();
         message.Should().Be("The value must be a valid date, but was 'not a date'");
         refined.Should().Be(default(DateOnlyString));

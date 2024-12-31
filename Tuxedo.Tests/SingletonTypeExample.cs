@@ -40,9 +40,9 @@ public sealed class GenericRefinementTests
     {
         const int value = 43;
         Assert
-            .Throws<InvalidOperationException>(() => (FortyTwoInt)value)
+            .Throws<ArgumentOutOfRangeException>(() => (FortyTwoInt)value)
             .Message.Should()
-            .Be("The value must be '42', instead found '43'");
+            .StartWith("The value must be '42', instead found '43'");
         FortyTwoInt.TryParse(value, out _, out _).Should().BeFalse();
     }
 

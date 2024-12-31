@@ -39,7 +39,7 @@ public readonly partial struct ValidWidget : IEquatable<ValidWidget>
     /// </summary>
     /// <param name="value">raw Widget</param>
     /// <returns>refined ValidWidget</returns>
-    /// <exception cref="InvalidOperationException">if the Test.Predicate refinement fails</exception>
+    /// <exception cref="ArgumentOutOfRangeException">if the Test.Predicate refinement fails</exception>
     public static explicit operator ValidWidget(Widget value)
     {
         return Parse(value);
@@ -50,10 +50,10 @@ public readonly partial struct ValidWidget : IEquatable<ValidWidget>
     /// </summary>
     /// <param name="value">raw Widget</param>
     /// <returns>refined ValidWidget</returns>
-    /// <exception cref="InvalidOperationException">if the Test.Predicate refinement fails</exception>
+    /// <exception cref="ArgumentOutOfRangeException">if the Test.Predicate refinement fails</exception>
     public static ValidWidget Parse(Widget value)
     {
-        return TryParse(value, out var result, out var failureMessage) ? result : throw new InvalidOperationException(failureMessage);
+        return TryParse(value, out var result, out var failureMessage) ? result : throw new ArgumentOutOfRangeException(nameof(value), value, failureMessage);
     }
     
     /// <summary>

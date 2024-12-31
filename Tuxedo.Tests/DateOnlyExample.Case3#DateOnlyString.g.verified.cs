@@ -57,7 +57,7 @@ public readonly partial struct DateOnlyString : IEquatable<DateOnlyString>
     /// </summary>
     /// <param name="value">raw string</param>
     /// <returns>refined DateOnlyString</returns>
-    /// <exception cref="InvalidOperationException">if the Test.DateOnly refinement fails</exception>
+    /// <exception cref="ArgumentOutOfRangeException">if the Test.DateOnly refinement fails</exception>
     public static explicit operator DateOnlyString(string value)
     {
         return Parse(value);
@@ -68,10 +68,10 @@ public readonly partial struct DateOnlyString : IEquatable<DateOnlyString>
     /// </summary>
     /// <param name="value">raw string</param>
     /// <returns>refined DateOnlyString</returns>
-    /// <exception cref="InvalidOperationException">if the Test.DateOnly refinement fails</exception>
+    /// <exception cref="ArgumentOutOfRangeException">if the Test.DateOnly refinement fails</exception>
     public static DateOnlyString Parse(string value)
     {
-        return TryParse(value, out var result, out var failureMessage) ? result : throw new InvalidOperationException(failureMessage);
+        return TryParse(value, out var result, out var failureMessage) ? result : throw new ArgumentOutOfRangeException(nameof(value), value, failureMessage);
     }
 
     /// <summary>

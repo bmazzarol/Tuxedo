@@ -40,7 +40,7 @@ public readonly partial struct Odd<T> : IEquatable<Odd<T>>
     /// </summary>
     /// <param name="value">raw T</param>
     /// <returns>refined Odd&lt;T&gt;</returns>
-    /// <exception cref="InvalidOperationException">if the Test.Odd refinement fails</exception>
+    /// <exception cref="ArgumentOutOfRangeException">if the Test.Odd refinement fails</exception>
     public static explicit operator Odd<T>(T value)
     {
         return Parse(value);
@@ -51,10 +51,10 @@ public readonly partial struct Odd<T> : IEquatable<Odd<T>>
     /// </summary>
     /// <param name="value">raw T</param>
     /// <returns>refined Odd&lt;T&gt;</returns>
-    /// <exception cref="InvalidOperationException">if the Test.Odd refinement fails</exception>
+    /// <exception cref="ArgumentOutOfRangeException">if the Test.Odd refinement fails</exception>
     public static Odd<T> Parse(T value)
     {
-        return TryParse(value, out var result, out var failureMessage) ? result : throw new InvalidOperationException(failureMessage);
+        return TryParse(value, out var result, out var failureMessage) ? result : throw new ArgumentOutOfRangeException(nameof(value), value, failureMessage);
     }
     
     /// <summary>

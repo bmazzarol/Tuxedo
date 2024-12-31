@@ -34,10 +34,10 @@ public class BoolRefinementsTests
     public void Case3()
     {
         const bool value = true;
-        Assert
-            .Throws<InvalidOperationException>(() => (FalseBool)value)
-            .Message.Should()
-            .Be("The boolean value must be 'False', instead found 'True'");
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => (FalseBool)value);
+        ex.Message.Should().StartWith("The boolean value must be 'False', instead found 'True'");
+        ex.ActualValue.Should().Be(value);
+        ex.ParamName.Should().Be("value");
         FalseBool.TryParse(value, out _, out _).Should().BeFalse();
     }
 

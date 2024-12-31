@@ -33,9 +33,9 @@ namespace Tuxedo.Tests
         {
             var widget = new Widget(0, "Widget");
             Assert
-                .Throws<InvalidOperationException>(() => (ValidWidget)widget)
+                .Throws<ArgumentOutOfRangeException>(() => (ValidWidget)widget)
                 .Message.Should()
-                .Be("The widget must have a valid Id and Name");
+                .StartWith("The widget must have a valid Id and Name");
             ValidWidget.TryParse(widget, out _, out _).Should().BeFalse();
         }
 

@@ -39,7 +39,7 @@ public readonly partial struct TrueBool : IEquatable<TrueBool>
     /// </summary>
     /// <param name="value">raw bool</param>
     /// <returns>refined TrueBool</returns>
-    /// <exception cref="InvalidOperationException">if the Test.True refinement fails</exception>
+    /// <exception cref="ArgumentOutOfRangeException">if the Test.True refinement fails</exception>
     public static explicit operator TrueBool(bool value)
     {
         return Parse(value);
@@ -50,10 +50,10 @@ public readonly partial struct TrueBool : IEquatable<TrueBool>
     /// </summary>
     /// <param name="value">raw bool</param>
     /// <returns>refined TrueBool</returns>
-    /// <exception cref="InvalidOperationException">if the Test.True refinement fails</exception>
+    /// <exception cref="ArgumentOutOfRangeException">if the Test.True refinement fails</exception>
     public static TrueBool Parse(bool value)
     {
-        return TryParse(value, out var result, out var failureMessage) ? result : throw new InvalidOperationException(failureMessage);
+        return TryParse(value, out var result, out var failureMessage) ? result : throw new ArgumentOutOfRangeException(nameof(value), value, failureMessage);
     }
     
     /// <summary>
