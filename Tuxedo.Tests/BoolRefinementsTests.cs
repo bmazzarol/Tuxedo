@@ -88,6 +88,9 @@ public class BoolRefinementsTests
                     {
                         TrueBool someValue = [|default|];
                         var someOtherValue = [|default(TrueBool)|];
+                        // default here is fine
+                        Guid someGuid = default;
+                        var someOtherGuid = default(Guid);
                     }
                 }
                 """,
@@ -121,6 +124,9 @@ public class BoolRefinementsTests
                     {
                         TrueBool someValue = [|new()|];
                         var someOtherValue = [|new TrueBool()|];
+                        // this new is fine
+                        Test someOkClass = new();
+                        var someOtherOkClass = new Test();
                     }
                 }
                 """,

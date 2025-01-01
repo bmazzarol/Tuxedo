@@ -50,12 +50,10 @@ public class DoNotUseNewRefinedTypeInstanceAnalyzer : DiagnosticAnalyzer
 
     private static void Analyze(OperationAnalysisContext ctx)
     {
-        if (ctx.Operation is not IObjectCreationOperation { Type: INamedTypeSymbol symbol } o)
-        {
-            return;
-        }
-
-        if (!symbol.IsRefinedType())
+        if (
+            ctx.Operation is not IObjectCreationOperation { Type: INamedTypeSymbol symbol } o
+            || !symbol.IsRefinedType()
+        )
         {
             return;
         }

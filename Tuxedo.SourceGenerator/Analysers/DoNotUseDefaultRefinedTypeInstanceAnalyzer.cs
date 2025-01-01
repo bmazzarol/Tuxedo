@@ -3,7 +3,6 @@
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Tuxedo.SourceGenerator.Extensions;
 
@@ -46,7 +45,7 @@ public class DoNotUseDefaultRefinedTypeInstanceAnalyzer : DiagnosticAnalyzer
             }
 
             compilationContext.RegisterSyntaxNodeAction(
-                AnalyzeLiteral,
+                Analyze,
                 SyntaxKind.DefaultLiteralExpression
             );
             compilationContext.RegisterSyntaxNodeAction(Analyze, SyntaxKind.DefaultExpression);
@@ -55,44 +54,15 @@ public class DoNotUseDefaultRefinedTypeInstanceAnalyzer : DiagnosticAnalyzer
 
     private static void Analyze(SyntaxNodeAnalysisContext ctx)
     {
-        var literalExpressionSyntax = (DefaultExpressionSyntax)ctx.Node;
-
-        if (literalExpressionSyntax.Kind() != SyntaxKind.DefaultExpression)
-        {
-            return;
-        }
-
-        ReportIfNeeded(ctx, literalExpressionSyntax);
-    }
-
-    private static void AnalyzeLiteral(SyntaxNodeAnalysisContext ctx)
-    {
-        var literalExpressionSyntax = (LiteralExpressionSyntax)ctx.Node;
-
-        if (literalExpressionSyntax.Kind() != SyntaxKind.DefaultLiteralExpression)
-        {
-            return;
-        }
-
-        ReportIfNeeded(ctx, literalExpressionSyntax);
-    }
-
-    private static void ReportIfNeeded(SyntaxNodeAnalysisContext ctx, ExpressionSyntax syntax)
-    {
-        var typeInfo = ctx.SemanticModel.GetTypeInfo(syntax).Type;
-        if (typeInfo is not INamedTypeSymbol symbol)
-        {
-            return;
-        }
-
-        if (!symbol.IsRefinedType())
+        var typeInfo = ctx.SemanticModel.GetTypeInfo(ctx.Node).Type;
+        if (typeInfo is not INamedTypeSymbol symbol || !symbol.IsRefinedType())
         {
             return;
         }
 
         var diagnostic = Diagnostic.Create(
             descriptor: Rule,
-            location: syntax.GetLocation(),
+            location: ctx.Node.GetLocation(),
             messageArgs: symbol.Name
         );
 
