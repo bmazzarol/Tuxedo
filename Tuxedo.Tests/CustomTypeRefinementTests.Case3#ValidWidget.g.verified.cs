@@ -10,7 +10,7 @@ namespace <global namespace>;
 /// <summary>
 /// A refined Widget based on the Test.Predicate refinement predicate
 /// </summary>
-[RefinedType]
+[Tuxedo.RefinedType]
 public readonly partial struct ValidWidget : IEquatable<ValidWidget>
 {
     private readonly Widget? _value;

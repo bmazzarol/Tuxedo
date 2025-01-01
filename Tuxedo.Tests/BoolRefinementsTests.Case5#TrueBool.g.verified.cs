@@ -10,7 +10,7 @@ namespace <global namespace>;
 /// <summary>
 /// A refined bool based on the Test.True refinement predicate
 /// </summary>
-[RefinedType]
+[Tuxedo.RefinedType]
 public readonly partial struct TrueBool : IEquatable<TrueBool>
 {
     private readonly bool? _value;

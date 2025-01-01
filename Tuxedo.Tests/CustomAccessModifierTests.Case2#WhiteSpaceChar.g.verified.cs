@@ -10,7 +10,7 @@ namespace <global namespace>;
 /// <summary>
 /// A refined char based on the Test.WhiteSpace refinement predicate
 /// </summary>
-[RefinedType]
+[Tuxedo.RefinedType]
 internal readonly partial struct WhiteSpaceChar : IEquatable<WhiteSpaceChar>
 {
     private readonly char? _value;

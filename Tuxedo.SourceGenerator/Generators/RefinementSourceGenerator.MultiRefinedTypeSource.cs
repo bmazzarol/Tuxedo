@@ -6,7 +6,7 @@ namespace Tuxedo.SourceGenerator;
 
 public sealed partial class RefinementSourceGenerator
 {
-    private static string RenderMultiRefinedType(ViewModel model)
+    private static string RenderMultiRefinedType(RefinedTypeDetails model)
     {
         return $$"""
                  {{RenderNamespaceParts(model)}}

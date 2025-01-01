@@ -36,10 +36,7 @@ public class DoNotUseDefaultRefinedTypeInstanceAnalyzer : DiagnosticAnalyzer
 
         context.RegisterCompilationStartAction(compilationContext =>
         {
-            var typeSymbol = compilationContext.Compilation.GetTypeByMetadataName(
-                $"{compilationContext.Compilation.Assembly.Name}.RefinedTypeAttribute"
-            );
-            if (typeSymbol == null)
+            if (!compilationContext.Compilation.HasRefinedTypeAttribute())
             {
                 return;
             }
@@ -54,7 +51,9 @@ public class DoNotUseDefaultRefinedTypeInstanceAnalyzer : DiagnosticAnalyzer
 
     private static void Analyze(SyntaxNodeAnalysisContext ctx)
     {
-        var typeInfo = ctx.SemanticModel.GetTypeInfo(ctx.Node).Type;
+        var typeInfo = ctx
+            .SemanticModel.GetTypeInfo(ctx.Node, cancellationToken: ctx.CancellationToken)
+            .Type;
         if (typeInfo is not INamedTypeSymbol symbol || !symbol.IsRefinedType())
         {
             return;

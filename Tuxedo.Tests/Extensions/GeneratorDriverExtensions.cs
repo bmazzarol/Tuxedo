@@ -24,6 +24,8 @@ public static class GeneratorDriverExtensions
     )
     {
         var driver = $$"""
+            using Tuxedo;
+
             internal static class Test
             {
                {{source}}

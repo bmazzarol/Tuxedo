@@ -12,7 +12,7 @@ public readonly partial struct PasswordString
     // this is the definition of what makes a password string valid.
     // the name of the method combined with the type it operates on make up the name of the refined type
     // in this case PasswordString
-    [Refinement(
+    [Tuxedo.Refinement(
         "The string must be at least 8 characters long, contain at most 1 uppercase letter, number and special character. You provided '{value}'."
     )]
     private static bool Password(string value)

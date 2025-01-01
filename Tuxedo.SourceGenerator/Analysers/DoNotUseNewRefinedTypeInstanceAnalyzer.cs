@@ -36,10 +36,7 @@ public class DoNotUseNewRefinedTypeInstanceAnalyzer : DiagnosticAnalyzer
 
         context.RegisterCompilationStartAction(compilationContext =>
         {
-            var typeSymbol = compilationContext.Compilation.GetTypeByMetadataName(
-                $"{compilationContext.Compilation.Assembly.Name}.RefinedTypeAttribute"
-            );
-            if (typeSymbol == null)
+            if (!compilationContext.Compilation.HasRefinedTypeAttribute())
             {
                 return;
             }

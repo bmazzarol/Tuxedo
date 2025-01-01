@@ -74,7 +74,7 @@ public class BoolRefinementsTests
             TestCode = """
                 using System;
 
-                namespace TestProject;
+                namespace Tuxedo;
 
                 [AttributeUsage(AttributeTargets.Struct)]
                 internal sealed class RefinedTypeAttribute : Attribute {}    
@@ -110,7 +110,7 @@ public class BoolRefinementsTests
             TestCode = """
                 using System;
 
-                namespace TestProject;
+                namespace Tuxedo;
 
                 [AttributeUsage(AttributeTargets.Struct)]
                 internal sealed class RefinedTypeAttribute : Attribute {}    

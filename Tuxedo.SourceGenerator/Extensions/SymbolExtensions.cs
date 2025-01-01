@@ -10,7 +10,7 @@ internal static class SymbolExtensions
         return attrs.Any(a =>
             a
                 .AttributeClass?.ToDisplayString()
-                .EndsWith(".RefinedTypeAttribute", StringComparison.Ordinal)
+                .Equals("Tuxedo.RefinedTypeAttribute", StringComparison.Ordinal)
                 is true
         );
     }

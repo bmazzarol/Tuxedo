@@ -18,6 +18,11 @@ public sealed partial class RefinementSourceGenerator
                 .AttributeLists.SelectMany(list => list.Attributes)
                 .Single(attribute =>
                     string.Equals(attribute.Name.ToString(), "Refinement", StringComparison.Ordinal)
+                    || string.Equals(
+                        attribute.Name.ToString(),
+                        "Tuxedo.Refinement",
+                        StringComparison.Ordinal
+                    )
                 )
                 .ArgumentList!.Arguments;
 
