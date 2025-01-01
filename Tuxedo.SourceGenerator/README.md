@@ -119,7 +119,7 @@ All refined types are structs and will not allocate, making them cost-effective.
 They can also be used to parse, not just validate.
 
 A very common use case is running a predicate which also results in some
-alternative type being created via the process.
+alternative value being created via the process.
 
 Take a string that should also be a valid Guid. It would be good to produce
 a valid guid as a result of the refinement process.
@@ -133,9 +133,9 @@ This can be done with Tuxedo,
 public readonly partial struct GuidString
 {
     // custom fields and methods can be added to the refined type
-    public byte[] Bytes => RefinedValue.ToByteArray();
+    public byte[] Bytes => AltValue.ToByteArray();
 
-    public bool IsEmpty => RefinedValue == System.Guid.Empty;
+    public bool IsEmpty => AltValue == System.Guid.Empty;
 
     [Refinement("The value must be a valid GUID, but was '{value}'")]
     private static bool Guid(string value, out Guid guid) => 
@@ -156,16 +156,16 @@ guid.
 // convert the string to a GuidString
 var refined = (GuidString)"6192C5ED-505C-4558-B87C-CA6E7D612B31";
 // now we have a valid Guid
-refined.RawValue.Should().Be("6192C5ED-505C-4558-B87C-CA6E7D612B31"); // string
-refined.RefinedValue.Should().Be(new Guid(
+refined.Value.Should().Be("6192C5ED-505C-4558-B87C-CA6E7D612B31"); // string
+refined.AltValue.Should().Be(new Guid(
     "6192C5ED-505C-4558-B87C-CA6E7D612B31")); // guid
 // and can also use custom methods defined on GuidString
 refined.Bytes.Should().NotBeEmpty();
 refined.IsEmpty.Should().BeFalse();
 ```
 
-If the alternative refined value is the same as the raw value, then only one
-implicit conversion method will be generated for the refined value, not the
+If the alternative value is the same as the raw value, then only one
+implicit conversion method will be generated for the alternative value, not the
 raw value.
 
 ## Are these Refinement types?
