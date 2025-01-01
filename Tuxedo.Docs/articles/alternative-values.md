@@ -1,7 +1,7 @@
 # Alternative Values
 
 Sometimes the refinement process for a type, naturally produces an alternative
-type.
+value.
 
 A good example of this is types that implement `IParsable`.
 
