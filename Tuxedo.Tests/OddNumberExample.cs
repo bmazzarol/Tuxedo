@@ -39,7 +39,9 @@ public class OddNumberExample
             .StartWith("The number must be an odd number, but was '2'");
         OddInt.TryParse(2, out var refined, out var message).Should().BeFalse();
         message.Should().Be("The number must be an odd number, but was '2'");
+#pragma warning disable TUX001
         refined.Should().Be(default(OddInt));
+#pragma warning restore TUX001
     }
 
     [Fact(DisplayName = "A float can be refined as odd")]

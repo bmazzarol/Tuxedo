@@ -10,6 +10,7 @@ namespace <global namespace>;
 /// <summary>
 /// A refined bool based on the Test.False refinement predicate
 /// </summary>
+[RefinedType]
 public readonly partial struct FalseBool : IEquatable<FalseBool>
 {
     private readonly bool? _value;

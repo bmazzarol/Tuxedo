@@ -56,7 +56,9 @@ public class DateOnlyExample
             .StartWith("The value must be a valid date, but was 'not a date'");
         DateOnlyString.TryParse("not a date", out var refined, out var message).Should().BeFalse();
         message.Should().Be("The value must be a valid date, but was 'not a date'");
+#pragma warning disable TUX001
         refined.Should().Be(default(DateOnlyString));
+#pragma warning restore TUX001
     }
 
     #endregion

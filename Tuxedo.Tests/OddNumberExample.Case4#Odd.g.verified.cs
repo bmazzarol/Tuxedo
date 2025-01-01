@@ -10,6 +10,7 @@ namespace <global namespace>;
 /// <summary>
 /// A refined T based on the Test.Odd refinement predicate
 /// </summary>
+[RefinedType]
 public readonly partial struct Odd<T> : IEquatable<Odd<T>>
 	where T : System.Numerics.INumberBase<T>
 {

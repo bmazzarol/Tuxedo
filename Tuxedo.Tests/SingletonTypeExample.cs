@@ -15,7 +15,7 @@ public readonly partial struct FortyTwoInt
     /// <summary>
     /// The singleton instance of 42
     /// </summary>
-    public static readonly FortyTwoInt Instance = new(42);
+    public static readonly FortyTwoInt Instance = Parse(42);
 }
 
 #endregion

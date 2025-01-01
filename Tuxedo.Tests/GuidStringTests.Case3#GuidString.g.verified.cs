@@ -10,6 +10,7 @@ namespace <global namespace>;
 /// <summary>
 /// A refined string based on the Test.Guid refinement predicate which produces an alternative Guid value
 /// </summary>
+[RefinedType]
 public readonly partial struct GuidString : IEquatable<GuidString>
 {
     private readonly string? _value;

@@ -52,6 +52,7 @@ public sealed partial class RefinementSourceGenerator
                 x => $" which produces an alternative {x.EscapeXml()} value"
             )}
             /// </summary>
+            [RefinedType]
             {model.AccessModifier} readonly partial struct {model.RefinedType}{model.Generics} : IEquatable<{model.RefinedType}{model.Generics}>{model.GenericConstraints.PrependIfNotNull(
                 "\n\t"
             )}

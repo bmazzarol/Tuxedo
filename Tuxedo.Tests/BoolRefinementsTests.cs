@@ -1,4 +1,7 @@
 ﻿using FluentAssertions;
+using Microsoft.CodeAnalysis.CSharp.Testing;
+using Microsoft.CodeAnalysis.Testing;
+using Tuxedo.SourceGenerator.Analysers;
 using Tuxedo.Tests.Extensions;
 
 namespace Tuxedo.Tests;
@@ -57,5 +60,71 @@ public class BoolRefinementsTests
             [Refinement("The boolean value must be 'True', instead found '{value}'")]
             internal static bool True(bool value) => value;
             """.VerifyRefinement();
+    }
+
+    [Fact(DisplayName = "TrueBool cannot be assigned default")]
+    public Task Case6()
+    {
+        var context = new CSharpAnalyzerTest<
+            DoNotUseDefaultRefinedTypeInstanceAnalyzer,
+            DefaultVerifier
+        >
+        {
+            ReferenceAssemblies = References.Net8AndOurs.Value,
+            TestCode = """
+                using System;
+
+                namespace TestProject;
+
+                [AttributeUsage(AttributeTargets.Struct)]
+                internal sealed class RefinedTypeAttribute : Attribute {}    
+
+                [RefinedType]
+                internal readonly partial struct TrueBool {}
+
+                internal class Test
+                {
+                    public static void TestMethod()
+                    {
+                        TrueBool someValue = [|default|];
+                        var someOtherValue = [|default(TrueBool)|];
+                    }
+                }
+                """,
+        };
+        return context.RunAsync();
+    }
+
+    [Fact(DisplayName = "TrueBool cannot be assigned from new")]
+    public Task Case67()
+    {
+        var context = new CSharpAnalyzerTest<
+            DoNotUseNewRefinedTypeInstanceAnalyzer,
+            DefaultVerifier
+        >
+        {
+            ReferenceAssemblies = References.Net8AndOurs.Value,
+            TestCode = """
+                using System;
+
+                namespace TestProject;
+
+                [AttributeUsage(AttributeTargets.Struct)]
+                internal sealed class RefinedTypeAttribute : Attribute {}    
+
+                [RefinedType]
+                internal readonly partial struct TrueBool {}
+
+                internal class Test
+                {
+                    public static void TestMethod()
+                    {
+                        TrueBool someValue = [|new()|];
+                        var someOtherValue = [|new TrueBool()|];
+                    }
+                }
+                """,
+        };
+        return context.RunAsync();
     }
 }

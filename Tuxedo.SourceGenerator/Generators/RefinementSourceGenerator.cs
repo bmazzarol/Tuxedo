@@ -21,7 +21,10 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(
             context.CompilationProvider,
             (ctx, c) =>
-                ctx.AddSource("RefinementAttribute.g", RenderRefinementAttribute(c.AssemblyName))
+            {
+                ctx.AddSource("RefinementAttribute.g", RenderRefinementAttribute(c.AssemblyName));
+                ctx.AddSource("RefinedTypeAttribute.g", RenderRefinedTypeAttribute(c.AssemblyName));
+            }
         );
 
         var provider = context.SyntaxProvider.CreateSyntaxProvider(
