@@ -22,7 +22,8 @@ public class DoNotUseDefaultRefinedTypeInstanceAnalyzer : DiagnosticAnalyzer
             RuleCategories.Usage,
             DiagnosticSeverity.Error,
             isEnabledByDefault: true,
-            description: "A refined type created with a default expression is always invalid, use the Parse or TryParse method instead."
+            description: "A refined type created with a default expression is always invalid, use the Parse or TryParse method instead.",
+            helpLinkUri: $"https://bmazzarol.github.io/Tuxedo/rules/{RuleIdentifiers.DoNotUseDefault}.html"
         );
 
     /// <inheritdoc />

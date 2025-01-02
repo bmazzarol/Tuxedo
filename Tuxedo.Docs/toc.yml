@@ -5,3 +5,5 @@ items:
     href: getting-started.md
   - name: Examples
     href: articles/
+  - name: Analyser Rules
+    href: rules/
