@@ -33,7 +33,10 @@ public static class GeneratorDriverExtensions
             """.BuildDriver();
         return Verify(driver, sourceFile: sourceFile)
             .IgnoreGeneratedResult(x =>
-                x.HintName is "RefinementAttribute.g.cs" or "RefinedTypeAttribute.g.cs"
+                x.HintName
+                    is "RefinementAttribute.g.cs"
+                        or "RefinedTypeAttribute.g.cs"
+                        or "RefinementService.g.cs"
             );
     }
 }

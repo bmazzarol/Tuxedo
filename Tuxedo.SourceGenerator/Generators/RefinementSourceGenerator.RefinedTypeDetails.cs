@@ -17,5 +17,9 @@ public sealed partial class RefinementSourceGenerator
     )
     {
         public string? RefinedTypeXmlSafeName => (RefinedType + Generics).EscapeXml();
+
+        public bool IsTuple =>
+            RawType?.StartsWith("(", StringComparison.Ordinal) == true
+            && RawType.EndsWith(")", StringComparison.Ordinal);
     }
 }

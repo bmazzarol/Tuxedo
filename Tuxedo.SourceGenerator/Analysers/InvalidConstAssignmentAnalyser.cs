@@ -33,7 +33,7 @@ public class InvalidConstAssignmentAnalyser : DiagnosticAnalyzer
     /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
 
-    private static Lazy<Assembly?>? _currentAssembly;
+    private static Lazy<Type?>? _refinementServiceType;
 
     /// <inheritdoc />
     public override void Initialize(AnalysisContext context)
@@ -50,47 +50,56 @@ public class InvalidConstAssignmentAnalyser : DiagnosticAnalyzer
 
             // we build an in memory assembly for the compilation so we can run
             // the refinement predicates
-            if (_currentAssembly is null)
+            if (_refinementServiceType is null)
             {
 #pragma warning disable S2696
-                _currentAssembly = new Lazy<Assembly?>(() =>
+                _refinementServiceType = new Lazy<Type?>(
 #pragma warning restore S2696
-                {
-                    using var ms = new MemoryStream();
-                    var result = compilationContext.Compilation.Emit(
-                        ms,
-                        cancellationToken: compilationContext.CancellationToken
-                    );
-
-                    if (!result.Success)
-                    {
-                        return null;
-                    }
-
-                    ms.Seek(0, SeekOrigin.Begin);
-#pragma warning disable RS1035 // we need to load it here, as we want to run code against the current state of the compilation.
-                    return Assembly.Load(ms.ToArray());
-#pragma warning restore RS1035
-                });
+                    () =>
+                        BuildIntoRuntimeRefinementServiceType(
+                            compilationContext.Compilation,
+                            compilationContext.CancellationToken
+                        )
+                );
             }
 
-            if (_currentAssembly.Value is not { } analysedAssembly)
+            if (_refinementServiceType.Value is not { } refinementServiceType)
             {
                 return;
             }
 
             compilationContext.RegisterOperationAction(
-                analysisContext => Analyze(analysisContext, analysedAssembly),
+                analysisContext => Analyze(analysisContext, refinementServiceType),
                 OperationKind.Invocation
             );
         });
     }
 
-    private static readonly ConcurrentDictionary<string, MethodInfo?> TryParseDelegates =
+    private static Type? BuildIntoRuntimeRefinementServiceType(
+        Compilation compilation,
+        CancellationToken token
+    )
+    {
+        using var ms = new MemoryStream();
+        var result = compilation.Emit(ms, cancellationToken: token);
+
+        if (!result.Success)
+        {
+            return null;
+        }
+
+        ms.Seek(0, SeekOrigin.Begin);
+#pragma warning disable RS1035 // we need to load it here, as we want to run code against the current state of the compilation
+        var assembly = Assembly.Load(ms.ToArray());
+#pragma warning restore RS1035
+        return assembly.GetType("Tuxedo.RefinementService");
+    }
+
+    private static readonly ConcurrentDictionary<string, Func<object, string?>?> TryParseDelegates =
         new(StringComparer.Ordinal);
 
     [SuppressMessage("Design", "MA0051:Method is too long")]
-    private static void Analyze(OperationAnalysisContext ctx, Assembly assembly)
+    private static void Analyze(OperationAnalysisContext ctx, Type refinementServiceType)
     {
         var operation = (IInvocationOperation)ctx.Operation;
         if (
@@ -111,48 +120,17 @@ public class InvalidConstAssignmentAnalyser : DiagnosticAnalyzer
             return;
         }
 
-        var fullName = operation.TargetMethod.ContainingType.ToDisplayString();
-
         try
         {
-            var tryParseDelegate = TryParseDelegates.GetOrAdd(
-                fullName,
-                fn =>
-                {
-                    // we try and get the refined type out of the assembly
-                    var type = assembly.GetType(fn);
-
-                    if (type == null)
-                    {
-                        return null;
-                    }
-
-                    // now we get the static method and call it to find out if the
-                    // constant would pass the refinement predicate
-                    var methodInfo = type.GetMethod(
-                        "TryParse",
-                        BindingFlags.Public | BindingFlags.Static
-                    );
-
-                    if (methodInfo == null)
-                    {
-                        return null;
-                    }
-
-#pragma warning disable MA0026, S1135
-                    return methodInfo; // TODO: use expressions to make this faster
-#pragma warning restore S1135, MA0026
-                }
+            // build a refinement delegate and run the constant value against it
+            var refinementDelegate = TryParseDelegates.GetOrAdd(
+                operation.TargetMethod.ContainingType.ToDisplayString(),
+                s => BuildRefinementDelegate(s, refinementServiceType)
             );
 
-            if (tryParseDelegate is null)
-            {
-                return;
-            }
+            var failureMessage = refinementDelegate?.Invoke(constantValue);
 
-            // out parameters
-            object?[] parameters = [constantValue, null, null];
-            if (tryParseDelegate.Invoke(null, parameters) is true)
+            if (failureMessage is null)
             {
                 return;
             }
@@ -160,7 +138,7 @@ public class InvalidConstAssignmentAnalyser : DiagnosticAnalyzer
             var diagnostic = Diagnostic.Create(
                 descriptor: Rule,
                 location: ctx.Operation.Syntax.GetLocation(),
-                messageArgs: parameters[2]
+                messageArgs: failureMessage
             );
 
             ctx.ReportDiagnostic(diagnostic);
@@ -169,5 +147,25 @@ public class InvalidConstAssignmentAnalyser : DiagnosticAnalyzer
         {
             // we just give up, we tried
         }
+    }
+
+    private static Func<object, string?>? BuildRefinementDelegate(
+        string fn,
+        Type refinementServiceType
+    )
+    {
+        var methodInfo = refinementServiceType.GetMethod(
+            $"TestAgainst{fn.RemoveNamespace()}",
+#pragma warning disable S3011
+            BindingFlags.NonPublic | BindingFlags.Static
+#pragma warning restore S3011
+        );
+
+        if (methodInfo == null)
+        {
+            return null;
+        }
+
+        return (Func<object, string?>?)methodInfo.CreateDelegate(typeof(Func<object, string?>));
     }
 }

@@ -1,5 +1,6 @@
 #pragma warning disable MA0051
 
+using System.Collections.Immutable;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -31,6 +32,10 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
         );
 
         context.RegisterSourceOutput(refinedTypeDetailsProvider, GenerateRefinedTypes);
+        context.RegisterSourceOutput(
+            refinedTypeDetailsProvider.Collect(),
+            GenerateRefinementService
+        );
     }
 
     private static bool IsRefinementMethod(SyntaxNode s, CancellationToken cancellationToken)
@@ -138,8 +143,8 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
         }
 
         generics = $"<{string.Join(", ", genericTypeArguments.Select(t => t.ToDisplayString()))}>";
-        var parts = methodDeclaration.ConstraintClauses.Select(x => x.ToString());
-        constraints = string.Join("\n", parts);
+        var parts = methodDeclaration.ConstraintClauses.Select(x => x.ToString()).ToArray();
+        constraints = parts.Length > 0 ? string.Join("\n", parts) : null;
     }
 
     private static string BuildSafeStructName(string name, string? parameterType)
@@ -159,6 +164,17 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
         context.AddSource(
             $"{refinedTypeDetails.RefinedType}.g.cs",
             SourceText.From(source, Encoding.UTF8)
+        );
+    }
+
+    private static void GenerateRefinementService(
+        SourceProductionContext context,
+        ImmutableArray<RefinedTypeDetails> refinedTypeDetails
+    )
+    {
+        context.AddSource(
+            "RefinementService.g.cs",
+            SourceText.From(RenderRefinementService(refinedTypeDetails), Encoding.UTF8)
         );
     }
 }

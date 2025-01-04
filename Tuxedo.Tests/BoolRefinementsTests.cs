@@ -149,6 +149,14 @@ public class BoolRefinementsTests
                 [AttributeUsage(AttributeTargets.Struct)]
                 internal sealed class RefinedTypeAttribute : Attribute {}    
 
+                internal static class RefinementService
+                {
+                    private static string? TestAgainstTrueBool(object value)
+                    {
+                        return value is bool rt && !Tuxedo.TrueBool.TryParse(rt, out _, out var errorMessage) ? errorMessage : null;
+                    }
+                }
+
                 [RefinedType]
                 internal readonly partial struct TrueBool 
                 {
