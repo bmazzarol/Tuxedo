@@ -14,4 +14,9 @@ public static class RuleIdentifiers
     /// Refined types should not be created via new
     /// </summary>
     public const string DoNotUseNew = "TUX002";
+
+    /// <summary>
+    /// Compile type known values that will fail refinement, should not be assigned
+    /// </summary>
+    public const string InvalidConstAssignment = "TUX003";
 }

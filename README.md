@@ -186,14 +186,11 @@ raw value.
 
 ## Are these Refinement types?
 
-Sort of, but at this stage there is no compile time checks performed.
+Sort of, at this stage there is limited compile time checks performed.
 
-I have future plans to perform refinement checks on all statically known
-values. This would take the form of an analyser, and would be enabled through
-the use of the refined types.
-
-But for now think of it as moving the guard clauses to the type level and
-making it more explicit what the method requirements are.
+For constant value assignments to `Parse` and `TryParse` methods, the
+refinement is attempted at compile time. There are many edge cases and for
+the most part any time this analyser runs, it's a bonus.
 
 ## When should I not use this?
 

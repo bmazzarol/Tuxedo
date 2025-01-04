@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Testing;
 using Tuxedo.SourceGenerator.Analysers;
@@ -99,7 +100,7 @@ public class BoolRefinementsTests
     }
 
     [Fact(DisplayName = "TrueBool cannot be assigned from new")]
-    public Task Case67()
+    public Task Case7()
     {
         var context = new CSharpAnalyzerTest<
             DoNotUseNewRefinedTypeInstanceAnalyzer,
@@ -130,6 +131,68 @@ public class BoolRefinementsTests
                     }
                 }
                 """,
+        };
+        return context.RunAsync();
+    }
+
+    [Fact(DisplayName = "TrueBool cannot be assigned false")]
+    public Task Case8()
+    {
+        var context = new CSharpAnalyzerTest<InvalidConstAssignmentAnalyser, DefaultVerifier>
+        {
+            ReferenceAssemblies = References.Net8AndOurs.Value,
+            TestCode = """
+                using System;
+
+                namespace Tuxedo;
+
+                [AttributeUsage(AttributeTargets.Struct)]
+                internal sealed class RefinedTypeAttribute : Attribute {}    
+
+                [RefinedType]
+                internal readonly partial struct TrueBool 
+                {
+                    public bool Value { get; }
+                    
+                    private TrueBool(bool value) => Value = value;
+                    
+                    public static TrueBool Parse(bool value)
+                    {
+                        return value ? new TrueBool(value) : throw new ArgumentOutOfRangeException(nameof(value), value, "needs to be true");
+                    }
+                    
+                    public static bool TryParse(bool value, out TrueBool result, out string error)
+                    {
+                        if(value)
+                        {
+                            result = new TrueBool(value);
+                            error = null;
+                            return true;
+                        }
+                        
+                        result = default;
+                        error = "needs to be true";
+                        return false;
+                    }
+                }
+
+                internal class Test
+                {
+                    public static void TestMethod()
+                    {
+                        var someValue = [|TrueBool.Parse(false)|];
+                        var boolValue = [|TrueBool.TryParse(false, out _, out _)|];
+                        
+                        // this one is fine
+                        var someOtherValue = TrueBool.Parse(true);
+                    }
+                }
+                """,
+            DiagnosticVerifier = (diagnostic, _, _) =>
+            {
+                diagnostic.Severity.Should().Be(DiagnosticSeverity.Warning);
+                diagnostic.GetMessage().Should().Be("needs to be true");
+            },
         };
         return context.RunAsync();
     }

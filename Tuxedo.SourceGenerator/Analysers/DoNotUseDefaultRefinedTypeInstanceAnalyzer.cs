@@ -12,7 +12,7 @@ namespace Tuxedo.SourceGenerator.Analysers;
 /// An analyser that prevents default assignment to refined types
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class DoNotUseDefaultRefinedTypeInstanceAnalyzer : DiagnosticAnalyzer
+public sealed class DoNotUseDefaultRefinedTypeInstanceAnalyzer : DiagnosticAnalyzer
 {
     private static readonly DiagnosticDescriptor Rule =
         new(

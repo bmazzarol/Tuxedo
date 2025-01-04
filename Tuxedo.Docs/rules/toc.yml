@@ -3,3 +3,5 @@ items:
     href: TUX001.md
   - name: (TUX002) Do not use new()
     href: TUX002.md
+  - name: (TUX003) Invalid const assignment
+    href: TUX003.md

@@ -12,7 +12,7 @@ namespace Tuxedo.SourceGenerator.Analysers;
 /// An analyser that prevents new construction of refined types
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class DoNotUseNewRefinedTypeInstanceAnalyzer : DiagnosticAnalyzer
+public sealed class DoNotUseNewRefinedTypeInstanceAnalyzer : DiagnosticAnalyzer
 {
     private static readonly DiagnosticDescriptor Rule =
         new(

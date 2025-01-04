@@ -4,7 +4,6 @@ namespace Tuxedo.Tests;
 
 #region DependentTypeExample
 
-// we need the predicate to not nest in the enclosing type, as it has the same name
 public readonly partial struct PositiveInt
 {
     [Refinement("The value must be positive")]
