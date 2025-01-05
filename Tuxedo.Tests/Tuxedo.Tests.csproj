@@ -28,11 +28,5 @@
     <ItemGroup>
         <ProjectReference Include="..\Tuxedo.SourceGenerator\Tuxedo.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
     </ItemGroup>
-    
-    <ItemGroup>
-      <None Update="SharedTests.Case1#RefinementAttribute.g.verified.cs">
-        <DependentUpon>SharedTests.cs</DependentUpon>
-      </None>
-    </ItemGroup>
 
 </Project>

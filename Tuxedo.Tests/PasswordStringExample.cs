@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Tuxedo.Tests.Extensions;
 
 namespace Tuxedo.Tests;
 
@@ -13,9 +14,10 @@ public readonly partial struct PasswordString
     // the name of the method combined with the type it operates on make up the name of the refined type
     // in this case PasswordString
     [Tuxedo.Refinement(
-        "The string must be at least 8 characters long, contain at most 1 uppercase letter, number and special character. You provided '{value}'."
+        "The string must be at least 8 characters long, contain at most 1 uppercase letter, number and special character. You provided '{value}'.",
+        Name = nameof(PasswordString)
     )]
-    private static bool Password(string value)
+    private static bool IsValidPassword(string value)
     {
         if (value.Length < 8)
         {
@@ -40,8 +42,8 @@ public readonly partial struct PasswordString
 
 public sealed class PasswordStringExampleTests
 {
-    [Fact]
-    public void PasswordStringExample()
+    [Fact(DisplayName = "PasswordString Example")]
+    public void Case1()
     {
         #region ExampleUsage
 
@@ -49,5 +51,17 @@ public sealed class PasswordStringExampleTests
         password.Value.Should().Be("12Da3%sd");
 
         #endregion
+    }
+
+    [Fact(DisplayName = "PasswordString source looks correct")]
+    public Task Case2()
+    {
+        return """
+            [Tuxedo.Refinement(
+                "The string must be at least 8 characters long, contain at most 1 uppercase letter, number and special character. You provided '{value}'.",
+                Name = nameof(PasswordString)
+            )]
+            internal static bool IsValidPassword(string value)
+            """.VerifyRefinement();
     }
 }

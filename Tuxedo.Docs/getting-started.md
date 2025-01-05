@@ -28,7 +28,7 @@ partial struct that will eventually be the refined type.
 
 So in this case that type will be called a `PasswordString`, it looks like this,
 
-[!code-csharp[Example1](../Tuxedo.Tests/PasswordStringExample.cs#ExampleRefinement)]
+[!code-csharp[](../Tuxedo.Tests/PasswordStringExample.cs#ExampleRefinement)]
 
 Which can be used like this,
 

@@ -1,9 +1,6 @@
 #pragma warning disable RS2008
 
-using System.Collections.Concurrent;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Operations;
@@ -16,7 +13,7 @@ namespace Tuxedo.SourceGenerator.Analysers;
 /// refinement predicates of the refined types
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class InvalidConstAssignmentAnalyser : DiagnosticAnalyzer
+public sealed partial class InvalidConstAssignmentAnalyser : DiagnosticAnalyzer
 {
     private static readonly DiagnosticDescriptor Rule =
         new(
@@ -24,7 +21,7 @@ public class InvalidConstAssignmentAnalyser : DiagnosticAnalyzer
             "Assigning compile time known values that do not pass refinement will fail",
             "{0}",
             RuleCategories.Usage,
-            DiagnosticSeverity.Warning,
+            DiagnosticSeverity.Error,
             isEnabledByDefault: true,
             description: "Assigning compile time known values that do not pass refinement will result in runtime failure, so alter the value or the code.",
             helpLinkUri: $"https://bmazzarol.github.io/Tuxedo/rules/{RuleIdentifiers.InvalidConstAssignment}.html"
@@ -32,8 +29,6 @@ public class InvalidConstAssignmentAnalyser : DiagnosticAnalyzer
 
     /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
-
-    private static Lazy<Type?>? _refinementServiceType;
 
     /// <inheritdoc />
     public override void Initialize(AnalysisContext context)
@@ -48,70 +43,47 @@ public class InvalidConstAssignmentAnalyser : DiagnosticAnalyzer
                 return;
             }
 
-            // we build an in memory assembly for the compilation so we can run
-            // the refinement predicates
-            if (_refinementServiceType is null)
-            {
-#pragma warning disable S2696
-                _refinementServiceType = new Lazy<Type?>(
-#pragma warning restore S2696
-                    () =>
-                        BuildIntoRuntimeRefinementServiceType(
-                            compilationContext.Compilation,
-                            compilationContext.CancellationToken
-                        )
-                );
-            }
+            _refinementService ??= new Lazy<RefinementService?>(
+                () =>
+                    RefinementService.Build(
+                        compilationContext.Compilation,
+                        compilationContext.CancellationToken
+                    )
+            );
 
-            if (_refinementServiceType.Value is not { } refinementServiceType)
+            if (_refinementService.Value is not { } refinementService)
             {
                 return;
             }
 
             compilationContext.RegisterOperationAction(
-                analysisContext => Analyze(analysisContext, refinementServiceType),
+                analysisContext => AnalyzeInvocation(analysisContext, refinementService),
                 OperationKind.Invocation
+            );
+            compilationContext.RegisterOperationAction(
+                analysisContext => AnalyzeConversion(analysisContext, refinementService),
+                OperationKind.Conversion
             );
         });
     }
 
-    private static Type? BuildIntoRuntimeRefinementServiceType(
-        Compilation compilation,
-        CancellationToken token
-    )
+    private static bool IsStaticParseMethod(IInvocationOperation operation)
     {
-        using var ms = new MemoryStream();
-        var result = compilation.Emit(ms, cancellationToken: token);
-
-        if (!result.Success)
-        {
-            return null;
-        }
-
-        ms.Seek(0, SeekOrigin.Begin);
-#pragma warning disable RS1035 // we need to load it here, as we want to run code against the current state of the compilation
-        var assembly = Assembly.Load(ms.ToArray());
-#pragma warning restore RS1035
-        return assembly.GetType("Tuxedo.RefinementService");
+        return operation.TargetMethod is { IsStatic: true, Name: "Parse" or "TryParse" } tm
+            && tm.ContainingType.IsRefinedType();
     }
 
-    private static readonly ConcurrentDictionary<string, Func<object, string?>?> TryParseDelegates =
-        new(StringComparer.Ordinal);
-
-    [SuppressMessage("Design", "MA0051:Method is too long")]
-    private static void Analyze(OperationAnalysisContext ctx, Type refinementServiceType)
+    private static void AnalyzeInvocation(
+        OperationAnalysisContext ctx,
+        RefinementService refinementService
+    )
     {
         var operation = (IInvocationOperation)ctx.Operation;
-        if (
-            !operation.TargetMethod.IsStatic
-            || operation.TargetMethod.Name is not ("Parse" or "TryParse")
-            || !operation.TargetMethod.ContainingType.IsRefinedType()
-        )
+        if (!IsStaticParseMethod(operation))
         {
             return;
         }
 
-        // we try and get the constant value of the first argument
         var firstArgument = operation.Arguments[0];
         var constantValue =
             firstArgument.Value.ConstantValue.Value ?? firstArgument.ConstantValue.Value;
@@ -120,15 +92,60 @@ public class InvalidConstAssignmentAnalyser : DiagnosticAnalyzer
             return;
         }
 
+        TryTestAndReport(
+            ctx,
+            refinementService,
+            fullTypeName: operation.TargetMethod.ContainingType.ToDisplayString(),
+            constantValue
+        );
+    }
+
+    private static bool IsExplicitConversionToRefinedType(IConversionOperation operation)
+    {
+        return operation.Conversion
+                is {
+                    IsImplicit: false,
+                    IsUserDefined: true,
+                    MethodSymbol: { ContainingType: { } ct, Name: "op_Explicit" }
+                }
+            && ct.IsRefinedType();
+    }
+
+    private static void AnalyzeConversion(
+        OperationAnalysisContext ctx,
+        RefinementService refinementService
+    )
+    {
+        var operation = (IConversionOperation)ctx.Operation;
+        if (!IsExplicitConversionToRefinedType(operation))
+        {
+            return;
+        }
+
+        var constantValue = operation.Operand.ConstantValue.Value;
+        if (constantValue is null)
+        {
+            return;
+        }
+
+        TryTestAndReport(
+            ctx,
+            refinementService,
+            fullTypeName: operation.Conversion.MethodSymbol!.ContainingType.ToDisplayString(),
+            constantValue
+        );
+    }
+
+    private static void TryTestAndReport(
+        OperationAnalysisContext ctx,
+        RefinementService refinementService,
+        string fullTypeName,
+        object constantValue
+    )
+    {
         try
         {
-            // build a refinement delegate and run the constant value against it
-            var refinementDelegate = TryParseDelegates.GetOrAdd(
-                operation.TargetMethod.ContainingType.ToDisplayString(),
-                s => BuildRefinementDelegate(s, refinementServiceType)
-            );
-
-            var failureMessage = refinementDelegate?.Invoke(constantValue);
+            var failureMessage = refinementService.TestAgainst(fullTypeName, constantValue);
 
             if (failureMessage is null)
             {
@@ -147,25 +164,5 @@ public class InvalidConstAssignmentAnalyser : DiagnosticAnalyzer
         {
             // we just give up, we tried
         }
-    }
-
-    private static Func<object, string?>? BuildRefinementDelegate(
-        string fn,
-        Type refinementServiceType
-    )
-    {
-        var methodInfo = refinementServiceType.GetMethod(
-            $"TestAgainst{fn.RemoveNamespace()}",
-#pragma warning disable S3011
-            BindingFlags.NonPublic | BindingFlags.Static
-#pragma warning restore S3011
-        );
-
-        if (methodInfo == null)
-        {
-            return null;
-        }
-
-        return (Func<object, string?>?)methodInfo.CreateDelegate(typeof(Func<object, string?>));
     }
 }
