@@ -4,13 +4,14 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Tuxedo;
 
 namespace <global namespace>;
 
 /// <summary>
 /// A refined bool based on the Test.False refinement predicate
 /// </summary>
-[Tuxedo.RefinedType]
+[RefinedType]
 public readonly partial struct FalseBool : IEquatable<FalseBool>
 {
     private readonly bool? _value;

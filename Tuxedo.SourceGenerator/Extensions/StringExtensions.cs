@@ -52,4 +52,10 @@ internal static class StringExtensions
     {
         return value == null ? null : char.ToUpperInvariant(value[0]) + value.Substring(1);
     }
+
+    public static string? JoinBy(this IEnumerable<string> values, string separator)
+    {
+        var result = string.Join(separator, values);
+        return result.Length == 0 ? null : result;
+    }
 }

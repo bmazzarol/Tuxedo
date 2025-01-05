@@ -18,6 +18,16 @@ public static class GeneratorDriverExtensions
         return driver.RunGenerators(compilation);
     }
 
+    internal static SettingsTask IgnoreStandardSupportCode(this SettingsTask settings)
+    {
+        return settings.IgnoreGeneratedResult(x =>
+            x.HintName
+                is "RefinementAttribute.g.cs"
+                    or "RefinedTypeAttribute.g.cs"
+                    or "RefinementService.g.cs"
+        );
+    }
+
     internal static Task VerifyRefinement(
         this string? source,
         [CallerFilePath] string sourceFile = ""
@@ -31,12 +41,6 @@ public static class GeneratorDriverExtensions
                {{source}}
             }
             """.BuildDriver();
-        return Verify(driver, sourceFile: sourceFile)
-            .IgnoreGeneratedResult(x =>
-                x.HintName
-                    is "RefinementAttribute.g.cs"
-                        or "RefinedTypeAttribute.g.cs"
-                        or "RefinementService.g.cs"
-            );
+        return Verify(driver, sourceFile: sourceFile).IgnoreStandardSupportCode();
     }
 }

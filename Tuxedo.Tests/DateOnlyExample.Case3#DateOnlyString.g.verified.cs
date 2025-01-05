@@ -4,13 +4,14 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Tuxedo;
 
 namespace <global namespace>;
 
 /// <summary>
 /// A refined string based on the Test.DateOnly refinement predicate which produces an alternative DateOnly value
 /// </summary>
-[Tuxedo.RefinedType]
+[RefinedType]
 public readonly partial struct DateOnlyString : IEquatable<DateOnlyString>
 {
     private readonly string? _value;

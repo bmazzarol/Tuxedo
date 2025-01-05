@@ -4,13 +4,14 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Tuxedo;
 
 namespace <global namespace>;
 
 /// <summary>
 /// A refined string based on the Test.IsValidPassword refinement predicate
 /// </summary>
-[Tuxedo.RefinedType]
+[RefinedType]
 public readonly partial struct PasswordString : IEquatable<PasswordString>
 {
     private readonly string? _value;

@@ -1,3 +1,4 @@
+using System.Numerics;
 using FluentAssertions;
 using Tuxedo.Tests.Extensions;
 
@@ -13,7 +14,7 @@ public readonly partial struct OddT
 {
     [Refinement("The number must be an odd number, but was '{value}'")]
     internal static bool Odd<T>(T value)
-        where T : System.Numerics.INumberBase<T> => T.IsOddInteger(value);
+        where T : INumberBase<T> => T.IsOddInteger(value);
 }
 
 public class OddNumberExample
@@ -65,5 +66,23 @@ public class OddNumberExample
             internal static bool Odd<T>(T value)
                 where T : System.Numerics.INumberBase<T> => T.IsOddInteger(value);
             """.VerifyRefinement();
+    }
+
+    [Fact(
+        DisplayName = "OddT refinement snapshot is correct with generics and constraints and usings"
+    )]
+    public Task Case5()
+    {
+        var driver = """
+            using Tuxedo;
+            using System.Numerics;
+
+            internal static class Test
+            {
+               [Refinement("The number must be an odd number, but was '{value}'", Name = "Odd")]
+               internal static bool Odd<T>(T value) where T : INumberBase<T> => T.IsOddInteger(value);
+            }
+            """.BuildDriver();
+        return Verify(driver).IgnoreStandardSupportCode();
     }
 }

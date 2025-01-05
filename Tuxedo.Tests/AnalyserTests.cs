@@ -138,18 +138,24 @@ public sealed class AnalyserTests
                 {
                     public static void TestMethod()
                     {
-                        var v1 = [|TrueBool.Parse(false)|];
-                        var v2 = [|TrueBool.TryParse(false, out _, out _)|];
-                        var v3 = [|(TrueBool)false|];
+                        // these are all bad
+                        var bad1 = [|TrueBool.Parse(false)|];
+                        var bad2 = [|TrueBool.TryParse(false, out _, out _)|];
+                        var bad3 = [|(TrueBool)false|];
+                        
+                        const bool badConst = false;
+                        var bad4 = [|TrueBool.Parse(badConst)|];
+                        var bad5 = [|TrueBool.TryParse(badConst, out _, out _)|];
+                        var bad6 = [|(TrueBool)badConst|];
                         
                         // these are fine
-                        var v4 = TrueBool.Parse(true);
-                        var v5 = (TrueBool)true;
-                        var v6 = TrueBool.TryParse(true, out _, out _);
+                        var ok1 = TrueBool.Parse(true);
+                        var ok2 = (TrueBool)true;
+                        var ok3 = TrueBool.TryParse(true, out _, out _);
                         // these unrelated parse methods are also fine
-                        var v7 = Guid.Parse("");
-                        var v8 = Guid.TryParse("", out _);
-                        var v9 = (double) 1;
+                        var ok4 = Guid.Parse("");
+                        var ok5 = Guid.TryParse("", out _);
+                        var ok6 = (double) 1;
                     }
                 }
                 """,

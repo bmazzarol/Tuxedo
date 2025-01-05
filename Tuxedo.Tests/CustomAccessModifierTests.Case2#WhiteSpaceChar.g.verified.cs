@@ -4,13 +4,14 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Tuxedo;
 
 namespace <global namespace>;
 
 /// <summary>
 /// A refined char based on the Test.WhiteSpace refinement predicate
 /// </summary>
-[Tuxedo.RefinedType]
+[RefinedType]
 internal readonly partial struct WhiteSpaceChar : IEquatable<WhiteSpaceChar>
 {
     private readonly char? _value;

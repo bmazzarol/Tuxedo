@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using Tuxedo.SourceGenerator.Extensions;
+using SF = Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Tuxedo.SourceGenerator;
 
@@ -68,6 +69,13 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
         )!;
         var ns = methodSymbol.ContainingNamespace.ToDisplayString();
 
+        // get all usings
+        var usings = methodDeclarationSyntax
+            .TryGetUsings()
+            .Add(SF.UsingDirective(SF.ParseName(" System")))
+            .Add(SF.UsingDirective(SF.ParseName(" System.Diagnostics.CodeAnalysis")))
+            .Add(SF.UsingDirective(SF.ParseName(" Tuxedo")));
+
         // get the predicate details
         var containingType = methodSymbol.ContainingType;
         var @class = containingType.ToDisplayString();
@@ -115,6 +123,7 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
 
         return new RefinedTypeDetails(
             Namespace: ns,
+            Usings: usings,
             Predicate: predicate,
             FailureMessage: failureMessage,
             AccessModifier: accessModifier,
@@ -142,9 +151,8 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
             return;
         }
 
-        generics = $"<{string.Join(", ", genericTypeArguments.Select(t => t.ToDisplayString()))}>";
-        var parts = methodDeclaration.ConstraintClauses.Select(x => x.ToString()).ToArray();
-        constraints = parts.Length > 0 ? string.Join("\n", parts) : null;
+        generics = $"<{genericTypeArguments.Select(t => t.ToDisplayString()).JoinBy(", ")}>";
+        constraints = methodDeclaration.ConstraintClauses.Select(x => x.ToString()).JoinBy("\n");
     }
 
     private static string BuildSafeStructName(string name, string? parameterType)

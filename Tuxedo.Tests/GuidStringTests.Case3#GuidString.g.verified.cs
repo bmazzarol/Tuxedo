@@ -4,13 +4,14 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Tuxedo;
 
 namespace <global namespace>;
 
 /// <summary>
 /// A refined string based on the Test.Guid refinement predicate which produces an alternative Guid value
 /// </summary>
-[Tuxedo.RefinedType]
+[RefinedType]
 public readonly partial struct GuidString : IEquatable<GuidString>
 {
     private readonly string? _value;

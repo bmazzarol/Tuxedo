@@ -4,6 +4,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using Tuxedo;
 
 namespace <global namespace>;
@@ -13,7 +14,7 @@ namespace <global namespace>;
 /// </summary>
 [RefinedType]
 public readonly partial struct Odd<T> : IEquatable<Odd<T>>
-	where T : System.Numerics.INumberBase<T>
+	where T : INumberBase<T>
 {
     private readonly T? _value;
    
