@@ -98,6 +98,18 @@ public readonly partial struct Odd<T> : IEquatable<Odd<T>>
     }
     
     /// <inheritdoc />
+    public static bool operator ==(Odd<T> left, Odd<T> right)
+    {
+        return left.Equals(right);
+    }
+    
+    /// <inheritdoc />
+    public static bool operator !=(Odd<T> left, Odd<T> right)
+    {
+        return !(left == right);
+    }
+    
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return HashCode.Combine(_value);

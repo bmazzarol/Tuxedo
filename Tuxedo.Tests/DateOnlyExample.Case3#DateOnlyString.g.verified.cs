@@ -114,6 +114,18 @@ public readonly partial struct DateOnlyString : IEquatable<DateOnlyString>
     }
     
     /// <inheritdoc />
+    public static bool operator ==(DateOnlyString left, DateOnlyString right)
+    {
+        return left.Equals(right);
+    }
+    
+    /// <inheritdoc />
+    public static bool operator !=(DateOnlyString left, DateOnlyString right)
+    {
+        return !(left == right);
+    }
+    
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return HashCode.Combine(_value, _altValue);

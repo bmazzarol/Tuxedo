@@ -96,6 +96,18 @@ public readonly partial struct ValidWidget : IEquatable<ValidWidget>
     }
     
     /// <inheritdoc />
+    public static bool operator ==(ValidWidget left, ValidWidget right)
+    {
+        return left.Equals(right);
+    }
+    
+    /// <inheritdoc />
+    public static bool operator !=(ValidWidget left, ValidWidget right)
+    {
+        return !(left == right);
+    }
+    
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return HashCode.Combine(_value);

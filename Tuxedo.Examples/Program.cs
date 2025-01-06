@@ -31,3 +31,27 @@ if (NonEmptyArray<PositiveInt>.TryParse([v2], out var v5, out _))
 {
     Debug.Assert(nea.Equals(v5));
 }
+
+// loop over the array
+foreach (var item in nea)
+{
+    Debug.Assert(item == v2);
+}
+
+// we can also parse at the same time
+// here we have a custom widget id type that must follow a specific format but has an int value part
+#pragma warning disable TUX003 // this is required otherwise it will not compile
+_ = WidgetId.Parse("widget-1"); // invalid format
+#pragma warning restore TUX003
+
+var widgetId = WidgetId.Parse("W123");
+
+// the string part and int part can both be accessed
+string widgetString = widgetId;
+int widgetInt = widgetId;
+
+// or deconstructed
+(string? str, int i) = widgetId;
+
+Debug.Assert(widgetString == "W123");
+Debug.Assert(widgetInt == 123);

@@ -114,6 +114,18 @@ public readonly partial struct GuidString : IEquatable<GuidString>
     }
     
     /// <inheritdoc />
+    public static bool operator ==(GuidString left, GuidString right)
+    {
+        return left.Equals(right);
+    }
+    
+    /// <inheritdoc />
+    public static bool operator !=(GuidString left, GuidString right)
+    {
+        return !(left == right);
+    }
+    
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return HashCode.Combine(_value, _altValue);

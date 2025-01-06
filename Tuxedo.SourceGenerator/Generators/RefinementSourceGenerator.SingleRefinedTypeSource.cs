@@ -181,6 +181,18 @@ public sealed partial class RefinementSourceGenerator
                 }
                 
                 /// <inheritdoc />
+                public static bool operator ==({{model.RefinedType}}{{model.Generics}} left, {{model.RefinedType}}{{model.Generics}} right)
+                {
+                    return left.Equals(right);
+                }
+                
+                /// <inheritdoc />
+                public static bool operator !=({{model.RefinedType}}{{model.Generics}} left, {{model.RefinedType}}{{model.Generics}} right)
+                {
+                    return !(left == right);
+                }
+                
+                /// <inheritdoc />
                 public override int GetHashCode()
                 {
                     return {{hashCode}};

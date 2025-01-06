@@ -96,6 +96,18 @@ internal readonly partial struct WhiteSpaceChar : IEquatable<WhiteSpaceChar>
     }
     
     /// <inheritdoc />
+    public static bool operator ==(WhiteSpaceChar left, WhiteSpaceChar right)
+    {
+        return left.Equals(right);
+    }
+    
+    /// <inheritdoc />
+    public static bool operator !=(WhiteSpaceChar left, WhiteSpaceChar right)
+    {
+        return !(left == right);
+    }
+    
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return HashCode.Combine(_value);

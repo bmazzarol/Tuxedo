@@ -96,6 +96,18 @@ public readonly partial struct PasswordString : IEquatable<PasswordString>
     }
     
     /// <inheritdoc />
+    public static bool operator ==(PasswordString left, PasswordString right)
+    {
+        return left.Equals(right);
+    }
+    
+    /// <inheritdoc />
+    public static bool operator !=(PasswordString left, PasswordString right)
+    {
+        return !(left == right);
+    }
+    
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return HashCode.Combine(_value);

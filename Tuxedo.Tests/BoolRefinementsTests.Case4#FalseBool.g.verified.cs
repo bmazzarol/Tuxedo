@@ -96,6 +96,18 @@ public readonly partial struct FalseBool : IEquatable<FalseBool>
     }
     
     /// <inheritdoc />
+    public static bool operator ==(FalseBool left, FalseBool right)
+    {
+        return left.Equals(right);
+    }
+    
+    /// <inheritdoc />
+    public static bool operator !=(FalseBool left, FalseBool right)
+    {
+        return !(left == right);
+    }
+    
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return HashCode.Combine(_value);
