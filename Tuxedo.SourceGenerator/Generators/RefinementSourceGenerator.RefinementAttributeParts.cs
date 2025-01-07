@@ -7,7 +7,7 @@ public sealed partial class RefinementSourceGenerator
 {
     private readonly ref struct RefinementAttributeParts
     {
-        public string FailureMessage { get; }
+        public string? FailureMessage { get; }
         private bool IsInternal { get; }
         public string AccessModifier => IsInternal ? "internal" : "public";
         public string? Name { get; }
@@ -33,7 +33,12 @@ public sealed partial class RefinementSourceGenerator
                     syntax => syntax.Expression.ToString(),
                     StringComparer.OrdinalIgnoreCase
                 );
-            FailureMessage = arguments[0].Expression.ToString();
+            FailureMessage = nameToArgs.TryGetValue(nameof(FailureMessage), out var failureMessage)
+                ? failureMessage
+                : arguments
+                    .Where(x => x.NameEquals is null)
+                    .Select(x => x.Expression.ToString())
+                    .FirstOrDefault();
             IsInternal =
                 nameToArgs.TryGetValue(nameof(IsInternal), out var value)
                 && string.Equals(value, "true", StringComparison.Ordinal);

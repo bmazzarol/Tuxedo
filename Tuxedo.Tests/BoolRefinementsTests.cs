@@ -1,8 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Testing;
-using Microsoft.CodeAnalysis.Testing;
-using Tuxedo.SourceGenerator.Analysers;
 using Tuxedo.Tests.Extensions;
 
 namespace Tuxedo.Tests;

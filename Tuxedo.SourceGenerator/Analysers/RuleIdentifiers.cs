@@ -19,4 +19,9 @@ public static class RuleIdentifiers
     /// Compile type known values that will fail refinement, should not be assigned
     /// </summary>
     public const string InvalidConstAssignment = "TUX003";
+
+    /// <summary>
+    /// A refinement must have a failure message
+    /// </summary>
+    public const string MissingFailureMessage = "TUX004";
 }

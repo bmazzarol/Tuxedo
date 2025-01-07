@@ -144,7 +144,7 @@ public sealed partial class RefinementSourceGenerator
                 {
                     if ({{model.Predicate}}{{model.Generics}}(value{{model.AlternativeType.RenderIfNotNull(
                 _ => ", out var altValue"
-            )}}))
+            )}}){{(model.PredicateReturnsFailureMessage ? " is not {} fm": "")}})
                     {
                         refined = new {{model.RefinedType}}{{model.Generics}}(value{{model.AlternativeType.RenderIfNotNull(_ => ", altValue")}});
                         failureMessage = null;
@@ -152,7 +152,7 @@ public sealed partial class RefinementSourceGenerator
                     }
                     
                     refined = default!;
-                    failureMessage = ${{model.FailureMessage}};
+                    failureMessage = {{(model.PredicateReturnsFailureMessage ? "fm" : $"${model.FailureMessage}")}};
                     return false;
                 }
             """;

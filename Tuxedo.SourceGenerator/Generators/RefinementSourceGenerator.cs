@@ -43,8 +43,11 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
     {
         return s is MethodDeclarationSyntax mds
             && mds.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword))
-            // and returns a bool
-            && string.Equals(mds.ReturnType.ToString(), "bool", StringComparison.Ordinal)
+            // and returns a bool or a string
+            && (
+                string.Equals(mds.ReturnType.ToString(), "bool", StringComparison.Ordinal)
+                || string.Equals(mds.ReturnType.ToString(), "string?", StringComparison.Ordinal)
+            )
             // and has at least one parameter and no more than two
             && mds.ParameterList.Parameters.Count is >= 1 and <= 2
             // and if there are two parameters, the second is an out parameter
@@ -68,6 +71,10 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
             cancellationToken: token
         )!;
         var ns = methodSymbol.ContainingNamespace.ToDisplayString();
+
+        // is it returning a string or a bool?
+        var returnType = methodDeclarationSyntax.ReturnType.ToString();
+        var returningFailureMessage = !string.Equals(returnType, "bool", StringComparison.Ordinal);
 
         // get all usings
         var usings = methodDeclarationSyntax
@@ -125,6 +132,7 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
             Namespace: ns,
             Usings: usings,
             Predicate: predicate,
+            PredicateReturnsFailureMessage: returningFailureMessage,
             FailureMessage: failureMessage,
             AccessModifier: accessModifier,
             Generics: generics,

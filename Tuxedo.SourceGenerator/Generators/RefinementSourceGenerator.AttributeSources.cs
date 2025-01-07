@@ -20,7 +20,7 @@ public sealed partial class RefinementSourceGenerator
             /// The message to display when the refinement fails.
             /// The `value` parameter is available for string interpolation.
             /// </summary>
-            public string FailureMessage { get; }
+            public string? FailureMessage { get; set; }
 
             /// <summary>
             /// Indicates whether the refined type is internal, default is public
@@ -29,16 +29,22 @@ public sealed partial class RefinementSourceGenerator
             
             /// <summary>
             /// Optional name of the refined type.
-            /// Defaults to the refinement method name + the raw type name.
+            /// Defaults to the refinement method name + the raw type name
             /// </summary>
             public string? Name { get; set; }
             
             /// <summary>
-            /// Initializes a new instance of the <see cref="RefinementAttribute"/> class.
+            /// Initializes a new instance of the <see cref="RefinementAttribute"/> class
             /// </summary>
             public RefinementAttribute(string failureMessage)
             {
                 FailureMessage = failureMessage;
+            }
+            
+            /// <summary>
+            /// Initializes a new instance of the <see cref="RefinementAttribute"/> class
+            public RefinementAttribute()
+            {
             }
         }
         #endif

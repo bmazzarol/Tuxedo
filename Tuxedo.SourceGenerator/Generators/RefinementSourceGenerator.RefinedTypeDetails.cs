@@ -10,6 +10,7 @@ public sealed partial class RefinementSourceGenerator
         string? Namespace,
         SyntaxList<UsingDirectiveSyntax> Usings,
         string? Predicate,
+        bool PredicateReturnsFailureMessage,
         string? FailureMessage,
         string? AccessModifier,
         string? Generics,

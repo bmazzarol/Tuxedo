@@ -9,4 +9,10 @@ internal static class CompilationExtensions
         var typeSymbol = compilation.GetTypeByMetadataName("Tuxedo.RefinedTypeAttribute");
         return typeSymbol != null;
     }
+
+    public static bool HasRefinementAttribute(this Compilation compilation)
+    {
+        var typeSymbol = compilation.GetTypeByMetadataName("Tuxedo.RefinementAttribute");
+        return typeSymbol != null;
+    }
 }

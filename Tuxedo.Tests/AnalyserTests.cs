@@ -167,4 +167,78 @@ public sealed class AnalyserTests
         };
         return context.RunAsync();
     }
+
+    [Fact(
+        DisplayName = "The Refinement attribute must have the FailureMessage property set or the method must have a return type of string?"
+    )]
+    public Task Case4()
+    {
+        var context = new CSharpAnalyzerTest<MissingFailureMessageAnalyzer, DefaultVerifier>
+        {
+            ReferenceAssemblies = References.Net8AndOurs.Value,
+            TestCode = """
+                using System;
+
+                namespace Tuxedo;
+
+                [AttributeUsage(AttributeTargets.Method)]
+                internal sealed class RefinementAttribute : Attribute
+                {
+                    public string FailureMessage { get; set; }
+                    
+                    public RefinementAttribute(string failureMessage) => FailureMessage = failureMessage;
+                    
+                    public RefinementAttribute() {}
+                }
+
+                internal static class Test
+                {
+                    // these are bad
+                    
+                    [[|Refinement|]]
+                    public static bool TestMethod(bool value)
+                    {
+                        return value;
+                    }
+                    
+                    [[|Refinement|]]
+                    public static string TestMethod2(bool value)
+                    {
+                        return !value ? "This is fine" : null;
+                    }
+                    
+                    // these is fine
+                    
+                    [Refinement("This is fine")]
+                    public static bool TestMethod3(bool value)
+                    {
+                        return value;
+                    }
+                    
+                    [Refinement(FailureMessage = "This is fine")]
+                    public static bool TestMethod4(bool value)
+                    {
+                        return value;
+                    }
+                    
+                    [Refinement]
+                    public static string? TestMethod5(bool value)
+                    {
+                        return !value ? "This is fine" : null;
+                    }
+                }
+                """,
+            DiagnosticVerifier = (diagnostic, _, _) =>
+            {
+                diagnostic.Severity.Should().Be(DiagnosticSeverity.Error);
+                diagnostic
+                    .GetMessage()
+                    .Should()
+                    .Be(
+                        "FailureMessage must be set on the Refinement attribute, or the method must return a string?"
+                    );
+            },
+        };
+        return context.RunAsync();
+    }
 }
