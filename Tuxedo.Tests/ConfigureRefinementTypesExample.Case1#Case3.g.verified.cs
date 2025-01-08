@@ -112,4 +112,10 @@ public readonly partial struct Case3 : IEquatable<Case3>
     {
         return HashCode.Combine(_value);
     }
+    
+    /// <inheritdoc />
+    public override string? ToString()
+    {
+        return _value?.ToString();
+    }
 }

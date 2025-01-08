@@ -112,4 +112,10 @@ public readonly partial struct ValidWidget : IEquatable<ValidWidget>
     {
         return HashCode.Combine(_value);
     }
+    
+    /// <inheritdoc />
+    public override string? ToString()
+    {
+        return _value?.ToString();
+    }
 }

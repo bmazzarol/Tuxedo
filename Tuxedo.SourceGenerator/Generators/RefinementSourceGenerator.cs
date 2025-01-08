@@ -93,6 +93,7 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
         var attributeParts = new RefinementAttributeParts(methodDeclarationSyntax);
         var failureMessage = attributeParts.FailureMessage;
         var accessModifier = attributeParts.AccessModifier;
+        var hasImplicitConversionFromRaw = attributeParts.HasImplicitConversionFromRaw;
 
         // extract the generic parts
         ExtractGenericPartDetails(
@@ -139,7 +140,8 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
             GenericConstraints: genericTypeConstraints,
             RawType: rawType,
             RefinedType: refinedType,
-            AlternativeType: altType
+            AlternativeType: altType,
+            HasImplicitConversionFromRaw: hasImplicitConversionFromRaw
         );
     }
 

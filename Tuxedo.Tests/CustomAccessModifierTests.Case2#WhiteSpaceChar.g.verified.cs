@@ -112,4 +112,10 @@ internal readonly partial struct WhiteSpaceChar : IEquatable<WhiteSpaceChar>
     {
         return HashCode.Combine(_value);
     }
+    
+    /// <inheritdoc />
+    public override string? ToString()
+    {
+        return _value?.ToString();
+    }
 }

@@ -17,7 +17,8 @@ public sealed partial class RefinementSourceGenerator
         string? GenericConstraints,
         string? RawType,
         string? RefinedType,
-        string? AlternativeType
+        string? AlternativeType,
+        bool HasImplicitConversionFromRaw
     )
     {
         public string? RefinedTypeXmlSafeName => (RefinedType + Generics).EscapeXml();

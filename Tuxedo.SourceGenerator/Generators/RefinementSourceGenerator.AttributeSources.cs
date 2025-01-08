@@ -34,6 +34,12 @@ public sealed partial class RefinementSourceGenerator
             public string? Name { get; set; }
             
             /// <summary>
+            /// Indicates whether the raw type has an implicit conversion to the refined type.
+            /// The default is false, which generates an explicit conversion.
+            /// </summary>
+            public bool HasImplicitConversionFromRaw { get; set; }
+            
+            /// <summary>
             /// Initializes a new instance of the <see cref="RefinementAttribute"/> class
             /// </summary>
             public RefinementAttribute(string failureMessage)

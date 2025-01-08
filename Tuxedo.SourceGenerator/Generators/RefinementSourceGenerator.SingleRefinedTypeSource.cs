@@ -27,6 +27,8 @@ public sealed partial class RefinementSourceGenerator
                      {{RenderTryParseMethod(model)}}
                      
                      {{RenderEqualityMembers(model)}}
+                     
+                     {{FormattingMembers}}
                  }
                  """;
     }
@@ -103,12 +105,16 @@ public sealed partial class RefinementSourceGenerator
     {
         return $$"""
             /// <summary>
-                /// Explicit conversion from a {{model.RawType.EscapeXml()}} to a {{model.RefinedTypeXmlSafeName}}
+                /// {{(
+                model.HasImplicitConversionFromRaw ? "Implicit" : "Explicit"
+            )}} conversion from a {{model.RawType.EscapeXml()}} to a {{model.RefinedTypeXmlSafeName}}
                 /// </summary>
                 /// <param name="value">raw {{model.RawType.EscapeXml()}}</param>
                 /// <returns>refined {{model.RefinedTypeXmlSafeName}}</returns>
                 /// <exception cref="ArgumentOutOfRangeException">if the {{model.Predicate.EscapeXml()}} refinement fails</exception>
-                public static explicit operator {{model.RefinedType}}{{model.Generics}}({{model.RawType}} value)
+                public static {{(
+                    model.HasImplicitConversionFromRaw ? "implicit" : "explicit"
+                )}} operator {{model.RefinedType}}{{model.Generics}}({{model.RawType}} value)
                 {
                     return Parse(value);
                 }
@@ -199,4 +205,12 @@ public sealed partial class RefinementSourceGenerator
                 }
             """;
     }
+
+    private const string FormattingMembers = """
+        /// <inheritdoc />
+            public override string? ToString()
+            {
+                return _value?.ToString();
+            }
+        """;
 }

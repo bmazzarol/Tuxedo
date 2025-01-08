@@ -64,7 +64,10 @@ public sealed class MissingFailureMessageAnalyzer : DiagnosticAnalyzer
         var hasStringConstructor = ctx
             .Node.DescendantNodes()
             .OfType<AttributeArgumentSyntax>()
-            .Any(arg => arg.Expression is LiteralExpressionSyntax);
+            .Any(arg =>
+                arg.Expression is LiteralExpressionSyntax literal
+                && literal.IsKind(SyntaxKind.StringLiteralExpression)
+            );
 
         var hasStringReturn = ctx
             .Node.Ancestors()

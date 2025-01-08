@@ -112,4 +112,10 @@ public readonly partial struct PasswordString : IEquatable<PasswordString>
     {
         return HashCode.Combine(_value);
     }
+    
+    /// <inheritdoc />
+    public override string? ToString()
+    {
+        return _value?.ToString();
+    }
 }
