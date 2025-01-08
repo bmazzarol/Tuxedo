@@ -43,7 +43,7 @@ public sealed partial class RefinementSourceGenerator
                      /// Standard deconstruction to the underlying values
                      /// </summary>
                      /// <param name="value">raw {{model.RawType.EscapeXml()}}</param>
-                     /// <param name="altValue">alternative {{model.AlternativeType.EscapeXml()}}</param>
+                     /// <param name="altValue">The alternative {{model.AlternativeType.EscapeXml()}} produced when the refinement predicate is satisfied</param>
                      public void Deconstruct(out {{model.RawType}} value, out {{model.AlternativeType}} altValue)
                      {
                           value = Value;

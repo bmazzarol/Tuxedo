@@ -18,8 +18,7 @@ internal static class SymbolExtensions
     public static bool HasInterface(this ITypeSymbol? symbol, string interfaceName)
     {
         return symbol?.AllInterfaces.Any(i =>
-            i.ToDisplayString().Equals(interfaceName, StringComparison.Ordinal)
-        )
-            is true;
+                i.ToDisplayString().Equals(interfaceName, StringComparison.Ordinal)
+            ) ?? false;
     }
 }

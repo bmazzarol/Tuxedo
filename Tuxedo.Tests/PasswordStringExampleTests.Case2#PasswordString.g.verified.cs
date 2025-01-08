@@ -120,4 +120,12 @@ public readonly partial struct PasswordString : IEquatable<PasswordString>
     {
         return Value.ToString() ?? string.Empty;
     }
+    
+    /// <summary>
+    /// Returns the string representation of the underlying string
+    /// </summary>
+    public string ToString(IFormatProvider? provider)
+    {
+        return ((IConvertible)Value).ToString(provider) ?? string.Empty;
+    }
 }

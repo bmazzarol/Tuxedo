@@ -11,7 +11,12 @@ public static class GeneratorDriverExtensions
     {
         var compilation = CSharpCompilation.Create(
             "name",
-            source != null ? [CSharpSyntaxTree.ParseText(source)] : []
+            source != null ? [CSharpSyntaxTree.ParseText(source)] : [],
+            [
+                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(RefinementAttribute).Assembly.Location),
+            ],
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
         );
         var generator = new RefinementSourceGenerator();
         var driver = CSharpGeneratorDriver.Create(generator);
@@ -34,6 +39,7 @@ public static class GeneratorDriverExtensions
     )
     {
         var driver = $$"""
+            using System;
             using Tuxedo;
 
             internal static class Test

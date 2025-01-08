@@ -120,4 +120,12 @@ public readonly partial struct Case3 : IEquatable<Case3>
     {
         return Value.ToString() ?? string.Empty;
     }
+    
+    /// <summary>
+    /// Returns the string representation of the underlying bool
+    /// </summary>
+    public string ToString(IFormatProvider? provider)
+    {
+        return ((IConvertible)Value).ToString(provider) ?? string.Empty;
+    }
 }

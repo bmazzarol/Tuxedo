@@ -9,7 +9,7 @@ using Tuxedo;
 namespace <global namespace>;
 
 /// <summary>
-/// A refined string based on the Test.DateOnly refinement predicate which produces an alternative DateOnly value
+/// A refined string based on the Test.DateOnly refinement predicate which produces an alternative System.DateOnly value
 /// </summary>
 [RefinedType]
 public readonly partial struct DateOnlyString : IEquatable<DateOnlyString>
@@ -31,24 +31,24 @@ public readonly partial struct DateOnlyString : IEquatable<DateOnlyString>
         return @this.Value;
     }
         
-    private readonly DateOnly? _altValue;
+    private readonly System.DateOnly? _altValue;
    
     /// <summary>
-    /// The underlying DateOnly
+    /// The underlying System.DateOnly
     /// </summary>
-    public DateOnly AltValue => _altValue ?? throw new InvalidOperationException("Do not use the default value, please use the Parse and TryParse methods to construct a DateOnlyString");
+    public System.DateOnly AltValue => _altValue ?? throw new InvalidOperationException("Do not use the default value, please use the Parse and TryParse methods to construct a DateOnlyString");
 
     /// <summary>
-    /// Implicit conversion from the DateOnlyString to a DateOnly
+    /// Implicit conversion from the DateOnlyString to a System.DateOnly
     /// </summary>
     /// <param name="this">the DateOnlyString</param>
-    /// <returns>underlying DateOnly</returns>
-    public static implicit operator DateOnly(DateOnlyString @this)
+    /// <returns>underlying System.DateOnly</returns>
+    public static implicit operator System.DateOnly(DateOnlyString @this)
     {
         return @this.AltValue;
     }
 
-    private DateOnlyString(string value, DateOnly altValue)
+    private DateOnlyString(string value, System.DateOnly altValue)
     {
         _value = value;
         _altValue = altValue;
@@ -77,7 +77,7 @@ public readonly partial struct DateOnlyString : IEquatable<DateOnlyString>
     }
 
     /// <summary>
-    /// Try and refine the string against the Test.DateOnly refinement producing a DateOnly
+    /// Try and refine the string against the Test.DateOnly refinement producing a System.DateOnly
     /// </summary>
     /// <param name="value">raw string</param>
     /// <param name="refined">refined DateOnlyString when true</param>
@@ -140,11 +140,19 @@ public readonly partial struct DateOnlyString : IEquatable<DateOnlyString>
     }
     
     /// <summary>
+    /// Returns the string representation of the underlying string
+    /// </summary>
+    public string ToString(IFormatProvider? provider)
+    {
+        return ((IConvertible)Value).ToString(provider) ?? string.Empty;
+    }
+    
+    /// <summary>
     /// Standard deconstruction to the underlying values
     /// </summary>
     /// <param name="value">raw string</param>
-    /// <param name="altValue">alternative DateOnly</param>
-    public void Deconstruct(out string value, out DateOnly altValue)
+    /// <param name="altValue">The alternative System.DateOnly produced when the refinement predicate is satisfied</param>
+    public void Deconstruct(out string value, out System.DateOnly altValue)
     {
          value = Value;
          altValue = AltValue;

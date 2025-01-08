@@ -9,7 +9,7 @@ using Tuxedo;
 namespace <global namespace>;
 
 /// <summary>
-/// A refined string based on the Test.Guid refinement predicate which produces an alternative Guid value
+/// A refined string based on the Test.Guid refinement predicate which produces an alternative System.Guid value
 /// </summary>
 [RefinedType]
 public readonly partial struct GuidString : IEquatable<GuidString>
@@ -31,24 +31,24 @@ public readonly partial struct GuidString : IEquatable<GuidString>
         return @this.Value;
     }
         
-    private readonly Guid? _altValue;
+    private readonly System.Guid? _altValue;
    
     /// <summary>
-    /// The underlying Guid
+    /// The underlying System.Guid
     /// </summary>
-    public Guid AltValue => _altValue ?? throw new InvalidOperationException("Do not use the default value, please use the Parse and TryParse methods to construct a GuidString");
+    public System.Guid AltValue => _altValue ?? throw new InvalidOperationException("Do not use the default value, please use the Parse and TryParse methods to construct a GuidString");
 
     /// <summary>
-    /// Implicit conversion from the GuidString to a Guid
+    /// Implicit conversion from the GuidString to a System.Guid
     /// </summary>
     /// <param name="this">the GuidString</param>
-    /// <returns>underlying Guid</returns>
-    public static implicit operator Guid(GuidString @this)
+    /// <returns>underlying System.Guid</returns>
+    public static implicit operator System.Guid(GuidString @this)
     {
         return @this.AltValue;
     }
 
-    private GuidString(string value, Guid altValue)
+    private GuidString(string value, System.Guid altValue)
     {
         _value = value;
         _altValue = altValue;
@@ -77,7 +77,7 @@ public readonly partial struct GuidString : IEquatable<GuidString>
     }
 
     /// <summary>
-    /// Try and refine the string against the Test.Guid refinement producing a Guid
+    /// Try and refine the string against the Test.Guid refinement producing a System.Guid
     /// </summary>
     /// <param name="value">raw string</param>
     /// <param name="refined">refined GuidString when true</param>
@@ -140,11 +140,19 @@ public readonly partial struct GuidString : IEquatable<GuidString>
     }
     
     /// <summary>
+    /// Returns the string representation of the underlying string
+    /// </summary>
+    public string ToString(IFormatProvider? provider)
+    {
+        return ((IConvertible)Value).ToString(provider) ?? string.Empty;
+    }
+    
+    /// <summary>
     /// Standard deconstruction to the underlying values
     /// </summary>
     /// <param name="value">raw string</param>
-    /// <param name="altValue">alternative Guid</param>
-    public void Deconstruct(out string value, out Guid altValue)
+    /// <param name="altValue">The alternative System.Guid produced when the refinement predicate is satisfied</param>
+    public void Deconstruct(out string value, out System.Guid altValue)
     {
          value = Value;
          altValue = AltValue;
