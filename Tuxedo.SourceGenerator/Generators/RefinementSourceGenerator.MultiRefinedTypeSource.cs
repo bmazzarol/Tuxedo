@@ -37,7 +37,7 @@ public sealed partial class RefinementSourceGenerator
                      
                      {{RenderEqualityMembers(model)}}
                      
-                     {{FormattingMembers}}
+                     {{RenderFormattingMembers(model)}}
                      
                      /// <summary>
                      /// Standard deconstruction to the underlying values

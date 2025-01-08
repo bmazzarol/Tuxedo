@@ -113,9 +113,11 @@ public readonly partial struct TrueBool : IEquatable<TrueBool>
         return HashCode.Combine(_value);
     }
     
-    /// <inheritdoc />
+    /// <summary>
+    /// Returns the string representation of the underlying bool
+    /// </summary>
     public override string ToString()
     {
-        return _value?.ToString() ?? string.Empty;
+        return Value.ToString() ?? string.Empty;
     }
 }

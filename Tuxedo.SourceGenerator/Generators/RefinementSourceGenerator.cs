@@ -91,9 +91,6 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
 
         // get the attribute details
         var attributeParts = new RefinementAttributeParts(methodDeclarationSyntax);
-        var failureMessage = attributeParts.FailureMessage;
-        var accessModifier = attributeParts.AccessModifier;
-        var hasImplicitConversionFromRaw = attributeParts.HasImplicitConversionFromRaw;
 
         // extract the generic parts
         ExtractGenericPartDetails(
@@ -120,6 +117,7 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
 
         // try and see if there is a second out parameter
         string? altType = null;
+        ITypeSymbol? altTypeSymbol = null;
         if (methodDeclarationSyntax.ParameterList.Parameters.Count > 1)
         {
             var secondParam = methodDeclarationSyntax.ParameterList.Parameters[1].Type!;
@@ -127,6 +125,7 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
                 .SemanticModel.GetTypeInfo(secondParam, cancellationToken: token)
                 .Type;
             altType = secondParameterTypeInfo!.ToDisplayString();
+            altTypeSymbol = secondParameterTypeInfo;
         }
 
         return new RefinedTypeDetails(
@@ -134,14 +133,14 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
             Usings: usings,
             Predicate: predicate,
             PredicateReturnsFailureMessage: returningFailureMessage,
-            FailureMessage: failureMessage,
-            AccessModifier: accessModifier,
+            AttributeDetails: attributeParts,
             Generics: generics,
             GenericConstraints: genericTypeConstraints,
             RawType: rawType,
+            RawTypeSymbol: firstParameterTypeInfo,
             RefinedType: refinedType,
             AlternativeType: altType,
-            HasImplicitConversionFromRaw: hasImplicitConversionFromRaw
+            AlternativeTypeSymbol: altTypeSymbol
         );
     }
 

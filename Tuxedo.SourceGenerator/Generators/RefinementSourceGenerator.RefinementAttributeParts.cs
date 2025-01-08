@@ -5,7 +5,7 @@ namespace Tuxedo.SourceGenerator;
 
 public sealed partial class RefinementSourceGenerator
 {
-    private readonly ref struct RefinementAttributeParts
+    private sealed record RefinementAttributeParts
     {
         public string? FailureMessage { get; }
         private bool IsInternal { get; }

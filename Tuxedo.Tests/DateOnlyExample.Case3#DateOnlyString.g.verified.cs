@@ -131,10 +131,12 @@ public readonly partial struct DateOnlyString : IEquatable<DateOnlyString>
         return HashCode.Combine(_value, _altValue);
     }
     
-    /// <inheritdoc />
+    /// <summary>
+    /// Returns the string representation of the underlying string
+    /// </summary>
     public override string ToString()
     {
-        return _value?.ToString() ?? string.Empty;
+        return Value.ToString() ?? string.Empty;
     }
     
     /// <summary>

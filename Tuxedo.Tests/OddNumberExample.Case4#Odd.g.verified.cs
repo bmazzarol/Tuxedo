@@ -114,9 +114,11 @@ public readonly partial struct Odd<T> : IEquatable<Odd<T>>
         return HashCode.Combine(_value);
     }
     
-    /// <inheritdoc />
+    /// <summary>
+    /// Returns the string representation of the underlying T
+    /// </summary>
     public override string ToString()
     {
-        return _value?.ToString() ?? string.Empty;
+        return Value.ToString() ?? string.Empty;
     }
 }
