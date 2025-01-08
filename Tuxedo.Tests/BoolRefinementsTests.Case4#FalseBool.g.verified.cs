@@ -78,7 +78,7 @@ public readonly partial struct FalseBool : IEquatable<FalseBool>
             return true;
         }
         
-        refined = default!;
+        refined = default;
         failureMessage = $"The boolean value must be 'False', instead found '{value}'";
         return false;
     }
@@ -114,8 +114,8 @@ public readonly partial struct FalseBool : IEquatable<FalseBool>
     }
     
     /// <inheritdoc />
-    public override string? ToString()
+    public override string ToString()
     {
-        return _value?.ToString();
+        return _value?.ToString() ?? string.Empty;
     }
 }

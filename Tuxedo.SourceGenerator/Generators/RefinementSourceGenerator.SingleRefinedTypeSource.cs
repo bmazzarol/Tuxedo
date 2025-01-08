@@ -157,7 +157,7 @@ public sealed partial class RefinementSourceGenerator
                         return true;
                     }
                     
-                    refined = default!;
+                    refined = default;
                     failureMessage = {{(model.PredicateReturnsFailureMessage ? "fm" : $"${model.FailureMessage}")}};
                     return false;
                 }
@@ -208,9 +208,9 @@ public sealed partial class RefinementSourceGenerator
 
     private const string FormattingMembers = """
         /// <inheritdoc />
-            public override string? ToString()
+            public override string ToString()
             {
-                return _value?.ToString();
+                return _value?.ToString() ?? string.Empty;
             }
         """;
 }

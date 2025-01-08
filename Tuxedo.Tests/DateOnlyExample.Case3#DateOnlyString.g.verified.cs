@@ -96,7 +96,7 @@ public readonly partial struct DateOnlyString : IEquatable<DateOnlyString>
             return true;
         }
         
-        refined = default!;
+        refined = default;
         failureMessage = $"The value must be a valid date, but was '{value}'";
         return false;
     }
@@ -132,9 +132,9 @@ public readonly partial struct DateOnlyString : IEquatable<DateOnlyString>
     }
     
     /// <inheritdoc />
-    public override string? ToString()
+    public override string ToString()
     {
-        return _value?.ToString();
+        return _value?.ToString() ?? string.Empty;
     }
     
     /// <summary>

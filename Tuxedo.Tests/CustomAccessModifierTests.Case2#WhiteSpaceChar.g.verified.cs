@@ -78,7 +78,7 @@ internal readonly partial struct WhiteSpaceChar : IEquatable<WhiteSpaceChar>
             return true;
         }
         
-        refined = default!;
+        refined = default;
         failureMessage = $"`{value}` is not a whitespace character";
         return false;
     }
@@ -114,8 +114,8 @@ internal readonly partial struct WhiteSpaceChar : IEquatable<WhiteSpaceChar>
     }
     
     /// <inheritdoc />
-    public override string? ToString()
+    public override string ToString()
     {
-        return _value?.ToString();
+        return _value?.ToString() ?? string.Empty;
     }
 }

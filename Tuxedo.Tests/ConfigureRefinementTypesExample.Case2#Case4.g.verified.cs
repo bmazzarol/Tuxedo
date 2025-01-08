@@ -78,7 +78,7 @@ public readonly partial struct Case4 : IEquatable<Case4>
             return true;
         }
         
-        refined = default!;
+        refined = default;
         failureMessage = $"Must be true";
         return false;
     }
@@ -114,8 +114,8 @@ public readonly partial struct Case4 : IEquatable<Case4>
     }
     
     /// <inheritdoc />
-    public override string? ToString()
+    public override string ToString()
     {
-        return _value?.ToString();
+        return _value?.ToString() ?? string.Empty;
     }
 }

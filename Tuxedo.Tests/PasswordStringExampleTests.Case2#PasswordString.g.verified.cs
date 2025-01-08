@@ -78,7 +78,7 @@ public readonly partial struct PasswordString : IEquatable<PasswordString>
             return true;
         }
         
-        refined = default!;
+        refined = default;
         failureMessage = $"The string must be at least 8 characters long, contain at most 1 uppercase letter, number and special character. You provided '{value}'.";
         return false;
     }
@@ -114,8 +114,8 @@ public readonly partial struct PasswordString : IEquatable<PasswordString>
     }
     
     /// <inheritdoc />
-    public override string? ToString()
+    public override string ToString()
     {
-        return _value?.ToString();
+        return _value?.ToString() ?? string.Empty;
     }
 }

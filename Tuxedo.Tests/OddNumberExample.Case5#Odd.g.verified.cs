@@ -80,7 +80,7 @@ public readonly partial struct Odd<T> : IEquatable<Odd<T>>
             return true;
         }
         
-        refined = default!;
+        refined = default;
         failureMessage = $"The number must be an odd number, but was '{value}'";
         return false;
     }
@@ -116,8 +116,8 @@ public readonly partial struct Odd<T> : IEquatable<Odd<T>>
     }
     
     /// <inheritdoc />
-    public override string? ToString()
+    public override string ToString()
     {
-        return _value?.ToString();
+        return _value?.ToString() ?? string.Empty;
     }
 }
