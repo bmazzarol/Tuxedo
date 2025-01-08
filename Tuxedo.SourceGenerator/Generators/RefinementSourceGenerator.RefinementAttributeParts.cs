@@ -5,12 +5,13 @@ namespace Tuxedo.SourceGenerator;
 
 public sealed partial class RefinementSourceGenerator
 {
-    private readonly ref struct RefinementAttributeParts
+    private sealed record RefinementAttributeParts
     {
         public string? FailureMessage { get; }
         private bool IsInternal { get; }
         public string AccessModifier => IsInternal ? "internal" : "public";
         public string? Name { get; }
+        public bool HasImplicitConversionFromRaw { get; }
 
         public RefinementAttributeParts(MethodDeclarationSyntax methodDeclaration)
         {
@@ -39,12 +40,18 @@ public sealed partial class RefinementSourceGenerator
                     .Where(x => x.NameEquals is null)
                     .Select(x => x.Expression.ToString())
                     .FirstOrDefault();
-            IsInternal =
-                nameToArgs.TryGetValue(nameof(IsInternal), out var value)
-                && string.Equals(value, "true", StringComparison.Ordinal);
             Name = nameToArgs.TryGetValue(nameof(Name), out var nameToName)
                 ? nameToName.StripExpressionParts()
                 : null;
+            IsInternal = IsEnabled(nameof(IsInternal), nameToArgs);
+            HasImplicitConversionFromRaw = IsEnabled(
+                nameof(HasImplicitConversionFromRaw),
+                nameToArgs
+            );
         }
+
+        private static bool IsEnabled(string value, Dictionary<string?, string> nameToArgs) =>
+            nameToArgs.TryGetValue(value, out var v)
+            && string.Equals(v, "true", StringComparison.Ordinal);
     }
 }

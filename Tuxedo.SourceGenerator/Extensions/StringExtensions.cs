@@ -43,6 +43,11 @@ internal static class StringExtensions
         return value == null ? null : render(value);
     }
 
+    public static string? RenderIfTrue(this bool value, Func<string> render)
+    {
+        return !value ? null : render();
+    }
+
     public static string? LowercaseFirst(this string? value)
     {
         return value == null ? null : char.ToLowerInvariant(value[0]) + value.Substring(1);

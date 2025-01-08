@@ -6,18 +6,19 @@ namespace Tuxedo.SourceGenerator;
 
 public sealed partial class RefinementSourceGenerator
 {
-    private readonly record struct RefinedTypeDetails(
+    private sealed record RefinedTypeDetails(
         string? Namespace,
         SyntaxList<UsingDirectiveSyntax> Usings,
         string? Predicate,
         bool PredicateReturnsFailureMessage,
-        string? FailureMessage,
-        string? AccessModifier,
+        RefinementAttributeParts AttributeDetails,
         string? Generics,
         string? GenericConstraints,
         string? RawType,
+        ITypeSymbol? RawTypeSymbol,
         string? RefinedType,
-        string? AlternativeType
+        string? AlternativeType,
+        ITypeSymbol? AlternativeTypeSymbol
     )
     {
         public string? RefinedTypeXmlSafeName => (RefinedType + Generics).EscapeXml();

@@ -85,4 +85,13 @@ public class OddNumberExample
             """.BuildDriver();
         return Verify(driver).IgnoreStandardSupportCode();
     }
+
+    [Fact(DisplayName = "OddInt refined type generates the correct ToString methods")]
+    public Task Case6()
+    {
+        return """
+            [Refinement("The number must be an odd number, but was '{value}'")]
+            internal static bool Odd(int value) 
+            """.VerifyRefinement();
+    }
 }

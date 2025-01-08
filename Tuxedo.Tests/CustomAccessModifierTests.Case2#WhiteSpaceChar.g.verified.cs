@@ -12,7 +12,7 @@ namespace <global namespace>;
 /// A refined char based on the Test.WhiteSpace refinement predicate
 /// </summary>
 [RefinedType]
-internal readonly partial struct WhiteSpaceChar : IEquatable<WhiteSpaceChar>
+internal readonly partial struct WhiteSpaceChar : IEquatable<WhiteSpaceChar>, IFormattable
 {
     private readonly char? _value;
    
@@ -78,7 +78,7 @@ internal readonly partial struct WhiteSpaceChar : IEquatable<WhiteSpaceChar>
             return true;
         }
         
-        refined = default!;
+        refined = default;
         failureMessage = $"`{value}` is not a whitespace character";
         return false;
     }
@@ -111,5 +111,29 @@ internal readonly partial struct WhiteSpaceChar : IEquatable<WhiteSpaceChar>
     public override int GetHashCode()
     {
         return HashCode.Combine(_value);
+    }
+    
+    /// <summary>
+    /// Returns the string representation of the underlying char
+    /// </summary>
+    public override string ToString()
+    {
+        return Value.ToString() ?? string.Empty;
+    }
+    
+    /// <summary>
+    /// Returns the string representation of the underlying char
+    /// </summary>
+    public string ToString(IFormatProvider? provider)
+    {
+        return ((IConvertible)Value).ToString(provider) ?? string.Empty;
+    }
+    
+    /// <summary>
+    /// Returns the string representation of the underlying char
+    /// </summary>
+    public string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        return ((IFormattable)Value).ToString(format, formatProvider) ?? string.Empty;
     }
 }

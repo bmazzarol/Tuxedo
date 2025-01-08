@@ -78,7 +78,7 @@ public readonly partial struct ValidWidget : IEquatable<ValidWidget>
             return true;
         }
         
-        refined = default!;
+        refined = default;
         failureMessage = $"The widget must have a valid Id and Name";
         return false;
     }
@@ -111,5 +111,13 @@ public readonly partial struct ValidWidget : IEquatable<ValidWidget>
     public override int GetHashCode()
     {
         return HashCode.Combine(_value);
+    }
+    
+    /// <summary>
+    /// Returns the string representation of the underlying Widget
+    /// </summary>
+    public override string ToString()
+    {
+        return Value.ToString() ?? string.Empty;
     }
 }

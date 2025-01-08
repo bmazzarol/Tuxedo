@@ -27,6 +27,8 @@ public sealed partial class RefinementSourceGenerator
                      {{RenderTryParseMethod(model)}}
                      
                      {{RenderEqualityMembers(model)}}
+                     
+                     {{RenderFormattingMembers(model)}}
                  }
                  """;
     }
@@ -50,6 +52,7 @@ public sealed partial class RefinementSourceGenerator
 
     private static string RenderTypeNameParts(RefinedTypeDetails model)
     {
+        var isFormattable = model.RawTypeSymbol.HasInterface("System.IFormattable");
         return $"""
             /// <summary>
             /// A refined {model.RawType.EscapeXml()} based on the {model.Predicate.EscapeXml()} refinement predicate{model.AlternativeType.RenderIfNotNull(
@@ -57,7 +60,7 @@ public sealed partial class RefinementSourceGenerator
             )}
             /// </summary>
             [RefinedType]
-            {model.AccessModifier} readonly partial struct {model.RefinedType}{model.Generics} : IEquatable<{model.RefinedType}{model.Generics}>{model.GenericConstraints.PrependIfNotNull(
+            {model.AttributeDetails.AccessModifier} readonly partial struct {model.RefinedType}{model.Generics} : IEquatable<{model.RefinedType}{model.Generics}>{isFormattable.RenderIfTrue(() => ", IFormattable")}{model.GenericConstraints.PrependIfNotNull(
                 "\n\t"
             )}
             """;
@@ -103,12 +106,16 @@ public sealed partial class RefinementSourceGenerator
     {
         return $$"""
             /// <summary>
-                /// Explicit conversion from a {{model.RawType.EscapeXml()}} to a {{model.RefinedTypeXmlSafeName}}
+                /// {{(
+                model.AttributeDetails.HasImplicitConversionFromRaw ? "Implicit" : "Explicit"
+            )}} conversion from a {{model.RawType.EscapeXml()}} to a {{model.RefinedTypeXmlSafeName}}
                 /// </summary>
                 /// <param name="value">raw {{model.RawType.EscapeXml()}}</param>
                 /// <returns>refined {{model.RefinedTypeXmlSafeName}}</returns>
                 /// <exception cref="ArgumentOutOfRangeException">if the {{model.Predicate.EscapeXml()}} refinement fails</exception>
-                public static explicit operator {{model.RefinedType}}{{model.Generics}}({{model.RawType}} value)
+                public static {{(
+                    model.AttributeDetails.HasImplicitConversionFromRaw ? "implicit" : "explicit"
+                )}} operator {{model.RefinedType}}{{model.Generics}}({{model.RawType}} value)
                 {
                     return Parse(value);
                 }
@@ -144,15 +151,15 @@ public sealed partial class RefinementSourceGenerator
                 {
                     if ({{model.Predicate}}{{model.Generics}}(value{{model.AlternativeType.RenderIfNotNull(
                 _ => ", out var altValue"
-            )}}){{(model.PredicateReturnsFailureMessage ? " is not {} fm": "")}})
+            )}}){{model.PredicateReturnsFailureMessage.RenderIfTrue(() =>" is not {} fm")}})
                     {
                         refined = new {{model.RefinedType}}{{model.Generics}}(value{{model.AlternativeType.RenderIfNotNull(_ => ", altValue")}});
                         failureMessage = null;
                         return true;
                     }
                     
-                    refined = default!;
-                    failureMessage = {{(model.PredicateReturnsFailureMessage ? "fm" : $"${model.FailureMessage}")}};
+                    refined = default;
+                    failureMessage = {{(model.PredicateReturnsFailureMessage ? "fm" : $"${model.AttributeDetails.FailureMessage}")}};
                     return false;
                 }
             """;
@@ -198,5 +205,52 @@ public sealed partial class RefinementSourceGenerator
                     return {{hashCode}};
                 }
             """;
+    }
+
+    private static string RenderFormattingMembers(RefinedTypeDetails details)
+    {
+        var isConvertible = details.RawTypeSymbol?.HasInterface("System.IConvertible") ?? false;
+        var isFormattable = details.RawTypeSymbol?.HasInterface("System.IFormattable") ?? false;
+        return $$"""
+            /// <summary>
+                /// Returns the string representation of the underlying {{details.RawType.EscapeXml()}}
+                /// </summary>
+                public override string ToString()
+                {
+                    return Value.ToString() ?? string.Empty;
+                }{{isConvertible.RenderIfTrue(RenderConvertableImpl)}}{{isFormattable.RenderIfTrue(
+                RenderFormattableImpl
+            )}}
+            """;
+
+        string RenderConvertableImpl()
+        {
+            return $$"""
+
+                    
+                    /// <summary>
+                    /// Returns the string representation of the underlying {{details.RawType.EscapeXml()}}
+                    /// </summary>
+                    public string ToString(IFormatProvider? provider)
+                    {
+                        return ((IConvertible)Value).ToString(provider) ?? string.Empty;
+                    }
+                """;
+        }
+
+        string RenderFormattableImpl()
+        {
+            return $$"""
+
+                    
+                    /// <summary>
+                    /// Returns the string representation of the underlying {{details.RawType.EscapeXml()}}
+                    /// </summary>
+                    public string ToString(string? format, IFormatProvider? formatProvider)
+                    {
+                        return ((IFormattable)Value).ToString(format, formatProvider) ?? string.Empty;
+                    }
+                """;
+        }
     }
 }

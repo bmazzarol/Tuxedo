@@ -78,7 +78,7 @@ public readonly partial struct TrueBool : IEquatable<TrueBool>
             return true;
         }
         
-        refined = default!;
+        refined = default;
         failureMessage = $"The boolean value must be 'True', instead found '{value}'";
         return false;
     }
@@ -111,5 +111,21 @@ public readonly partial struct TrueBool : IEquatable<TrueBool>
     public override int GetHashCode()
     {
         return HashCode.Combine(_value);
+    }
+    
+    /// <summary>
+    /// Returns the string representation of the underlying bool
+    /// </summary>
+    public override string ToString()
+    {
+        return Value.ToString() ?? string.Empty;
+    }
+    
+    /// <summary>
+    /// Returns the string representation of the underlying bool
+    /// </summary>
+    public string ToString(IFormatProvider? provider)
+    {
+        return ((IConvertible)Value).ToString(provider) ?? string.Empty;
     }
 }

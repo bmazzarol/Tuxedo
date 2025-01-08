@@ -14,4 +14,11 @@ internal static class SymbolExtensions
                 is true
         );
     }
+
+    public static bool HasInterface(this ITypeSymbol? symbol, string interfaceName)
+    {
+        return symbol?.AllInterfaces.Any(i =>
+                i.ToDisplayString().Equals(interfaceName, StringComparison.Ordinal)
+            ) ?? false;
+    }
 }
