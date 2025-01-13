@@ -32,7 +32,7 @@ public static float MyCustomDivide(float dividend, float divisor)
 }
 ```
 
-This is fine, as long as the method does not pass its parameters on to a new
+This is fine, as long as the method does not pass its parameters on to another
 method. Those nested methods would then need to do the same checks again to
 ensure that the float is indeed not zero.
 
@@ -178,7 +178,7 @@ the most part any time this analyser runs, it's a bonus.
 
 ## When should I not use this?
 
-Refinement types are not designed to integrate with System.Text.Json or any
+Refined types are not designed to integrate with System.Text.Json or any
 other serialization layer. That is not to say that they could not be made
 to, but at this stage it's a non-requirement.
 
