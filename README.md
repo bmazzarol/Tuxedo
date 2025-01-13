@@ -48,7 +48,7 @@ public static float MyCustomDivide(float dividend, float divisor)
 }
 ```
 
-This is fine, as long as the method does not pass its parameters on to a another
+This is fine, as long as the method does not pass its parameters on to another
 method. Those nested methods would then need to do the same checks again to
 ensure that the float is indeed not zero.
 
