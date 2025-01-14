@@ -93,12 +93,7 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
         var attributeParts = new RefinementAttributeParts(methodDeclarationSyntax);
 
         // extract the generic parts
-        ExtractGenericPartDetails(
-            methodSymbol,
-            methodDeclarationSyntax,
-            out var generics,
-            out var genericTypeConstraints
-        );
+        var genericDetails = ExtractGenericPartDetails(methodSymbol, methodDeclarationSyntax);
 
         // get the first parameter type
         var firstParam = methodDeclarationSyntax.ParameterList.Parameters[0].Type!;
@@ -138,8 +133,7 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
                 ReturnsFailureMessage: returningFailureMessage
             ),
             AttributeDetails: attributeParts,
-            Generics: generics,
-            GenericConstraints: genericTypeConstraints,
+            GenericDetails: genericDetails,
             RawType: rawType,
             RawTypeSymbol: firstParameterTypeInfo,
             RefinedType: refinedType,
@@ -148,45 +142,44 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
         );
     }
 
-    private static void ExtractGenericPartDetails(
+    private static GenericPartDetails? ExtractGenericPartDetails(
         IMethodSymbol methodSymbol,
-        MethodDeclarationSyntax methodDeclaration,
-        out string? generics,
-        out string? constraints
+        MethodDeclarationSyntax methodDeclaration
     )
     {
-        generics = null;
-        constraints = null;
-
         var genericTypeArguments = methodSymbol.TypeArguments;
-        if (genericTypeArguments.Length == 0)
+        if (genericTypeArguments.Length != 0)
         {
-            // try and extract the generic type arguments from the enclosing type
-            var enclosingType = methodSymbol.ContainingType;
-            if (enclosingType is null)
-            {
-                return;
-            }
-
-            genericTypeArguments = enclosingType.TypeArguments;
-            if (genericTypeArguments.Length == 0)
-            {
-                return;
-            }
-
-            generics = $"<{genericTypeArguments.Select(t => t.ToDisplayString()).JoinBy(", ")}>";
-            constraints = methodDeclaration
-                .Ancestors()
-                .OfType<TypeDeclarationSyntax>()
-                .SelectMany(x => x.ConstraintClauses)
-                .Select(x => x.ToString())
-                .JoinBy("\n");
-
-            return;
+            return new GenericPartDetails(
+                ParameterSymbols: genericTypeArguments,
+                ConstraintSyntaxes: methodDeclaration.ConstraintClauses
+            );
         }
 
-        generics = $"<{genericTypeArguments.Select(t => t.ToDisplayString()).JoinBy(", ")}>";
-        constraints = methodDeclaration.ConstraintClauses.Select(x => x.ToString()).JoinBy("\n");
+        // if the method has no generic type arguments, try to extract them from the enclosing type
+        // this allows for generic constraints to be inherited from the containing class
+        var enclosingType = methodSymbol.ContainingType;
+        if (enclosingType is null)
+        {
+            return null;
+        }
+
+        genericTypeArguments = enclosingType.TypeArguments;
+        if (genericTypeArguments.Length == 0)
+        {
+            return null;
+        }
+
+        return new GenericPartDetails(
+            ParameterSymbols: genericTypeArguments,
+            // extract constraints from the enclosing type's declaration syntax
+            ConstraintSyntaxes: new SyntaxList<TypeParameterConstraintClauseSyntax>(
+                methodDeclaration
+                    .Ancestors()
+                    .OfType<TypeDeclarationSyntax>()
+                    .SelectMany(x => x.ConstraintClauses)
+            )
+        );
     }
 
     private static string BuildSafeStructName(string name, string? parameterType)

@@ -60,7 +60,7 @@ public sealed partial class RefinementSourceGenerator
             )}
             /// </summary>
             [RefinedType]
-            {model.AttributeDetails.AccessModifier} readonly partial struct {model.RefinedType}{model.Generics} : IEquatable<{model.RefinedType}{model.Generics}>{isFormattable.RenderIfTrue(() => ", IFormattable")}{model.GenericConstraints.PrependIfNotNull(
+            {model.AttributeDetails.AccessModifier} readonly partial struct {model.RefinedType}{model.GenericDetails?.Parameters} : IEquatable<{model.RefinedType}{model.GenericDetails?.Parameters}>{isFormattable.RenderIfTrue(() => ", IFormattable")}{model.GenericDetails?.Constraints.PrependIfNotNull(
                 "\n\t"
             )}
             """;
@@ -92,7 +92,9 @@ public sealed partial class RefinementSourceGenerator
                     /// </summary>
                     /// <param name="this">the {{model.RefinedTypeXmlSafeName}}</param>
                     /// <returns>underlying {{typeName.EscapeXml()}}</returns>
-                    public static implicit operator {{typeName}}({{model.RefinedType}}{{model.Generics}} @this)
+                    public static implicit operator {{typeName}}({{model.RefinedType}}{{model
+                    .GenericDetails
+                    ?.Parameters}} @this)
                     {
                         return @this.{{name}};
                     }
@@ -115,7 +117,7 @@ public sealed partial class RefinementSourceGenerator
                 /// <exception cref="ArgumentOutOfRangeException">if the {{model.PredicateDetails.Name.EscapeXml()}} refinement fails</exception>
                 public static {{(
                     model.AttributeDetails.HasImplicitConversionFromRaw ? "implicit" : "explicit"
-                )}} operator {{model.RefinedType}}{{model.Generics}}({{model.RawType}} value)
+                )}} operator {{model.RefinedType}}{{model.GenericDetails?.Parameters}}({{model.RawType}} value)
                 {
                     return Parse(value);
                 }
@@ -126,7 +128,7 @@ public sealed partial class RefinementSourceGenerator
                 /// <param name="value">raw {{model.RawType.EscapeXml()}}</param>
                 /// <returns>refined {{model.RefinedTypeXmlSafeName}}</returns>
                 /// <exception cref="ArgumentOutOfRangeException">if the {{model.PredicateDetails.Name.EscapeXml()}} refinement fails</exception>
-                public static {{model.RefinedType}}{{model.Generics}} Parse({{model.RawType}} value)
+                public static {{model.RefinedType}}{{model.GenericDetails?.Parameters}} Parse({{model.RawType}} value)
                 {
                     return TryParse(value, out var result, out var failureMessage) ? result : throw new ArgumentOutOfRangeException(nameof(value), value, failureMessage);
                 }
@@ -146,15 +148,15 @@ public sealed partial class RefinementSourceGenerator
                 /// <returns>true if refined, false otherwise</returns>
                 public static bool TryParse(
                     {{model.RawType}} value,
-                    out {{model.RefinedType}}{{model.Generics}} refined,
+                    out {{model.RefinedType}}{{model.GenericDetails?.Parameters}} refined,
                     [NotNullWhen(false)] out string? failureMessage
                 )
                 {
-                    if ({{model.PredicateDetails.Name}}{{(hasGenericsOnPredicate ? model.Generics: null)}}(value{{model.AlternativeType.RenderIfNotNull(
+                    if ({{model.PredicateDetails.Name}}{{(hasGenericsOnPredicate ? model.GenericDetails?.Parameters: null)}}(value{{model.AlternativeType.RenderIfNotNull(
                 _ => ", out var altValue"
             )}}){{model.PredicateDetails.ReturnsFailureMessage.RenderIfTrue(() =>" is not {} fm")}})
                     {
-                        refined = new {{model.RefinedType}}{{model.Generics}}(value{{model.AlternativeType.RenderIfNotNull(_ => ", altValue")}});
+                        refined = new {{model.RefinedType}}{{model.GenericDetails?.Parameters}}(value{{model.AlternativeType.RenderIfNotNull(_ => ", altValue")}});
                         failureMessage = null;
                         return true;
                     }
@@ -177,7 +179,7 @@ public sealed partial class RefinementSourceGenerator
             : "HashCode.Combine(_value)";
         return $$"""
             // <inheritdoc />
-                public bool Equals({{model.RefinedType}}{{model.Generics}} other)
+                public bool Equals({{model.RefinedType}}{{model.GenericDetails?.Parameters}} other)
                 {
                     return {{equals}};
                 }
@@ -185,17 +187,27 @@ public sealed partial class RefinementSourceGenerator
                 /// <inheritdoc />
                 public override bool Equals(object? obj)
                 {
-                    return obj is {{model.RefinedType}}{{model.Generics}} other && Equals(other);
+                    return obj is {{model.RefinedType}}{{model
+                .GenericDetails
+                ?.Parameters}} other && Equals(other);
                 }
                 
                 /// <inheritdoc />
-                public static bool operator ==({{model.RefinedType}}{{model.Generics}} left, {{model.RefinedType}}{{model.Generics}} right)
+                public static bool operator ==({{model.RefinedType}}{{model
+                .GenericDetails
+                ?.Parameters}} left, {{model.RefinedType}}{{model
+                .GenericDetails
+                ?.Parameters}} right)
                 {
                     return left.Equals(right);
                 }
                 
                 /// <inheritdoc />
-                public static bool operator !=({{model.RefinedType}}{{model.Generics}} left, {{model.RefinedType}}{{model.Generics}} right)
+                public static bool operator !=({{model.RefinedType}}{{model
+                .GenericDetails
+                ?.Parameters}} left, {{model.RefinedType}}{{model
+                .GenericDetails
+                ?.Parameters}} right)
                 {
                     return !(left == right);
                 }
