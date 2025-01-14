@@ -94,4 +94,23 @@ public class OddNumberExample
             internal static bool Odd(int value) 
             """.VerifyRefinement();
     }
+
+    [Fact(
+        DisplayName = "OddT refinement snapshot is correct with generics and constraints on the class"
+    )]
+    public Task Case7()
+    {
+        var driver = """
+            using Tuxedo;
+            using System.Numerics;
+
+            public readonly partial struct Odd<T>
+               where T : INumberBase<T>
+            {
+               [Refinement("The number must be an odd number, but was '{value}'", Name = "Odd")]
+               internal static bool Odd(T value) => T.IsOddInteger(value);
+            }
+            """.BuildDriver();
+        return Verify(driver).IgnoreStandardSupportCode();
+    }
 }

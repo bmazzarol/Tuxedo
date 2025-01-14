@@ -11,7 +11,7 @@ public sealed partial class RefinementSourceGenerator
 
                  {{RenderTypeNameParts(model)}}
                  {
-                     {{RenderTypePropertyParts(
+                     {{RenderTypePropertyParts( 
                          "Value",
                          model.RawType,
                          model,
@@ -55,7 +55,7 @@ public sealed partial class RefinementSourceGenerator
         var isFormattable = model.RawTypeSymbol.HasInterface("System.IFormattable");
         return $"""
             /// <summary>
-            /// A refined {model.RawType.EscapeXml()} based on the {model.Predicate.EscapeXml()} refinement predicate{model.AlternativeType.RenderIfNotNull(
+            /// A refined {model.RawType.EscapeXml()} based on the {model.PredicateDetails.Name.EscapeXml()} refinement predicate{model.AlternativeType.RenderIfNotNull(
                 x => $" which produces an alternative {x.EscapeXml()} value"
             )}
             /// </summary>
@@ -112,7 +112,7 @@ public sealed partial class RefinementSourceGenerator
                 /// </summary>
                 /// <param name="value">raw {{model.RawType.EscapeXml()}}</param>
                 /// <returns>refined {{model.RefinedTypeXmlSafeName}}</returns>
-                /// <exception cref="ArgumentOutOfRangeException">if the {{model.Predicate.EscapeXml()}} refinement fails</exception>
+                /// <exception cref="ArgumentOutOfRangeException">if the {{model.PredicateDetails.Name.EscapeXml()}} refinement fails</exception>
                 public static {{(
                     model.AttributeDetails.HasImplicitConversionFromRaw ? "implicit" : "explicit"
                 )}} operator {{model.RefinedType}}{{model.Generics}}({{model.RawType}} value)
@@ -125,7 +125,7 @@ public sealed partial class RefinementSourceGenerator
                 /// </summary>
                 /// <param name="value">raw {{model.RawType.EscapeXml()}}</param>
                 /// <returns>refined {{model.RefinedTypeXmlSafeName}}</returns>
-                /// <exception cref="ArgumentOutOfRangeException">if the {{model.Predicate.EscapeXml()}} refinement fails</exception>
+                /// <exception cref="ArgumentOutOfRangeException">if the {{model.PredicateDetails.Name.EscapeXml()}} refinement fails</exception>
                 public static {{model.RefinedType}}{{model.Generics}} Parse({{model.RawType}} value)
                 {
                     return TryParse(value, out var result, out var failureMessage) ? result : throw new ArgumentOutOfRangeException(nameof(value), value, failureMessage);
@@ -135,9 +135,10 @@ public sealed partial class RefinementSourceGenerator
 
     private static string RenderTryParseMethod(RefinedTypeDetails model)
     {
+        var hasGenericsOnPredicate = model.PredicateDetails.MethodSymbol.TypeParameters.Length > 0;
         return $$"""
             /// <summary>
-                /// Try and refine the {{model.RawType.EscapeXml()}} against the {{model.Predicate.EscapeXml()}} refinement{{model.AlternativeType.RenderIfNotNull(x => $" producing a {x.EscapeXml()}")}}
+                /// Try and refine the {{model.RawType.EscapeXml()}} against the {{model.PredicateDetails.Name.EscapeXml()}} refinement{{model.AlternativeType.RenderIfNotNull(x => $" producing a {x.EscapeXml()}")}}
                 /// </summary>
                 /// <param name="value">raw {{model.RawType.EscapeXml()}}</param>
                 /// <param name="refined">refined {{model.RefinedTypeXmlSafeName}} when true</param>
@@ -149,9 +150,9 @@ public sealed partial class RefinementSourceGenerator
                     [NotNullWhen(false)] out string? failureMessage
                 )
                 {
-                    if ({{model.Predicate}}{{model.Generics}}(value{{model.AlternativeType.RenderIfNotNull(
+                    if ({{model.PredicateDetails.Name}}{{(hasGenericsOnPredicate ? model.Generics: null)}}(value{{model.AlternativeType.RenderIfNotNull(
                 _ => ", out var altValue"
-            )}}){{model.PredicateReturnsFailureMessage.RenderIfTrue(() =>" is not {} fm")}})
+            )}}){{model.PredicateDetails.ReturnsFailureMessage.RenderIfTrue(() =>" is not {} fm")}})
                     {
                         refined = new {{model.RefinedType}}{{model.Generics}}(value{{model.AlternativeType.RenderIfNotNull(_ => ", altValue")}});
                         failureMessage = null;
@@ -159,7 +160,7 @@ public sealed partial class RefinementSourceGenerator
                     }
                     
                     refined = default;
-                    failureMessage = {{(model.PredicateReturnsFailureMessage ? "fm" : $"${model.AttributeDetails.FailureMessage}")}};
+                    failureMessage = {{(model.PredicateDetails.ReturnsFailureMessage ? "fm" : $"${model.AttributeDetails.FailureMessage}")}};
                     return false;
                 }
             """;

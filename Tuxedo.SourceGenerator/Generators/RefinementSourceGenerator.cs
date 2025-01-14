@@ -131,8 +131,12 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
         return new RefinedTypeDetails(
             Namespace: ns,
             Usings: usings,
-            Predicate: predicate,
-            PredicateReturnsFailureMessage: returningFailureMessage,
+            PredicateDetails: new PredicateDetails(
+                Name: predicate,
+                MethodDeclaration: methodDeclarationSyntax,
+                MethodSymbol: methodSymbol,
+                ReturnsFailureMessage: returningFailureMessage
+            ),
             AttributeDetails: attributeParts,
             Generics: generics,
             GenericConstraints: genericTypeConstraints,
@@ -157,6 +161,27 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
         var genericTypeArguments = methodSymbol.TypeArguments;
         if (genericTypeArguments.Length == 0)
         {
+            // try and extract the generic type arguments from the enclosing type
+            var enclosingType = methodSymbol.ContainingType;
+            if (enclosingType is null)
+            {
+                return;
+            }
+
+            genericTypeArguments = enclosingType.TypeArguments;
+            if (genericTypeArguments.Length == 0)
+            {
+                return;
+            }
+
+            generics = $"<{genericTypeArguments.Select(t => t.ToDisplayString()).JoinBy(", ")}>";
+            constraints = methodDeclaration
+                .Ancestors()
+                .OfType<TypeDeclarationSyntax>()
+                .SelectMany(x => x.ConstraintClauses)
+                .Select(x => x.ToString())
+                .JoinBy("\n");
+
             return;
         }
 

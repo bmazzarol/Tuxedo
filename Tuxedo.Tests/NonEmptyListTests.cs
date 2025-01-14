@@ -20,7 +20,7 @@ public readonly partial struct NonEmptyList<T>
     /// <typeparam name="T">some T, required again here for the source generator</typeparam>
     /// <returns>true if the list is non-empty</returns>
     [Refinement("The list must not be empty.")]
-    private static bool NonEmpty<T>(List<T> list) => list.Count != 0;
+    private static bool NonEmpty(List<T> list) => list.Count != 0;
 }
 
 public class NonEmptyListTests

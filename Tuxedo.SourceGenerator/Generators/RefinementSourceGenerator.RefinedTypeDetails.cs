@@ -9,8 +9,7 @@ public sealed partial class RefinementSourceGenerator
     private sealed record RefinedTypeDetails(
         string? Namespace,
         SyntaxList<UsingDirectiveSyntax> Usings,
-        string? Predicate,
-        bool PredicateReturnsFailureMessage,
+        PredicateDetails PredicateDetails,
         RefinementAttributeParts AttributeDetails,
         string? Generics,
         string? GenericConstraints,
@@ -27,4 +26,11 @@ public sealed partial class RefinementSourceGenerator
             RawType?.StartsWith("(", StringComparison.Ordinal) == true
             && RawType.EndsWith(")", StringComparison.Ordinal);
     }
+
+    private sealed record PredicateDetails(
+        string? Name,
+        MethodDeclarationSyntax MethodDeclaration,
+        IMethodSymbol MethodSymbol,
+        bool ReturnsFailureMessage
+    );
 }

@@ -20,7 +20,7 @@ public readonly partial struct PositiveInt
 public readonly partial struct NonEmptyArray<T> : IEnumerable<T>
 {
     [Refinement("Must be not empty", Name = "NonEmptyArray")]
-    private static bool IsNotEmpty<T>(T[] value) => value.Length > 0;
+    private static bool IsNotEmpty(T[] value) => value.Length > 0;
 
     public PositiveInt Length => (PositiveInt)Value.Length;
 
