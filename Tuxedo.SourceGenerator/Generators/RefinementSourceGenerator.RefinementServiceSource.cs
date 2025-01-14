@@ -40,13 +40,13 @@ public sealed partial class RefinementSourceGenerator
     private static string RenderTestMethod(RefinedTypeDetails model)
     {
         return $$"""
-                private static string? TestAgainst{{model.RefinedType}}{{model.Generics}}(object value){{model.GenericConstraints.PrependIfNotNull(
+                private static string? TestAgainst{{model.RefinedType}}{{model.GenericDetails?.Parameters}}(object value){{model.GenericDetails?.Constraints.PrependIfNotNull(
                     "\n\t\t"
                 )}}
                 {
                     return {{(model.IsTuple
-                        ? $"!{model.Namespace}.{model.RefinedType}{model.Generics}.TryParse(({model.RawType})value, out _, out var errorMessage) ? errorMessage : null"
-                        : $"value is {model.RawType} rt && !{model.Namespace}.{model.RefinedType}{model.Generics}.TryParse(rt, out _, out var errorMessage) ? errorMessage : null")}};
+                        ? $"!{model.Namespace}.{model.RefinedType}{model.GenericDetails?.Parameters}.TryParse(({model.RawType})value, out _, out var errorMessage) ? errorMessage : null"
+                        : $"value is {model.RawType} rt && !{model.Namespace}.{model.RefinedType}{model.GenericDetails?.Parameters}.TryParse(rt, out _, out var errorMessage) ? errorMessage : null")}};
                 }
             """;
     }

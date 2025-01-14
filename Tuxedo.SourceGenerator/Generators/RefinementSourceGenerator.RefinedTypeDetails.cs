@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Tuxedo.SourceGenerator.Extensions;
@@ -9,11 +10,9 @@ public sealed partial class RefinementSourceGenerator
     private sealed record RefinedTypeDetails(
         string? Namespace,
         SyntaxList<UsingDirectiveSyntax> Usings,
-        string? Predicate,
-        bool PredicateReturnsFailureMessage,
+        PredicateDetails PredicateDetails,
         RefinementAttributeParts AttributeDetails,
-        string? Generics,
-        string? GenericConstraints,
+        GenericPartDetails? GenericDetails,
         string? RawType,
         ITypeSymbol? RawTypeSymbol,
         string? RefinedType,
@@ -21,10 +20,30 @@ public sealed partial class RefinementSourceGenerator
         ITypeSymbol? AlternativeTypeSymbol
     )
     {
-        public string? RefinedTypeXmlSafeName => (RefinedType + Generics).EscapeXml();
+        public string? RefinedTypeXmlSafeName =>
+            (RefinedType + GenericDetails?.Parameters).EscapeXml();
 
         public bool IsTuple =>
             RawType?.StartsWith("(", StringComparison.Ordinal) == true
             && RawType.EndsWith(")", StringComparison.Ordinal);
+    }
+
+    private sealed record PredicateDetails(
+        string? Name,
+        MethodDeclarationSyntax MethodDeclaration,
+        IMethodSymbol MethodSymbol,
+        bool ReturnsFailureMessage
+    );
+
+    private sealed record GenericPartDetails(
+        ImmutableArray<ITypeSymbol> ParameterSymbols,
+        SyntaxList<TypeParameterConstraintClauseSyntax> ConstraintSyntaxes
+    )
+    {
+        public string Parameters { get; } =
+            $"<{ParameterSymbols.Select(t => t.ToDisplayString()).JoinBy(", ")}>";
+
+        public string? Constraints { get; } =
+            ConstraintSyntaxes.Select(x => x.ToString()).JoinBy("\n");
     }
 }
