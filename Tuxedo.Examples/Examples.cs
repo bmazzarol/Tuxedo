@@ -10,7 +10,7 @@ namespace Examples;
 public readonly partial struct PositiveInt
 {
     [Refinement("Must be positive", Name = nameof(PositiveInt))]
-    private static bool IsPositive(int value) => value > 0;
+    private bool IsPositive(int value) => value > 0;
 }
 
 /// <summary>
