@@ -113,4 +113,23 @@ public class OddNumberExample
             """.BuildDriver();
         return Verify(driver).IgnoreStandardSupportCode();
     }
+
+    [Fact(
+        DisplayName = "OddT refinement snapshot is correct with generics and constraints on the class and no static modifier"
+    )]
+    public Task Case8()
+    {
+        var driver = """
+            using Tuxedo;
+            using System.Numerics;
+
+            public readonly partial struct Odd<T>
+               where T : INumberBase<T>
+            {
+               [Refinement("The number must be an odd number, but was '{value}'", Name = "Odd")]
+               private bool IsValid(T value) => T.IsOddInteger(value);
+            }
+            """.BuildDriver();
+        return Verify(driver).IgnoreStandardSupportCode();
+    }
 }

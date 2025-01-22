@@ -42,7 +42,8 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
     private static bool IsRefinementMethod(SyntaxNode s, CancellationToken cancellationToken)
     {
         return s is MethodDeclarationSyntax mds
-            && mds.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword))
+            // the method is either static or within the struct we are refining
+            && IsStaticOrWithinGeneratedType(mds)
             // and returns a bool or a string
             && (
                 string.Equals(mds.ReturnType.ToString(), "bool", StringComparison.Ordinal)
@@ -56,6 +57,24 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
                 || mds.ParameterList.Parameters[1]
                     .Modifiers.Any(m => m.IsKind(SyntaxKind.OutKeyword))
             );
+    }
+
+    private static bool IsStaticOrWithinGeneratedType(MethodDeclarationSyntax mds)
+    {
+        var attributeParts = new RefinementAttributeParts(mds);
+        return
+            // either the method is static
+            mds.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword))
+            // or the method is within the struct we are refining
+            || mds.Ancestors()
+                .OfType<StructDeclarationSyntax>()
+                .Any(tds =>
+                    string.Equals(
+                        tds.Identifier.Text,
+                        attributeParts.Name,
+                        StringComparison.Ordinal
+                    )
+                );
     }
 
     private static RefinedTypeDetails BuildRefinedTypeDetails(
@@ -87,7 +106,8 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
         var containingType = methodSymbol.ContainingType;
         var @class = containingType.ToDisplayString();
         var name = methodDeclarationSyntax.Identifier.Text;
-        var predicate = $"{@class}.{name}";
+        var isStatic = methodSymbol.IsStatic;
+        var predicate = isStatic ? $"{@class}.{name}" : name;
 
         // get the attribute details
         var attributeParts = new RefinementAttributeParts(methodDeclarationSyntax);
