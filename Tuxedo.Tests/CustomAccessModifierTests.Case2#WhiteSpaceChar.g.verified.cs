@@ -83,7 +83,7 @@ internal readonly partial struct WhiteSpaceChar : IEquatable<WhiteSpaceChar>, IF
         return false;
     }
     
-    // <inheritdoc />
+    /// <inheritdoc />
     public bool Equals(WhiteSpaceChar other)
     {
         return Nullable.Equals(_value, other._value);

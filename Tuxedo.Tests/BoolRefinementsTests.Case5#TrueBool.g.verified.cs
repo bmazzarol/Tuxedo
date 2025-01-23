@@ -83,7 +83,7 @@ public readonly partial struct TrueBool : IEquatable<TrueBool>
         return false;
     }
     
-    // <inheritdoc />
+    /// <inheritdoc />
     public bool Equals(TrueBool other)
     {
         return Nullable.Equals(_value, other._value);

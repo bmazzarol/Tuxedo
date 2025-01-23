@@ -85,7 +85,7 @@ public readonly partial struct Odd<T> : IEquatable<Odd<T>>
         return false;
     }
     
-    // <inheritdoc />
+    /// <inheritdoc />
     public bool Equals(Odd<T> other)
     {
         return Nullable.Equals(_value, other._value);

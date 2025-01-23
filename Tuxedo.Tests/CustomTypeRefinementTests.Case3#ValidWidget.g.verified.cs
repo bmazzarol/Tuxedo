@@ -83,7 +83,7 @@ public readonly partial struct ValidWidget : IEquatable<ValidWidget>
         return false;
     }
     
-    // <inheritdoc />
+    /// <inheritdoc />
     public bool Equals(ValidWidget other)
     {
         return Nullable.Equals(_value, other._value);

@@ -83,7 +83,7 @@ public readonly partial struct Case3 : IEquatable<Case3>
         return false;
     }
     
-    // <inheritdoc />
+    /// <inheritdoc />
     public bool Equals(Case3 other)
     {
         return Nullable.Equals(_value, other._value);

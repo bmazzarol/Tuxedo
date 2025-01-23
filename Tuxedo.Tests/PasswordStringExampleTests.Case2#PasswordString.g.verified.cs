@@ -83,7 +83,7 @@ public readonly partial struct PasswordString : IEquatable<PasswordString>
         return false;
     }
     
-    // <inheritdoc />
+    /// <inheritdoc />
     public bool Equals(PasswordString other)
     {
         return Nullable.Equals(_value, other._value);

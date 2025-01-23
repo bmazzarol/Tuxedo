@@ -101,7 +101,7 @@ public readonly partial struct GuidString : IEquatable<GuidString>
         return false;
     }
     
-    // <inheritdoc />
+    /// <inheritdoc />
     public bool Equals(GuidString other)
     {
         return Nullable.Equals(_value, other._value) && Nullable.Equals(_altValue, other._altValue);

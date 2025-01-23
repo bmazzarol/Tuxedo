@@ -83,7 +83,7 @@ public readonly partial struct OddInt : IEquatable<OddInt>, IFormattable
         return false;
     }
     
-    // <inheritdoc />
+    /// <inheritdoc />
     public bool Equals(OddInt other)
     {
         return Nullable.Equals(_value, other._value);

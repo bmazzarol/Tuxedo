@@ -178,7 +178,7 @@ public sealed partial class RefinementSourceGenerator
             ? "HashCode.Combine(_value, _altValue)"
             : "HashCode.Combine(_value)";
         return $$"""
-            // <inheritdoc />
+            /// <inheritdoc />
                 public bool Equals({{model.RefinedType}}{{model.GenericDetails?.Parameters}} other)
                 {
                     return {{equals}};
