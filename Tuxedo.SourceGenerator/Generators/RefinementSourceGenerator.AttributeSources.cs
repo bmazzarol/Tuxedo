@@ -49,6 +49,7 @@ public sealed partial class RefinementSourceGenerator
             
             /// <summary>
             /// Initializes a new instance of the <see cref="RefinementAttribute"/> class
+            /// </summary>
             public RefinementAttribute()
             {
             }

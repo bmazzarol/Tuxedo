@@ -45,6 +45,7 @@ internal sealed class RefinementAttribute : Attribute
     
     /// <summary>
     /// Initializes a new instance of the <see cref="RefinementAttribute"/> class
+    /// </summary>
     public RefinementAttribute()
     {
     }
