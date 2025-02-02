@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Testing;
@@ -41,7 +40,7 @@ public sealed class AnalyserTests
                 }
                 """,
         };
-        return context.RunAsync();
+        return context.RunAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact(DisplayName = "TrueBool cannot be assigned from new")]
@@ -77,7 +76,7 @@ public sealed class AnalyserTests
                 }
                 """,
         };
-        return context.RunAsync();
+        return context.RunAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact(DisplayName = "TrueBool cannot be assigned false")]
@@ -161,11 +160,11 @@ public sealed class AnalyserTests
                 """,
             DiagnosticVerifier = (diagnostic, _, _) =>
             {
-                diagnostic.Severity.Should().Be(DiagnosticSeverity.Error);
-                diagnostic.GetMessage().Should().Be("needs to be true");
+                Assert.Equal(DiagnosticSeverity.Error, diagnostic.Severity);
+                Assert.Equal("needs to be true", diagnostic.GetMessage());
             },
         };
-        return context.RunAsync();
+        return context.RunAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact(
@@ -230,15 +229,13 @@ public sealed class AnalyserTests
                 """,
             DiagnosticVerifier = (diagnostic, _, _) =>
             {
-                diagnostic.Severity.Should().Be(DiagnosticSeverity.Error);
-                diagnostic
-                    .GetMessage()
-                    .Should()
-                    .Be(
-                        "FailureMessage must be set on the Refinement attribute, or the method must return a string?"
-                    );
+                Assert.Equal(DiagnosticSeverity.Error, diagnostic.Severity);
+                Assert.Equal(
+                    "FailureMessage must be set on the Refinement attribute, or the method must return a string?",
+                    diagnostic.GetMessage()
+                );
             },
         };
-        return context.RunAsync();
+        return context.RunAsync(TestContext.Current.CancellationToken);
     }
 }

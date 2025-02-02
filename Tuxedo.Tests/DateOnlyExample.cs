@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Tuxedo.Tests.Extensions;
 
 namespace Tuxedo.Tests;
@@ -31,33 +30,30 @@ public class DateOnlyExample
     {
         var refined = (DateOnlyString)"2021-02-28";
         // access the raw string
-        refined.Value.Should().Be("2021-02-28");
+        Assert.Equal("2021-02-28", refined.Value);
         // access the DateOnly value that was produced from the refinement process
-        refined.AltValue.Should().Be(DateOnly.Parse("2021-02-28"));
+        Assert.Equal(new DateOnly(2021, 2, 28), refined.AltValue);
         // they can also be split out like this
         (string str, DateOnly dte) = refined;
 
-        refined.IsWeekend.Should().Be(true);
+        Assert.True(refined.IsWeekend);
 
-        DateOnlyString
-            .TryParse("2021-02-28", out var dateOnlyString, out var failureMessage)
-            .Should()
-            .BeTrue();
-        failureMessage.Should().BeNull();
-        (refined == dateOnlyString).Should().BeTrue();
+        Assert.True(
+            DateOnlyString.TryParse("2021-02-28", out var refined2, out var failureMessage)
+        );
+        Assert.Null(failureMessage);
+        Assert.Equal(refined, refined2);
     }
 
     [Fact(DisplayName = "A invalid date string cannot be refined as a date")]
     public void Case2()
     {
-        Assert
-            .Throws<ArgumentOutOfRangeException>(() => (DateOnlyString)"not a date")
-            .Message.Should()
-            .StartWith("The value must be a valid date, but was 'not a date'");
-        DateOnlyString.TryParse("not a date", out var refined, out var message).Should().BeFalse();
-        message.Should().Be("The value must be a valid date, but was 'not a date'");
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => (DateOnlyString)"not a date");
+        Assert.StartsWith("The value must be a valid date, but was 'not a date'", ex.Message);
+        Assert.False(DateOnlyString.TryParse("not a date", out var refined, out var message));
+        Assert.Equal("The value must be a valid date, but was 'not a date'", message);
 #pragma warning disable TUX001
-        refined.Should().Be(default(DateOnlyString));
+        Assert.Equal(default(DateOnlyString), refined);
 #pragma warning restore TUX001
     }
 
