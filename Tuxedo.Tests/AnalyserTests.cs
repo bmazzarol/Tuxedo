@@ -40,7 +40,7 @@ public sealed class AnalyserTests
                 }
                 """,
         };
-        return context.RunAsync(TestContext.Current.CancellationToken);
+        return context.RunAsync();
     }
 
     [Fact(DisplayName = "TrueBool cannot be assigned from new")]
@@ -76,7 +76,7 @@ public sealed class AnalyserTests
                 }
                 """,
         };
-        return context.RunAsync(TestContext.Current.CancellationToken);
+        return context.RunAsync();
     }
 
     [Fact(DisplayName = "TrueBool cannot be assigned false")]
@@ -164,7 +164,7 @@ public sealed class AnalyserTests
                 Assert.Equal("needs to be true", diagnostic.GetMessage());
             },
         };
-        return context.RunAsync(TestContext.Current.CancellationToken);
+        return context.RunAsync();
     }
 
     [Fact(
@@ -236,6 +236,6 @@ public sealed class AnalyserTests
                 );
             },
         };
-        return context.RunAsync(TestContext.Current.CancellationToken);
+        return context.RunAsync();
     }
 }
