@@ -10,7 +10,7 @@ using Tuxedo;
 namespace <global namespace>;
 
 /// <summary>
-/// A refined T based on the IsValid refinement predicate
+/// A refined T based on the default(Odd&lt;T&gt;).IsValid refinement predicate
 /// </summary>
 [RefinedType]
 public readonly partial struct Odd<T> : IEquatable<Odd<T>>
@@ -43,7 +43,7 @@ public readonly partial struct Odd<T> : IEquatable<Odd<T>>
     /// </summary>
     /// <param name="value">raw T</param>
     /// <returns>refined Odd&lt;T&gt;</returns>
-    /// <exception cref="ArgumentOutOfRangeException">if the IsValid refinement fails</exception>
+    /// <exception cref="ArgumentOutOfRangeException">if the default(Odd&lt;T&gt;).IsValid refinement fails</exception>
     public static explicit operator Odd<T>(T value)
     {
         return Parse(value);
@@ -54,14 +54,14 @@ public readonly partial struct Odd<T> : IEquatable<Odd<T>>
     /// </summary>
     /// <param name="value">raw T</param>
     /// <returns>refined Odd&lt;T&gt;</returns>
-    /// <exception cref="ArgumentOutOfRangeException">if the IsValid refinement fails</exception>
+    /// <exception cref="ArgumentOutOfRangeException">if the default(Odd&lt;T&gt;).IsValid refinement fails</exception>
     public static Odd<T> Parse(T value)
     {
         return TryParse(value, out var result, out var failureMessage) ? result : throw new ArgumentOutOfRangeException(nameof(value), value, failureMessage);
     }
     
     /// <summary>
-    /// Try and refine the T against the IsValid refinement
+    /// Try and refine the T against the default(Odd&lt;T&gt;).IsValid refinement
     /// </summary>
     /// <param name="value">raw T</param>
     /// <param name="refined">refined Odd&lt;T&gt; when true</param>
@@ -73,7 +73,7 @@ public readonly partial struct Odd<T> : IEquatable<Odd<T>>
         [NotNullWhen(false)] out string? failureMessage
     )
     {
-        if (IsValid(value))
+        if (default(Odd<T>).IsValid(value))
         {
             refined = new Odd<T>(value);
             failureMessage = null;

@@ -107,7 +107,6 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
         var @class = containingType.ToDisplayString();
         var name = methodDeclarationSyntax.Identifier.Text;
         var isStatic = methodSymbol.IsStatic;
-        var predicate = isStatic ? $"{@class}.{name}" : name;
 
         // get the attribute details
         var attributeParts = new RefinementAttributeParts(methodDeclarationSyntax);
@@ -129,6 +128,9 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
                 ? null
                 : rawType.UppercaseFirst()?.RemoveNamespace().RemoveGenerics()
         );
+        var predicate = isStatic
+            ? $"{@class}.{name}"
+            : $"default({refinedType}{genericDetails?.Parameters}).{name}";
 
         // try and see if there is a second out parameter
         string? altType = null;
