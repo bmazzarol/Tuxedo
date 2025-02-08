@@ -1,5 +1,3 @@
-using FluentAssertions;
-
 namespace Tuxedo.Tests;
 
 /// <summary>
@@ -17,7 +15,6 @@ public readonly partial struct NonEmptyList<T>
     /// Refinement that ensures the list is non-empty
     /// </summary>
     /// <param name="list">list</param>
-    /// <typeparam name="T">some T, required again here for the source generator</typeparam>
     /// <returns>true if the list is non-empty</returns>
     [Refinement("The list must not be empty.")]
     private static bool NonEmpty(List<T> list) => list.Count != 0;
@@ -29,25 +26,22 @@ public class NonEmptyListTests
     public static void Case1()
     {
         var refined = (NonEmptyList<int>)new List<int> { 1, 2, 3 };
-        refined.Value.Should().BeEquivalentTo([1, 2, 3]);
-        refined.Head.Should().Be(1);
+        Assert.Equal([1, 2, 3], refined.Value);
+        Assert.Equal(1, refined.Head);
 
-        NonEmptyList<int>
-            .TryParse([1, 2, 3], out var refined2, out var failureMessage)
-            .Should()
-            .Be(true);
-        refined2.Value.Should().BeEquivalentTo(refined.Value);
-        failureMessage.Should().BeNull();
+        Assert.True(
+            NonEmptyList<int>.TryParse([1, 2, 3], out var refined2, out var failureMessage)
+        );
+        Assert.Equivalent(refined, refined2);
+        Assert.Null(failureMessage);
     }
 
     [Fact(DisplayName = "A empty list cannot be refined as non-empty.")]
     public static void Case2()
     {
         List<string> value = [];
-        Assert
-            .Throws<ArgumentOutOfRangeException>(() => (NonEmptyList<string>)value)
-            .Message.Should()
-            .StartWith("The list must not be empty.");
-        NonEmptyList<string>.TryParse(value, out _, out _).Should().BeFalse();
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => (NonEmptyList<string>)value);
+        Assert.StartsWith("The list must not be empty.", ex.Message);
+        Assert.False(NonEmptyList<string>.TryParse(value, out _, out _));
     }
 }

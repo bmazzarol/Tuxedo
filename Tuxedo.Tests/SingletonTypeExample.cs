@@ -1,6 +1,4 @@
-﻿using FluentAssertions;
-
-namespace Tuxedo.Tests;
+﻿namespace Tuxedo.Tests;
 
 #region SingletonTypeExample
 
@@ -29,8 +27,8 @@ public sealed class GenericRefinementTests
     {
         const int value = 42;
         var refined = (FortyTwoInt)value;
-        refined.Value.Should().Be(42);
-        FortyTwoInt.Instance.Value.Should().Be(42);
+        Assert.Equal(42, refined.Value);
+        Assert.Equal(42, FortyTwoInt.Instance.Value);
     }
 
     [Fact(
@@ -39,11 +37,9 @@ public sealed class GenericRefinementTests
     public void Case2()
     {
         const int value = 43;
-        Assert
-            .Throws<ArgumentOutOfRangeException>(() => (FortyTwoInt)value)
-            .Message.Should()
-            .StartWith("The value must be '42', instead found '43'");
-        FortyTwoInt.TryParse(value, out _, out _).Should().BeFalse();
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => (FortyTwoInt)value);
+        Assert.StartsWith("The value must be '42', instead found '43'", ex.Message);
+        Assert.False(FortyTwoInt.TryParse(value, out _, out _));
     }
 
     #endregion

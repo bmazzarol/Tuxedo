@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Tuxedo.Tests.Extensions;
 
 namespace Tuxedo.Tests;
@@ -47,8 +46,9 @@ public sealed class PasswordStringExampleTests
     {
         #region ExampleUsage
 
-        PasswordString.TryParse("12Da3%sd", out var password, out _).Should().BeTrue();
-        password.Value.Should().Be("12Da3%sd");
+        bool isValid = PasswordString.TryParse("12Da3%sd", out var password, out _);
+        Assert.True(isValid);
+        Assert.Equal("12Da3%sd", password.Value);
 
         #endregion
     }

@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Tuxedo.Tests.Custom;
+﻿using Tuxedo.Tests.Custom;
 using Tuxedo.Tests.Extensions;
 
 namespace Tuxedo.Tests
@@ -23,20 +22,18 @@ namespace Tuxedo.Tests
         {
             var widget = new Widget(1, "Widget");
             var refined = (ValidWidget)widget;
-            refined.Value.Should().Be(widget);
-            refined.Value.Id.Should().Be(1);
-            refined.Value.Name.Should().Be("Widget");
+            Assert.Equal(widget, refined.Value);
+            Assert.Equal(1, refined.Value.Id);
+            Assert.Equal("Widget", refined.Value.Name);
         }
 
         [Fact(DisplayName = "An invalid widget should fail the refinement")]
         public void Case2()
         {
             var widget = new Widget(0, "Widget");
-            Assert
-                .Throws<ArgumentOutOfRangeException>(() => (ValidWidget)widget)
-                .Message.Should()
-                .StartWith("The widget must have a valid Id and Name");
-            ValidWidget.TryParse(widget, out _, out _).Should().BeFalse();
+            var ex = Assert.Throws<ArgumentOutOfRangeException>(() => (ValidWidget)widget);
+            Assert.StartsWith("The widget must have a valid Id and Name", ex.Message);
+            Assert.False(ValidWidget.TryParse(widget, out _, out _));
         }
 
         [Fact(

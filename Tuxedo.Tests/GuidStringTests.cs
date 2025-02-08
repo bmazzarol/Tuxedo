@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Tuxedo.Tests.Extensions;
 
 namespace Tuxedo.Tests;
@@ -23,36 +22,33 @@ public sealed class GuidStringTests
     public static void Case1()
     {
         var refined = (GuidString)"6192C5ED-505C-4558-B87C-CA6E7D612B31";
-        refined.Value.Should().Be("6192C5ED-505C-4558-B87C-CA6E7D612B31");
-        refined.AltValue.Should().Be(new Guid("6192C5ED-505C-4558-B87C-CA6E7D612B31"));
-        refined.Bytes.Should().NotBeEmpty();
-        refined.IsEmpty.Should().BeFalse();
+        Assert.Equal("6192C5ED-505C-4558-B87C-CA6E7D612B31", refined.Value);
+        Assert.Equal(new Guid("6192C5ED-505C-4558-B87C-CA6E7D612B31"), refined.AltValue);
+        Assert.NotEmpty(refined.Bytes);
+        Assert.False(refined.IsEmpty);
 
         var (str, guid) = refined;
-        str.Should().Be("6192C5ED-505C-4558-B87C-CA6E7D612B31");
-        guid.Should().Be(new Guid("6192C5ED-505C-4558-B87C-CA6E7D612B31"));
+        Assert.Equal("6192C5ED-505C-4558-B87C-CA6E7D612B31", str);
+        Assert.Equal(new Guid("6192C5ED-505C-4558-B87C-CA6E7D612B31"), guid);
 
-        GuidString
-            .TryParse(
+        Assert.True(
+            GuidString.TryParse(
                 "6192C5ED-505C-4558-B87C-CA6E7D612B31",
                 out var refined2,
                 out var failureMessage
             )
-            .Should()
-            .Be(true);
-        refined2.Should().Be(refined);
-        failureMessage.Should().BeNull();
+        );
+        Assert.Equal(refined, refined2);
+        Assert.Null(failureMessage);
     }
 
     [Fact(DisplayName = "A string cannot be refined to a GUID")]
     public static void Case2()
     {
         const string value = "not a guid";
-        Assert
-            .Throws<ArgumentOutOfRangeException>(() => (GuidString)value)
-            .Message.Should()
-            .StartWith("The value must be a valid GUID, but was 'not a guid'");
-        GuidString.TryParse(value, out _, out _).Should().BeFalse();
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => (GuidString)value);
+        Assert.StartsWith("The value must be a valid GUID, but was 'not a guid'", ex.Message);
+        Assert.False(GuidString.TryParse(value, out _, out _));
     }
 
     [Fact(DisplayName = "GuidString refinement snapshot is correct")]

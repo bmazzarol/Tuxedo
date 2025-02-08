@@ -1,5 +1,3 @@
-using FluentAssertions;
-
 namespace Tuxedo.Tests;
 
 #region DependentTypeExample
@@ -38,7 +36,7 @@ public class SafeRangeExample
         #region DependentTypeUsage
 
         var range = Range.Parse((Start: 1, End: 4));
-        range.Size.Value.Should().Be(3);
+        Assert.Equal(3, range.Size.Value);
 
         // the range can never be a negative size
         range = Range.Parse(
@@ -49,15 +47,15 @@ public class SafeRangeExample
             )
         );
 
-        range.Size.Value.Should().Be(18);
+        Assert.Equal(18, range.Size.Value);
 
         // invalid ranges cannot exist
-        Range.TryParse((Start: 6, End: 1), out _, out var message).Should().BeFalse();
-        message
-            .Should()
-            .Be(
-                "The value must be a valid range where the start value is greater than the end value, '1' is not greater than '6'"
-            );
+        var isValid = Range.TryParse((Start: 6, End: 1), out _, out var message);
+        Assert.False(isValid);
+        Assert.Equal(
+            "The value must be a valid range where the start value is greater than the end value, '1' is not greater than '6'",
+            message
+        );
 
         #endregion
     }

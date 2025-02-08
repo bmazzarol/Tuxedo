@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Tuxedo.Tests.Extensions;
+﻿using Tuxedo.Tests.Extensions;
 
 namespace Tuxedo.Tests;
 
@@ -18,8 +17,8 @@ public sealed class CustomAccessModifierTests
     {
         const char value = ' ';
         var ws = (WhiteSpaceChar)value;
-        AppendWhiteSpace(value, ws).Should().Be("   ");
-        typeof(WhiteSpaceChar).IsPublic.Should().BeFalse();
+        Assert.Equal("   ", AppendWhiteSpace(value, ws));
+        Assert.False(typeof(WhiteSpaceChar).IsPublic);
     }
 
     [Fact(DisplayName = "WhiteSpace refinement snapshot is correct and should be internal")]

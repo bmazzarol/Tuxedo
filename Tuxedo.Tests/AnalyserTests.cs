@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Testing;
@@ -161,8 +160,8 @@ public sealed class AnalyserTests
                 """,
             DiagnosticVerifier = (diagnostic, _, _) =>
             {
-                diagnostic.Severity.Should().Be(DiagnosticSeverity.Error);
-                diagnostic.GetMessage().Should().Be("needs to be true");
+                Assert.Equal(DiagnosticSeverity.Error, diagnostic.Severity);
+                Assert.Equal("needs to be true", diagnostic.GetMessage());
             },
         };
         return context.RunAsync();
@@ -230,13 +229,11 @@ public sealed class AnalyserTests
                 """,
             DiagnosticVerifier = (diagnostic, _, _) =>
             {
-                diagnostic.Severity.Should().Be(DiagnosticSeverity.Error);
-                diagnostic
-                    .GetMessage()
-                    .Should()
-                    .Be(
-                        "FailureMessage must be set on the Refinement attribute, or the method must return a string?"
-                    );
+                Assert.Equal(DiagnosticSeverity.Error, diagnostic.Severity);
+                Assert.Equal(
+                    "FailureMessage must be set on the Refinement attribute, or the method must return a string?",
+                    diagnostic.GetMessage()
+                );
             },
         };
         return context.RunAsync();
