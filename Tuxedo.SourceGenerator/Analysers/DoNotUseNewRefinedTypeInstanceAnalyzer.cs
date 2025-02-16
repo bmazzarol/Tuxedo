@@ -14,17 +14,16 @@ namespace Tuxedo.SourceGenerator.Analysers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class DoNotUseNewRefinedTypeInstanceAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly DiagnosticDescriptor Rule =
-        new(
-            RuleIdentifiers.DoNotUseNew,
-            "Using new to construct refined types is prohibited",
-            "Type '{0}' cannot be constructed with the new keyword as it is prohibited",
-            RuleCategories.Usage,
-            DiagnosticSeverity.Error,
-            isEnabledByDefault: true,
-            description: "A refined type created with the new keyword is always invalid, use the Parse or TryParse method instead.",
-            helpLinkUri: $"https://bmazzarol.github.io/Tuxedo/rules/{RuleIdentifiers.DoNotUseNew}.html"
-        );
+    private static readonly DiagnosticDescriptor Rule = new(
+        RuleIdentifiers.DoNotUseNew,
+        "Using new to construct refined types is prohibited",
+        "Type '{0}' cannot be constructed with the new keyword as it is prohibited",
+        RuleCategories.Usage,
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "A refined type created with the new keyword is always invalid, use the Parse or TryParse method instead.",
+        helpLinkUri: $"https://bmazzarol.github.io/Tuxedo/rules/{RuleIdentifiers.DoNotUseNew}.html"
+    );
 
     /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
