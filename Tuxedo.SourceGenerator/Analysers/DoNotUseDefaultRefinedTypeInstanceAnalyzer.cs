@@ -14,17 +14,16 @@ namespace Tuxedo.SourceGenerator.Analysers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class DoNotUseDefaultRefinedTypeInstanceAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly DiagnosticDescriptor Rule =
-        new(
-            RuleIdentifiers.DoNotUseDefault,
-            "Using default for refined types is prohibited",
-            "Type '{0}' cannot be constructed with default as it is prohibited",
-            RuleCategories.Usage,
-            DiagnosticSeverity.Error,
-            isEnabledByDefault: true,
-            description: "A refined type created with a default expression is always invalid, use the Parse or TryParse method instead.",
-            helpLinkUri: $"https://bmazzarol.github.io/Tuxedo/rules/{RuleIdentifiers.DoNotUseDefault}.html"
-        );
+    private static readonly DiagnosticDescriptor Rule = new(
+        RuleIdentifiers.DoNotUseDefault,
+        "Using default for refined types is prohibited",
+        "Type '{0}' cannot be constructed with default as it is prohibited",
+        RuleCategories.Usage,
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "A refined type created with a default expression is always invalid, use the Parse or TryParse method instead.",
+        helpLinkUri: $"https://bmazzarol.github.io/Tuxedo/rules/{RuleIdentifiers.DoNotUseDefault}.html"
+    );
 
     /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];

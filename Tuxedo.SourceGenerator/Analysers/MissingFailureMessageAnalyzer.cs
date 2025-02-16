@@ -15,17 +15,16 @@ namespace Tuxedo.SourceGenerator.Analysers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class MissingFailureMessageAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly DiagnosticDescriptor Rule =
-        new(
-            RuleIdentifiers.MissingFailureMessage,
-            "FailureMessage must be set on the Refinement attribute, or the method must return a string?",
-            "FailureMessage must be set on the Refinement attribute, or the method must return a string?",
-            RuleCategories.Usage,
-            DiagnosticSeverity.Error,
-            isEnabledByDefault: true,
-            description: "The FailureMessage property must be set on the Refinement attribute, or the method it on must return a string? which when non-null is used as the failure message.",
-            helpLinkUri: $"https://bmazzarol.github.io/Tuxedo/rules/{RuleIdentifiers.MissingFailureMessage}.html"
-        );
+    private static readonly DiagnosticDescriptor Rule = new(
+        RuleIdentifiers.MissingFailureMessage,
+        "FailureMessage must be set on the Refinement attribute, or the method must return a string?",
+        "FailureMessage must be set on the Refinement attribute, or the method must return a string?",
+        RuleCategories.Usage,
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "The FailureMessage property must be set on the Refinement attribute, or the method it on must return a string? which when non-null is used as the failure message.",
+        helpLinkUri: $"https://bmazzarol.github.io/Tuxedo/rules/{RuleIdentifiers.MissingFailureMessage}.html"
+    );
 
     /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];

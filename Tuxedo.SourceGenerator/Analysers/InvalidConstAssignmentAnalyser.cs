@@ -15,17 +15,16 @@ namespace Tuxedo.SourceGenerator.Analysers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed partial class InvalidConstAssignmentAnalyser : DiagnosticAnalyzer
 {
-    private static readonly DiagnosticDescriptor Rule =
-        new(
-            RuleIdentifiers.InvalidConstAssignment,
-            "Assigning compile time known values that do not pass refinement will fail",
-            "{0}",
-            RuleCategories.Usage,
-            DiagnosticSeverity.Error,
-            isEnabledByDefault: true,
-            description: "Assigning compile time known values that do not pass refinement will result in runtime failure, so alter the value or the code.",
-            helpLinkUri: $"https://bmazzarol.github.io/Tuxedo/rules/{RuleIdentifiers.InvalidConstAssignment}.html"
-        );
+    private static readonly DiagnosticDescriptor Rule = new(
+        RuleIdentifiers.InvalidConstAssignment,
+        "Assigning compile time known values that do not pass refinement will fail",
+        "{0}",
+        RuleCategories.Usage,
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "Assigning compile time known values that do not pass refinement will result in runtime failure, so alter the value or the code.",
+        helpLinkUri: $"https://bmazzarol.github.io/Tuxedo/rules/{RuleIdentifiers.InvalidConstAssignment}.html"
+    );
 
     /// <inheritdoc />
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
