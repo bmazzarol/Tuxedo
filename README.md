@@ -5,7 +5,7 @@
 
 # Tuxedo
 
-[:running: **_Getting Started_**](https://bmazzarol.github.io/Tuxedo/articles/getting-started.html)
+[:running: **_Getting Started_**](https://bmazzarol.github.io/Tuxedo/getting-started.html)
 |
 [:books: **_Documentation_**](https://bmazzarol.github.io/Tuxedo)
 
