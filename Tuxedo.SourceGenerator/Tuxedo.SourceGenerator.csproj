@@ -1,32 +1,31 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-    <Import Project="$([MSBuild]::GetPathOfFileAbove('Common.Release.props', '$(MSBuildThisFileDirectory)'))"/>
-
-    <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <Title>Tuxedo</Title>
-        <Description>Refined types for .NET</Description>
-        <PackageTags>C#, Refined types, Source Generator</PackageTags>
-        <PackageProjectUrl>https://bmazzarol.github.io/Tuxedo</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/bmazzarol/Tuxedo</RepositoryUrl>
-        <PackageIcon>jacket-icon.png</PackageIcon>
-        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-        <IsRoslynComponent>true</IsRoslynComponent>
-    </PropertyGroup>
-
-    <!-- This ensures the library will be packaged as a source generator when we use `dotnet pack` -->
-    <ItemGroup>
-        <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    </ItemGroup>
-    
-    <ItemGroup>
-        <None Include="..\jacket-icon.png" Pack="true" PackagePath="\"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
-        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
-    </ItemGroup>
-
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Common.Release.props', '$(MSBuildThisFileDirectory)'))" />
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Title>Tuxedo</Title>
+    <Description>Refined types for .NET</Description>
+    <PackageTags>C#, Refined types, Source Generator</PackageTags>
+    <PackageProjectUrl>https://bmazzarol.github.io/Tuxedo</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/bmazzarol/Tuxedo</RepositoryUrl>
+    <PackageIcon>jacket-icon.png</PackageIcon>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <IsRoslynComponent>true</IsRoslynComponent>
+  </PropertyGroup>
+  <!-- This ensures the library will be packaged as a source generator when we use `dotnet pack` -->
+  <ItemGroup>
+    <None
+      Include="$(OutputPath)\$(AssemblyName).dll"
+      Pack="true"
+      PackagePath="analyzers/dotnet/cs"
+      Visible="false"
+    />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\jacket-icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
+  </ItemGroup>
 </Project>

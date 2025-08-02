@@ -42,12 +42,11 @@ public sealed partial class InvalidConstAssignmentAnalyser : DiagnosticAnalyzer
                 return;
             }
 
-            _refinementService ??= new Lazy<RefinementService?>(
-                () =>
-                    RefinementService.Build(
-                        compilationContext.Compilation,
-                        compilationContext.CancellationToken
-                    )
+            _refinementService ??= new Lazy<RefinementService?>(() =>
+                RefinementService.Build(
+                    compilationContext.Compilation,
+                    compilationContext.CancellationToken
+                )
             );
 
             if (_refinementService.Value is not { } refinementService)
