@@ -1,0 +1,28 @@
+{%- var xmlSafeRawTypeName = model.RawType.EscapeXml() -%}
+/// <summary>
+/// Returns the string representation of the underlying {{ xmlSafeRawTypeName }}
+/// </summary>
+public override string ToString()
+{
+    return Value.ToString() ?? string.Empty;
+}
+{%- if model.RawTypeSymbol?.HasInterface("System.IConvertible") ?? false %}
+
+/// <summary>
+/// Returns the string representation of the underlying {{ xmlSafeRawTypeName }}
+/// </summary>
+public string ToString(IFormatProvider? provider)
+{
+    return ((IConvertible)Value).ToString(provider) ?? string.Empty;
+}
+{%- end -%}
+{%- if model.RawTypeSymbol?.HasInterface("System.IFormattable") ?? false %}
+
+/// <summary>
+/// Returns the string representation of the underlying {{ xmlSafeRawTypeName }}
+/// </summary>
+public string ToString(string? format, IFormatProvider? formatProvider)
+{
+    return ((IFormattable)Value).ToString(format, formatProvider) ?? string.Empty;
+}
+{%- end -%}

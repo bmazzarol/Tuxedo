@@ -15,14 +15,14 @@ namespace <global namespace>;
 public readonly partial struct Case4 : IEquatable<Case4>
 {
     private readonly bool? _value;
-   
+    
     /// <summary>
     /// The underlying bool
     /// </summary>
     public bool Value => _value ?? throw new InvalidOperationException("Do not use the default value, please use the Parse and TryParse methods to construct a Case4");
-
+    
     /// <summary>
-    /// Implicit conversion from the Case4 to a bool
+    /// Conversion from the Case4 to a bool
     /// </summary>
     /// <param name="this">the Case4</param>
     /// <returns>underlying bool</returns>
@@ -30,14 +30,14 @@ public readonly partial struct Case4 : IEquatable<Case4>
     {
         return @this.Value;
     }
-    
+
     private Case4(bool value)
     {
         _value = value;
     }
 
     /// <summary>
-    /// Implicit conversion from a bool to a Case4
+    /// Conversion from a bool to a Case4
     /// </summary>
     /// <param name="value">raw bool</param>
     /// <returns>refined Case4</returns>
@@ -65,11 +65,7 @@ public readonly partial struct Case4 : IEquatable<Case4>
     /// <param name="refined">refined Case4 when true</param>
     /// <param name="failureMessage">error message when false</param>
     /// <returns>true if refined, false otherwise</returns>
-    public static bool TryParse(
-        bool value,
-        out Case4 refined,
-        [NotNullWhen(false)] out string? failureMessage
-    )
+    public static bool TryParse(bool value, out Case4 refined, [NotNullWhen(false)] out string? failureMessage)
     {
         if (Test.ExampleWithImplicitConversion(value))
         {

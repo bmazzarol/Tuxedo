@@ -4,7 +4,6 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Operations;
-using Tuxedo.SourceGenerator.Extensions;
 
 namespace Tuxedo.SourceGenerator.Analysers;
 

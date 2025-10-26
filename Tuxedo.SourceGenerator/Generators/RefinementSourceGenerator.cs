@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using Tuxedo.SourceGenerator.Extensions;
+using Pasted;
 using SF = Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Tuxedo.SourceGenerator;
@@ -17,13 +17,31 @@ namespace Tuxedo.SourceGenerator;
 [Generator]
 public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
 {
+    [ThreadStatic]
+    private static StringBuilder? _stringBuilder;
+    private static StringBuilder StringBuilder
+    {
+        get
+        {
+            if (_stringBuilder is null)
+            {
+                _stringBuilder = new StringBuilder();
+            }
+            else
+            {
+                _stringBuilder.Clear();
+            }
+            return _stringBuilder;
+        }
+    }
+
     /// <inheritdoc />
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         context.RegisterPostInitializationOutput(ctx =>
         {
-            ctx.AddSource("RefinementAttribute.g", RefinementAttributeSource);
-            ctx.AddSource("RefinedTypeAttribute.g", RefinedTypeAttributeSource);
+            ctx.AddSource("RefinementAttribute.g", EmbeddedFiles.RefinementAttribute_Source);
+            ctx.AddSource("RefinedTypeAttribute.g", EmbeddedFiles.RefinedTypeAttribute_Source);
         });
 
         var refinedTypeDetailsProvider = context.SyntaxProvider.ForAttributeWithMetadataName(
@@ -214,13 +232,18 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
         RefinedTypeDetails refinedTypeDetails
     )
     {
-        var source = refinedTypeDetails.AlternativeType is not null
-            ? RenderMultiRefinedType(refinedTypeDetails)
-            : RenderSingleRefinedType(refinedTypeDetails);
-
+        var stringBuilder = StringBuilder;
+        if (refinedTypeDetails.AlternativeType is not null)
+        {
+            stringBuilder.WriteMultiRefinedType(refinedTypeDetails);
+        }
+        else
+        {
+            stringBuilder.WriteSingleRefinedType(refinedTypeDetails);
+        }
         context.AddSource(
             $"{refinedTypeDetails.RefinedType}.g.cs",
-            SourceText.From(source, Encoding.UTF8)
+            SourceText.From(stringBuilder.ToString(), Encoding.UTF8)
         );
     }
 
@@ -229,9 +252,11 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
         ImmutableArray<RefinedTypeDetails> refinedTypeDetails
     )
     {
+        var stringBuilder = StringBuilder;
+        stringBuilder.WriteRefinementService(refinedTypeDetails);
         context.AddSource(
             "RefinementService.g.cs",
-            SourceText.From(RenderRefinementService(refinedTypeDetails), Encoding.UTF8)
+            SourceText.From(stringBuilder.ToString(), Encoding.UTF8)
         );
     }
 }

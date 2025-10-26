@@ -7,11 +7,11 @@ A good example of this is types that implement `IParsable`.
 
 For example take `DateOnly`,
 
-[!code-csharp[Example1](../../Tuxedo.Tests/DateOnlyExample.cs#DateOnlyExample)]
+[!code-csharp[Example1](../../Tuxedo.SourceGenerator.Tests/DateOnlyExample.cs#DateOnlyExample)]
 
 This can be used like this,
 
-[!code-csharp[Example1](../../Tuxedo.Tests/DateOnlyExample.cs#DateOnlyStringUsage)]
+[!code-csharp[Example1](../../Tuxedo.SourceGenerator.Tests/DateOnlyExample.cs#DateOnlyStringUsage)]
 
 This is optimally efficient as it produces the alternative value as a result
 of the refinement process, as opposed to ensuring that the raw value could be

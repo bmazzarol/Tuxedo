@@ -1,6 +1,6 @@
 using Microsoft.CodeAnalysis;
 
-namespace Tuxedo.SourceGenerator.Extensions;
+namespace Tuxedo.SourceGenerator;
 
 internal static class SymbolExtensions
 {

@@ -1,0 +1,25 @@
+{%- var resolvedType = model.RefinedType + model.GenericDetails?.Parameters -%}
+{%- var xmlSafeRawTypeName = model.RawType.EscapeXml() -%}
+{%- var xmlSafePredicateName = model.PredicateDetails.Name.EscapeXml() -%}
+{%- var hasGenericsOnPredicate = model.PredicateDetails.MethodSymbol.TypeParameters.Length > 0 -%}
+{%- var hasAlternativeType = model.AlternativeType is not null -%}
+/// <summary>
+/// Try and refine the {{ xmlSafeRawTypeName }} against the {{ xmlSafePredicateName }} refinement{{ (hasAlternativeType ? $" producing a {model.AlternativeType}" : null) }}
+/// </summary>
+/// <param name="value">raw {{ xmlSafeRawTypeName }}</param>
+/// <param name="refined">refined {{ model.RefinedTypeXmlSafeName }} when true</param>
+/// <param name="failureMessage">error message when false</param>
+/// <returns>true if refined, false otherwise</returns>
+public static bool TryParse({{ model.RawType }} value, out {{ resolvedType }} refined, [NotNullWhen(false)] out string? failureMessage)
+{
+    if ({{ model.PredicateDetails.Name }}{{ (hasGenericsOnPredicate ? model.GenericDetails?.Parameters: null) }}(value{{ (hasAlternativeType ? ", out var altValue" : null) }}){{ (model.PredicateDetails.ReturnsFailureMessage ? " is not {} fm" : null) }})
+    {
+        refined = new {{ resolvedType }}(value{{ (hasAlternativeType ? ", altValue" : null) }});
+        failureMessage = null;
+        return true;
+    }
+    
+    refined = default;
+    failureMessage = {{ (model.PredicateDetails.ReturnsFailureMessage ? "fm" : $"${model.AttributeDetails.FailureMessage}") }};
+    return false;
+}

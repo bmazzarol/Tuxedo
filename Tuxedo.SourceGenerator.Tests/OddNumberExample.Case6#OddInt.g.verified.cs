@@ -15,14 +15,14 @@ namespace <global namespace>;
 public readonly partial struct OddInt : IEquatable<OddInt>, IFormattable
 {
     private readonly int? _value;
-   
+    
     /// <summary>
     /// The underlying int
     /// </summary>
     public int Value => _value ?? throw new InvalidOperationException("Do not use the default value, please use the Parse and TryParse methods to construct a OddInt");
-
+    
     /// <summary>
-    /// Implicit conversion from the OddInt to a int
+    /// Conversion from the OddInt to a int
     /// </summary>
     /// <param name="this">the OddInt</param>
     /// <returns>underlying int</returns>
@@ -30,14 +30,14 @@ public readonly partial struct OddInt : IEquatable<OddInt>, IFormattable
     {
         return @this.Value;
     }
-    
+
     private OddInt(int value)
     {
         _value = value;
     }
 
     /// <summary>
-    /// Explicit conversion from a int to a OddInt
+    /// Conversion from a int to a OddInt
     /// </summary>
     /// <param name="value">raw int</param>
     /// <returns>refined OddInt</returns>
@@ -65,11 +65,7 @@ public readonly partial struct OddInt : IEquatable<OddInt>, IFormattable
     /// <param name="refined">refined OddInt when true</param>
     /// <param name="failureMessage">error message when false</param>
     /// <returns>true if refined, false otherwise</returns>
-    public static bool TryParse(
-        int value,
-        out OddInt refined,
-        [NotNullWhen(false)] out string? failureMessage
-    )
+    public static bool TryParse(int value, out OddInt refined, [NotNullWhen(false)] out string? failureMessage)
     {
         if (Test.Odd(value))
         {

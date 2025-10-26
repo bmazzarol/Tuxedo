@@ -15,14 +15,14 @@ namespace <global namespace>;
 public readonly partial struct GuidString : IEquatable<GuidString>
 {
     private readonly string? _value;
-   
+    
     /// <summary>
     /// The underlying string
     /// </summary>
     public string Value => _value ?? throw new InvalidOperationException("Do not use the default value, please use the Parse and TryParse methods to construct a GuidString");
-
+    
     /// <summary>
-    /// Implicit conversion from the GuidString to a string
+    /// Conversion from the GuidString to a string
     /// </summary>
     /// <param name="this">the GuidString</param>
     /// <returns>underlying string</returns>
@@ -30,16 +30,16 @@ public readonly partial struct GuidString : IEquatable<GuidString>
     {
         return @this.Value;
     }
-        
+
     private readonly System.Guid? _altValue;
-   
+    
     /// <summary>
     /// The underlying System.Guid
     /// </summary>
     public System.Guid AltValue => _altValue ?? throw new InvalidOperationException("Do not use the default value, please use the Parse and TryParse methods to construct a GuidString");
-
+    
     /// <summary>
-    /// Implicit conversion from the GuidString to a System.Guid
+    /// Conversion from the GuidString to a System.Guid
     /// </summary>
     /// <param name="this">the GuidString</param>
     /// <returns>underlying System.Guid</returns>
@@ -55,7 +55,7 @@ public readonly partial struct GuidString : IEquatable<GuidString>
     }
 
     /// <summary>
-    /// Explicit conversion from a string to a GuidString
+    /// Conversion from a string to a GuidString
     /// </summary>
     /// <param name="value">raw string</param>
     /// <returns>refined GuidString</returns>
@@ -75,7 +75,7 @@ public readonly partial struct GuidString : IEquatable<GuidString>
     {
         return TryParse(value, out var result, out var failureMessage) ? result : throw new ArgumentOutOfRangeException(nameof(value), value, failureMessage);
     }
-
+    
     /// <summary>
     /// Try and refine the string against the Test.Guid refinement producing a System.Guid
     /// </summary>
@@ -83,11 +83,7 @@ public readonly partial struct GuidString : IEquatable<GuidString>
     /// <param name="refined">refined GuidString when true</param>
     /// <param name="failureMessage">error message when false</param>
     /// <returns>true if refined, false otherwise</returns>
-    public static bool TryParse(
-        string value,
-        out GuidString refined,
-        [NotNullWhen(false)] out string? failureMessage
-    )
+    public static bool TryParse(string value, out GuidString refined, [NotNullWhen(false)] out string? failureMessage)
     {
         if (Test.Guid(value, out var altValue))
         {
@@ -146,7 +142,7 @@ public readonly partial struct GuidString : IEquatable<GuidString>
     {
         return ((IConvertible)Value).ToString(provider) ?? string.Empty;
     }
-    
+
     /// <summary>
     /// Standard deconstruction to the underlying values
     /// </summary>

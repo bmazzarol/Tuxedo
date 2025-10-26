@@ -1,6 +1,6 @@
 using System.Security;
 
-namespace Tuxedo.SourceGenerator.Extensions;
+namespace Tuxedo.SourceGenerator;
 
 internal static class StringExtensions
 {
@@ -31,21 +31,6 @@ internal static class StringExtensions
             return value.Substring(7, value.Length - 8);
         }
         return value.Replace("\"", string.Empty);
-    }
-
-    public static string? PrependIfNotNull(this string? value, string prepend)
-    {
-        return value == null ? value : $"{prepend}{value}";
-    }
-
-    public static string? RenderIfNotNull(this string? value, Func<string, string> render)
-    {
-        return value == null ? null : render(value);
-    }
-
-    public static string? RenderIfTrue(this bool value, Func<string> render)
-    {
-        return !value ? null : render();
     }
 
     public static string? LowercaseFirst(this string? value)

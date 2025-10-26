@@ -25,7 +25,7 @@ internal sealed class RefinementAttribute : Attribute
     
     /// <summary>
     /// Optional name of the refined type.
-    /// Defaults to the refinement method name + the raw type name
+    /// Defaults to the refinement method name and the raw type name
     /// </summary>
     public string? Name { get; set; }
     
@@ -50,4 +50,5 @@ internal sealed class RefinementAttribute : Attribute
     {
     }
 }
+
 #endif

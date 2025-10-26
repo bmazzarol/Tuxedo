@@ -1,7 +1,6 @@
 using System.Collections.Concurrent;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
-using Tuxedo.SourceGenerator.Extensions;
 
 namespace Tuxedo.SourceGenerator.Analysers;
 

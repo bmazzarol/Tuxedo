@@ -1,0 +1,8 @@
+/// <summary>
+/// A refined {{ model.RawType.EscapeXml() }} based on the {{ model.PredicateDetails.Name.EscapeXml() }} refinement predicate
+{%- if model.AlternativeType is not null %} which produces an alternative {{ model.AlternativeType }} value{% end %}
+/// </summary>
+[RefinedType]
+{{ model.AttributeDetails.AccessModifier }} readonly partial struct {{ model.RefinedType }}{{ model.GenericDetails?.Parameters }} : IEquatable<{{ model.RefinedType }}{{ model.GenericDetails?.Parameters }}>
+{%- if model.RawTypeSymbol.HasInterface("System.IFormattable") %}, IFormattable {%- end -%}
+{%- if model.GenericDetails?.Constraints is not null %} {{ model.GenericDetails.Constraints }} {%- end %}

@@ -15,14 +15,14 @@ namespace <global namespace>;
 public readonly partial struct DateOnlyString : IEquatable<DateOnlyString>
 {
     private readonly string? _value;
-   
+    
     /// <summary>
     /// The underlying string
     /// </summary>
     public string Value => _value ?? throw new InvalidOperationException("Do not use the default value, please use the Parse and TryParse methods to construct a DateOnlyString");
-
+    
     /// <summary>
-    /// Implicit conversion from the DateOnlyString to a string
+    /// Conversion from the DateOnlyString to a string
     /// </summary>
     /// <param name="this">the DateOnlyString</param>
     /// <returns>underlying string</returns>
@@ -30,16 +30,16 @@ public readonly partial struct DateOnlyString : IEquatable<DateOnlyString>
     {
         return @this.Value;
     }
-        
+
     private readonly System.DateOnly? _altValue;
-   
+    
     /// <summary>
     /// The underlying System.DateOnly
     /// </summary>
     public System.DateOnly AltValue => _altValue ?? throw new InvalidOperationException("Do not use the default value, please use the Parse and TryParse methods to construct a DateOnlyString");
-
+    
     /// <summary>
-    /// Implicit conversion from the DateOnlyString to a System.DateOnly
+    /// Conversion from the DateOnlyString to a System.DateOnly
     /// </summary>
     /// <param name="this">the DateOnlyString</param>
     /// <returns>underlying System.DateOnly</returns>
@@ -55,7 +55,7 @@ public readonly partial struct DateOnlyString : IEquatable<DateOnlyString>
     }
 
     /// <summary>
-    /// Explicit conversion from a string to a DateOnlyString
+    /// Conversion from a string to a DateOnlyString
     /// </summary>
     /// <param name="value">raw string</param>
     /// <returns>refined DateOnlyString</returns>
@@ -75,7 +75,7 @@ public readonly partial struct DateOnlyString : IEquatable<DateOnlyString>
     {
         return TryParse(value, out var result, out var failureMessage) ? result : throw new ArgumentOutOfRangeException(nameof(value), value, failureMessage);
     }
-
+    
     /// <summary>
     /// Try and refine the string against the Test.DateOnly refinement producing a System.DateOnly
     /// </summary>
@@ -83,11 +83,7 @@ public readonly partial struct DateOnlyString : IEquatable<DateOnlyString>
     /// <param name="refined">refined DateOnlyString when true</param>
     /// <param name="failureMessage">error message when false</param>
     /// <returns>true if refined, false otherwise</returns>
-    public static bool TryParse(
-        string value,
-        out DateOnlyString refined,
-        [NotNullWhen(false)] out string? failureMessage
-    )
+    public static bool TryParse(string value, out DateOnlyString refined, [NotNullWhen(false)] out string? failureMessage)
     {
         if (Test.DateOnly(value, out var altValue))
         {
@@ -146,7 +142,7 @@ public readonly partial struct DateOnlyString : IEquatable<DateOnlyString>
     {
         return ((IConvertible)Value).ToString(provider) ?? string.Empty;
     }
-    
+
     /// <summary>
     /// Standard deconstruction to the underlying values
     /// </summary>

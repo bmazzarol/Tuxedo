@@ -1,0 +1,25 @@
+{%- var conversionType = model.AttributeDetails.HasImplicitConversionFromRaw ? "implicit" : "explicit" -%}
+{%- var resolvedType = model.RefinedType + model.GenericDetails?.Parameters -%}
+{%- var xmlSafeRawTypeName = model.RawType.EscapeXml() -%}
+{%- var xmlSafePredicateName = model.PredicateDetails.Name.EscapeXml() -%}
+/// <summary>
+/// Conversion from a {{ xmlSafeRawTypeName }} to a {{ model.RefinedTypeXmlSafeName }}
+/// </summary>
+/// <param name="value">raw {{ xmlSafeRawTypeName }}</param>
+/// <returns>refined {{ model.RefinedTypeXmlSafeName }}</returns>
+/// <exception cref="ArgumentOutOfRangeException">if the {{ xmlSafePredicateName }} refinement fails</exception>
+public static {{ conversionType }} operator {{ resolvedType }}({{ model.RawType }} value)
+{
+    return Parse(value);
+}
+
+/// <summary>
+/// Refines the {{ xmlSafeRawTypeName }} or throws
+/// </summary>
+/// <param name="value">raw {{ xmlSafeRawTypeName }}</param>
+/// <returns>refined {{ model.RefinedTypeXmlSafeName }}</returns>
+/// <exception cref="ArgumentOutOfRangeException">if the {{ xmlSafePredicateName }} refinement fails</exception>
+public static {{ resolvedType }} Parse({{ model.RawType }} value)
+{
+    return TryParse(value, out var result, out var failureMessage) ? result : throw new ArgumentOutOfRangeException(nameof(value), value, failureMessage);
+}

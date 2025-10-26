@@ -15,14 +15,14 @@ namespace <global namespace>;
 internal readonly partial struct WhiteSpaceChar : IEquatable<WhiteSpaceChar>, IFormattable
 {
     private readonly char? _value;
-   
+    
     /// <summary>
     /// The underlying char
     /// </summary>
     public char Value => _value ?? throw new InvalidOperationException("Do not use the default value, please use the Parse and TryParse methods to construct a WhiteSpaceChar");
-
+    
     /// <summary>
-    /// Implicit conversion from the WhiteSpaceChar to a char
+    /// Conversion from the WhiteSpaceChar to a char
     /// </summary>
     /// <param name="this">the WhiteSpaceChar</param>
     /// <returns>underlying char</returns>
@@ -30,14 +30,14 @@ internal readonly partial struct WhiteSpaceChar : IEquatable<WhiteSpaceChar>, IF
     {
         return @this.Value;
     }
-    
+
     private WhiteSpaceChar(char value)
     {
         _value = value;
     }
 
     /// <summary>
-    /// Explicit conversion from a char to a WhiteSpaceChar
+    /// Conversion from a char to a WhiteSpaceChar
     /// </summary>
     /// <param name="value">raw char</param>
     /// <returns>refined WhiteSpaceChar</returns>
@@ -65,11 +65,7 @@ internal readonly partial struct WhiteSpaceChar : IEquatable<WhiteSpaceChar>, IF
     /// <param name="refined">refined WhiteSpaceChar when true</param>
     /// <param name="failureMessage">error message when false</param>
     /// <returns>true if refined, false otherwise</returns>
-    public static bool TryParse(
-        char value,
-        out WhiteSpaceChar refined,
-        [NotNullWhen(false)] out string? failureMessage
-    )
+    public static bool TryParse(char value, out WhiteSpaceChar refined, [NotNullWhen(false)] out string? failureMessage)
     {
         if (Test.WhiteSpace(value))
         {

@@ -1,0 +1,18 @@
+private readonly {{ typeName }}? _{{ name.LowercaseFirst() }};
+
+/// <summary>
+/// The underlying {{ typeName.EscapeXml() }}
+/// </summary>
+public {{ typeName }} {{ name }} => _{{ name.LowercaseFirst() }} ?? throw new InvalidOperationException("Do not use the default value, please use the Parse and TryParse methods to construct a {{ model.RefinedType }}");
+{%- if addImplicitOperator %}
+
+/// <summary>
+/// Conversion from the {{ model.RefinedTypeXmlSafeName }} to a {{ typeName.EscapeXml() }}
+/// </summary>
+/// <param name="this">the {{ model.RefinedTypeXmlSafeName }}</param>
+/// <returns>underlying {{ typeName.EscapeXml() }}</returns>
+public static implicit operator {{ typeName }}({{ model.RefinedType }}{{ model.GenericDetails?.Parameters }} @this)
+{
+    return @this.{{name}};
+}
+{%- end -%}
