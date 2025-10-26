@@ -13,18 +13,17 @@ namespace <global namespace>;
 /// A refined T based on the Odd&lt;T&gt;.Odd refinement predicate
 /// </summary>
 [RefinedType]
-public readonly partial struct Odd<T> : IEquatable<Odd<T>>
-	where T : INumberBase<T>
+public readonly partial struct Odd<T> : IEquatable<Odd<T>> where T : INumberBase<T>
 {
     private readonly T? _value;
-   
+    
     /// <summary>
     /// The underlying T
     /// </summary>
     public T Value => _value ?? throw new InvalidOperationException("Do not use the default value, please use the Parse and TryParse methods to construct a Odd");
-
+    
     /// <summary>
-    /// Implicit conversion from the Odd&lt;T&gt; to a T
+    /// Conversion from the Odd&lt;T&gt; to a T
     /// </summary>
     /// <param name="this">the Odd&lt;T&gt;</param>
     /// <returns>underlying T</returns>
@@ -32,14 +31,14 @@ public readonly partial struct Odd<T> : IEquatable<Odd<T>>
     {
         return @this.Value;
     }
-    
+
     private Odd(T value)
     {
         _value = value;
     }
 
     /// <summary>
-    /// Explicit conversion from a T to a Odd&lt;T&gt;
+    /// Conversion from a T to a Odd&lt;T&gt;
     /// </summary>
     /// <param name="value">raw T</param>
     /// <returns>refined Odd&lt;T&gt;</returns>
@@ -67,11 +66,7 @@ public readonly partial struct Odd<T> : IEquatable<Odd<T>>
     /// <param name="refined">refined Odd&lt;T&gt; when true</param>
     /// <param name="failureMessage">error message when false</param>
     /// <returns>true if refined, false otherwise</returns>
-    public static bool TryParse(
-        T value,
-        out Odd<T> refined,
-        [NotNullWhen(false)] out string? failureMessage
-    )
+    public static bool TryParse(T value, out Odd<T> refined, [NotNullWhen(false)] out string? failureMessage)
     {
         if (Odd<T>.Odd(value))
         {

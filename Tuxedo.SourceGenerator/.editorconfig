@@ -1,0 +1,24 @@
+[RefinedTypeAttribute.Source.cs]
+embed = true
+[RefinementAttribute.Source.cs]
+embed = true
+[RefinementService.Source.cs.liquid]
+template_method = Tuxedo.SourceGenerator.TemplateProvider.WriteRefinementService
+[NamespaceParts.Partial.cs.liquid]
+template_method = Tuxedo.SourceGenerator.TemplateProvider.WriteNamespaceParts
+[TypeNameParts.Partial.cs.liquid]
+template_method = Tuxedo.SourceGenerator.TemplateProvider.WriteTypeNameParts
+[TypePropertyParts.Partial.cs.liquid]
+template_method = Tuxedo.SourceGenerator.TemplateProvider.WriteTypePropertyParts
+[ParseMethod.Partial.cs.liquid]
+template_method = Tuxedo.SourceGenerator.TemplateProvider.WriteParseMethod
+[TryParseMethod.Partial.cs.liquid]
+template_method = Tuxedo.SourceGenerator.TemplateProvider.WriteTryParseMethod
+[EqualityMembers.Partial.cs.liquid]
+template_method = Tuxedo.SourceGenerator.TemplateProvider.WriteEqualityMembers
+[FormattingMembers.Partial.cs.liquid]
+template_method = Tuxedo.SourceGenerator.TemplateProvider.WriteFormattingMembers
+[SingleRefinedType.Partial.cs.liquid]
+template_method = Tuxedo.SourceGenerator.TemplateProvider.WriteSingleRefinedType
+[MultiRefinedType.Partial.cs.liquid]
+template_method = Tuxedo.SourceGenerator.TemplateProvider.WriteMultiRefinedType

@@ -1,0 +1,31 @@
+{%- var resolvedType = model.RefinedType + model.GenericDetails?.Parameters -%}
+{%- var hasAltValue = model.AlternativeType is not null -%}
+/// <inheritdoc />
+public bool Equals({{ resolvedType }} other)
+{
+    return {% if hasAltValue %}Nullable.Equals(_value, other._value) && Nullable.Equals(_altValue, other._altValue){% else %}Nullable.Equals(_value, other._value){% end %};
+}
+
+/// <inheritdoc />
+public override bool Equals(object? obj)
+{
+    return obj is {{ resolvedType }} other && Equals(other);
+}
+
+/// <inheritdoc />
+public static bool operator ==({{ resolvedType }} left, {{ resolvedType }} right)
+{
+    return left.Equals(right);
+}
+
+/// <inheritdoc />
+public static bool operator !=({{ resolvedType }} left, {{ resolvedType }} right)
+{
+    return !(left == right);
+}
+
+/// <inheritdoc />
+public override int GetHashCode()
+{
+    return {% if hasAltValue %}HashCode.Combine(_value, _altValue){% else %}HashCode.Combine(_value){% end %};
+}

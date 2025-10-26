@@ -15,14 +15,14 @@ namespace <global namespace>;
 public readonly partial struct PasswordString : IEquatable<PasswordString>
 {
     private readonly string? _value;
-   
+    
     /// <summary>
     /// The underlying string
     /// </summary>
     public string Value => _value ?? throw new InvalidOperationException("Do not use the default value, please use the Parse and TryParse methods to construct a PasswordString");
-
+    
     /// <summary>
-    /// Implicit conversion from the PasswordString to a string
+    /// Conversion from the PasswordString to a string
     /// </summary>
     /// <param name="this">the PasswordString</param>
     /// <returns>underlying string</returns>
@@ -30,14 +30,14 @@ public readonly partial struct PasswordString : IEquatable<PasswordString>
     {
         return @this.Value;
     }
-    
+
     private PasswordString(string value)
     {
         _value = value;
     }
 
     /// <summary>
-    /// Explicit conversion from a string to a PasswordString
+    /// Conversion from a string to a PasswordString
     /// </summary>
     /// <param name="value">raw string</param>
     /// <returns>refined PasswordString</returns>
@@ -65,11 +65,7 @@ public readonly partial struct PasswordString : IEquatable<PasswordString>
     /// <param name="refined">refined PasswordString when true</param>
     /// <param name="failureMessage">error message when false</param>
     /// <returns>true if refined, false otherwise</returns>
-    public static bool TryParse(
-        string value,
-        out PasswordString refined,
-        [NotNullWhen(false)] out string? failureMessage
-    )
+    public static bool TryParse(string value, out PasswordString refined, [NotNullWhen(false)] out string? failureMessage)
     {
         if (Test.IsValidPassword(value))
         {

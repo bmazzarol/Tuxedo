@@ -1,0 +1,23 @@
+{%- call WriteNamespaceParts(model) %}
+
+{% call WriteTypeNameParts(model) -%}
+{
+    {% call WriteTypePropertyParts( 
+        "Value",
+        model.RawType,
+        model,
+        addImplicitOperator: true) %}
+
+    private {{ model.RefinedType }}({{ model.RawType }} value)
+    {
+        _value = value;
+    }
+
+    {% call WriteParseMethod(model) %}
+    
+    {% call WriteTryParseMethod(model) %}
+    
+    {% call WriteEqualityMembers(model) %}
+    
+    {% call WriteFormattingMembers(model) %}
+}

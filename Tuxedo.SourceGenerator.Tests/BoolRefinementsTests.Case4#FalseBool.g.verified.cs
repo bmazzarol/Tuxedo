@@ -15,14 +15,14 @@ namespace <global namespace>;
 public readonly partial struct FalseBool : IEquatable<FalseBool>
 {
     private readonly bool? _value;
-   
+    
     /// <summary>
     /// The underlying bool
     /// </summary>
     public bool Value => _value ?? throw new InvalidOperationException("Do not use the default value, please use the Parse and TryParse methods to construct a FalseBool");
-
+    
     /// <summary>
-    /// Implicit conversion from the FalseBool to a bool
+    /// Conversion from the FalseBool to a bool
     /// </summary>
     /// <param name="this">the FalseBool</param>
     /// <returns>underlying bool</returns>
@@ -30,14 +30,14 @@ public readonly partial struct FalseBool : IEquatable<FalseBool>
     {
         return @this.Value;
     }
-    
+
     private FalseBool(bool value)
     {
         _value = value;
     }
 
     /// <summary>
-    /// Explicit conversion from a bool to a FalseBool
+    /// Conversion from a bool to a FalseBool
     /// </summary>
     /// <param name="value">raw bool</param>
     /// <returns>refined FalseBool</returns>
@@ -65,11 +65,7 @@ public readonly partial struct FalseBool : IEquatable<FalseBool>
     /// <param name="refined">refined FalseBool when true</param>
     /// <param name="failureMessage">error message when false</param>
     /// <returns>true if refined, false otherwise</returns>
-    public static bool TryParse(
-        bool value,
-        out FalseBool refined,
-        [NotNullWhen(false)] out string? failureMessage
-    )
+    public static bool TryParse(bool value, out FalseBool refined, [NotNullWhen(false)] out string? failureMessage)
     {
         if (Test.False(value))
         {

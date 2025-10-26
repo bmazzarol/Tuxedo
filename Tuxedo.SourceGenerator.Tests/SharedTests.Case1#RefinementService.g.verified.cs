@@ -30,9 +30,9 @@ internal static class RefinementService
         return value is List<T> rt && !<global namespace>.Test3<T>.TryParse(rt, out _, out var errorMessage) ? errorMessage : null;
     }
 
-    private static string? TestAgainstTest4<T>(object value)
-		where T: struct
+    private static string? TestAgainstTest4<T>(object value) where T: struct
     {
         return value is List<T> rt && !<global namespace>.Test4<T>.TryParse(rt, out _, out var errorMessage) ? errorMessage : null;
     }
+
 }

@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tuxedo.Tests", "Tuxedo.Tests\Tuxedo.Tests.csproj", "{B724B08A-9CEB-4E61-B086-22DEF99FAA2A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tuxedo.SourceGenerator.Tests", "Tuxedo.SourceGenerator.Tests\Tuxedo.SourceGenerator.Tests.csproj", "{B724B08A-9CEB-4E61-B086-22DEF99FAA2A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tuxedo.Docs", "Tuxedo.Docs\Tuxedo.Docs.csproj", "{46FB68E3-DF07-42F7-AD0F-AC1E423CB66D}"
 EndProject
