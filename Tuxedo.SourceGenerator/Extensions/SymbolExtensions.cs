@@ -19,6 +19,7 @@ internal static class SymbolExtensions
     {
         return symbol?.AllInterfaces.Any(i =>
                 i.ToDisplayString().Equals(interfaceName, StringComparison.Ordinal)
-            ) ?? false;
+            )
+            ?? false;
     }
 }
