@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Tuxedo.Docs/Tuxedo.Docs.csproj" />
+  <Project Path="Tuxedo.Examples/Tuxedo.Examples.csproj" />
+  <Project Path="Tuxedo.SourceGenerator.Tests/Tuxedo.SourceGenerator.Tests.csproj" />
+  <Project Path="Tuxedo.SourceGenerator/Tuxedo.SourceGenerator.csproj" />
+</Solution>
