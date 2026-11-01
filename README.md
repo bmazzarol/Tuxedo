@@ -1,24 +1,14 @@
-<!-- markdownlint-disable MD033 MD041 -->
-<div align="center">
-
-<img src="jacket-icon.png" alt="Tuxedo" width="150px"/>
+![Tuxedo](jacket-icon.png)
 
 # Tuxedo
 
-[:running: **_Getting Started_**](https://bmazzarol.github.io/Tuxedo/getting-started.html)
-|
-[:books: **_Documentation_**](https://bmazzarol.github.io/Tuxedo)
+**Types that already know they are valid.**
 
-[![Nuget](https://img.shields.io/nuget/v/tuxedo.sourcegenerator)](https://www.nuget.org/packages/tuxedo.sourcegenerator/)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=bmazzarol_Tuxedo&metric=coverage)](https://sonarcloud.io/summary/new_code?id=bmazzarol_Tuxedo)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bmazzarol_Tuxedo&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=bmazzarol_Tuxedo)
-[![CD Build](https://github.com/bmazzarol/tuxedo/actions/workflows/cd-build.yml/badge.svg)](https://github.com/bmazzarol/tuxedo/actions/workflows/cd-build.yml)
-[![Check Markdown](https://github.com/bmazzarol/tuxedo/actions/workflows/check-markdown.yml/badge.svg)](https://github.com/bmazzarol/tuxedo/actions/workflows/check-markdown.yml)
+A source generator that turns predicates into refined types, so a check made once carries its proof forward and never has to be repeated.
 
-Refined types for the suave :cocktail: .NET developer
+[![Nuget](https://img.shields.io/nuget/v/tuxedo.sourcegenerator)](https://www.nuget.org/packages/tuxedo.sourcegenerator/) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=bmazzarol_Tuxedo&metric=coverage)](https://sonarcloud.io/summary/new_code?id=bmazzarol_Tuxedo) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bmazzarol_Tuxedo&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=bmazzarol_Tuxedo) [![CD Build](https://github.com/bmazzarol/Tuxedo/actions/workflows/cd-build.yml/badge.svg)](https://github.com/bmazzarol/Tuxedo/actions/workflows/cd-build.yml) [![Check Markdown](https://github.com/bmazzarol/Tuxedo/actions/workflows/check-markdown.yml/badge.svg)](https://github.com/bmazzarol/Tuxedo/actions/workflows/check-markdown.yml)
 
-</div>
-<!-- markdownlint-enable MD033 MD041 -->
+[:running: **_Getting Started_**](https://bmazzarol.github.io/Tuxedo/getting-started.html) | [:books: **_Documentation_**](https://bmazzarol.github.io/Tuxedo/)
 
 ## Why?
 

@@ -1,24 +1,14 @@
-<!-- markdownlint-disable MD033 MD041 -->
-<div align="center">
-
-<img src="images/jacket-icon.png" alt="Tuxedo" width="150px"/>
-
 # Tuxedo
 
----
+![Tuxedo](images/jacket-icon.png)
 
-[![Nuget](https://img.shields.io/nuget/v/tuxedo.sourcegenerator)](https://www.nuget.org/packages/tuxedo.sourcegenerator/)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=bmazzarol_Tuxedo&metric=coverage)](https://sonarcloud.io/summary/new_code?id=bmazzarol_Tuxedo)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bmazzarol_Tuxedo&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=bmazzarol_Tuxedo)
-[![CD Build](https://github.com/bmazzarol/tuxedo/actions/workflows/cd-build.yml/badge.svg)](https://github.com/bmazzarol/tuxedo/actions/workflows/cd-build.yml)
-[![Check Markdown](https://github.com/bmazzarol/tuxedo/actions/workflows/check-markdown.yml/badge.svg)](https://github.com/bmazzarol/tuxedo/actions/workflows/check-markdown.yml)
+**Types that already know they are valid.**
 
-Refined types for the suave :cocktail: .NET developer
+A source generator that turns predicates into refined types, so a check made once carries its proof forward and never has to be repeated.
 
----
-
-</div>
-<!-- markdownlint-enable MD033 MD041 -->
+```shell
+dotnet add package tuxedo.sourcegenerator
+```
 
 ## Why?
 
