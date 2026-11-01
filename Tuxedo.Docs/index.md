@@ -4,7 +4,7 @@
 
 **Types that already know they are valid.**
 
-A fluent builder for HttpRequestMessage and HttpResponseMessage built on System.Net.Http alone, with no dependencies.
+A source generator that turns a predicate into a refined type, so a value of that type has already passed the check.
 
 ```shell
 dotnet add package tuxedo.sourcegenerator
