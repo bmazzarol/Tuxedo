@@ -1,7 +1,7 @@
 # Getting Started
 
-To use this source generator include it as a source only dependency in your
-project.
+Tuxedo is a source generator, so it is referenced as a build-time only
+dependency.
 
 ```xml
 <ItemGroup>
@@ -12,24 +12,32 @@ project.
 </ItemGroup>
 ```
 
-Now we can build our first refined type.
+## A refined type
 
-Let's create a password string that must comply with some simple rules.
+A refined type is a partial struct with a predicate attached to it. The
+generator reads the predicate and writes the type.
 
-It must,
-
-* Be at least 8 characters long
-* Contain at least 1 uppercase letter
-* Contain at least 1 number
-* Contain at least 1 special character
-
-To do this create a simple predicate method, It helps to do this on the
-partial struct that will eventually be the refined type.
-
-So in this case that type will be called a `PasswordString`, it looks like this,
+Say a password has to be at least eight characters long, and contain an
+uppercase letter, a number and a special character.
 
 [!code-csharp[](../Tuxedo.SourceGenerator.Tests/PasswordStringExample.cs#ExampleRefinement)]
 
-Which can be used like this,
+The generated `PasswordString` carries the rule, and the way to use it is the
+same whatever the rule is,
 
 [!code-csharp[Example1](../Tuxedo.SourceGenerator.Tests/PasswordStringExample.cs#ExampleUsage)]
+
+`TryParse` returns `false` and fills the failure message when the value does
+not satisfy the predicate. `Parse` throws `ArgumentOutOfRangeException` with
+that same message instead.
+
+## Where the rules come from
+
+The generator only turns predicates marked with `Tuxedo.Refinement` into types.
+Everything else in the partial struct is left alone.
+
+## See also
+
+* [Refinement Rules](rules/toc.yml) - what the generator requires of a predicate
+* [Examples](articles/toc.yml) - refined types for strings, numbers, dates and
+  collections
