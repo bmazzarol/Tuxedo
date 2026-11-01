@@ -1,187 +1,90 @@
-<!-- markdownlint-disable MD013 -->
+![Tuxedo](https://raw.githubusercontent.com/bmazzarol/Tuxedo/main/jacket-small-icon.png)
 
-# ![Tuxedo](https://raw.githubusercontent.com/bmazzarol/Tuxedo/main/jacket-small-icon.png) Tuxedo
+# Tuxedo
 
-<!-- markdownlint-enable MD013 -->
+**Types that already know they are valid.**
 
-[![Nuget](https://img.shields.io/nuget/v/tuxedo.sourcegenerator)](https://www.nuget.org/packages/tuxedo.sourcegenerator/)
+A source generator that turns a predicate into a refined type, so a value of that type has already passed the check.
 
-More precise types can help to reduce the number of bugs in your code. Tuxedo
-provides a source generator that turns a predicate into a refined type. There is
-no other runtime dependency, so it can be used in libraries without issue.
+[![Nuget](https://img.shields.io/nuget/v/Tuxedo.SourceGenerator)](https://www.nuget.org/packages/Tuxedo.SourceGenerator/)
 
-This provides advantages over the 'Guard' based approaches because once the
-check on the type has been done, it carries with it proof of refinement,
-eliminating the need to ever check it again.
-
-This allows for opt in fail fast behaviour, while eliminating shotgun parsing
-where the same check is repeated throughout the program as a precaution.
-
-For example, take a method that divides two floats,
-
-```c#
-public static float MyCustomDivide(float dividend, float divisor)
-{
-    // some check that throws early if the divisor is zero
-    // a "Guard" library would do the same thing here
-    ArgumentOutOfRangeException.ThrowIfZero(divisor);
-    
-    // now we are safe and can do the work
-    return dividend / divisor;    
-}
+```shell
+dotnet add package Tuxedo.SourceGenerator
 ```
 
-This is fine, as long as the method does not pass its parameters on to another
-method. Those nested methods would then need to do the same checks again to
-ensure that the float is indeed not zero.
+[Getting started](https://bmazzarol.github.io/Tuxedo/getting-started.html) - [Full documentation](https://bmazzarol.github.io/Tuxedo/)
 
-Instead, lets use Tuxedo to refine the float type so that it will
-always be greater than zero.
+## Why?
 
-```c#
-// this is the predicate that is used to refine the float
-// it will produce a new type called a PositiveFloat
-// only floats that meet the predicate can ever be one
-[Refinement("The float must be positive, but was '{value}'")]
-public static bool Positive(float value) => value > 0;
+A predicate is usually written as a guard: check the value, then pass it on. The
+check has to be repeated everywhere the value travels. Tuxedo turns the predicate
+into a type, so the check happens once, at the boundary.
 
-public static float MyCustomDivide(float dividend, PositiveFloat divisor)
+## First example
+
+A refined type is a partial struct with a predicate attached to it. The
+generator reads the predicate and writes the type.
+
+```csharp
+public readonly partial struct PasswordString
 {
-    return dividend / divisor; // will never fail at this point
-}
-```
-
-A `PositiveFloat` is a refined version of a float, it must be positive.
-
-That is what a refined type is, a type paired with a predicate that it
-passes. Tuxedo generates one from the predicate.
-
-Let's create the canonical example of a non-empty list.
-
-```c#
-
-/// <summary>
-/// This is a non-empty list
-/// </summary>
-/// <typeparam name="T">some T</typeparam>
-public readonly partial struct NonEmptyList<T>
-{
-    /// <summary>
-    /// The head of the list
-    /// </summary>
-    public T Head => Value[0];
-
-    /// <summary>
-    /// Refinement that ensures the list is non-empty
-    /// </summary>
-    /// <param name="list">list</param>
-    /// <typeparam name="T">some T, required again here for the source generator</typeparam>
-    /// <returns>true if the list is non-empty</returns>
-    [Refinement("The list must not be empty.")]
-    private static bool NonEmpty(List<T> list) => list.Count != 0;
-}
-```
-
-This new type will convert to its underlying List of T type and has the
-convenience `Head` method added to it.
-
-Using it looks like this,
-
-```c#
-// some list we want to refine
-List<string> list = new List<string>{ "Some", "Great", "Values" };
-
-// now we can try and convert that list
-if(NonEmptyList<string>.TryParse(
-    list, 
-    out NonEmptyList<string> nel, 
-    out string failureMessage))
-{
-    // we have a safe non-empty list in here
-    // which we can get the head of
-    var head = nel.Head;
-    // or assign to a list variable
-    List<string> lst = nel;
-    // or enumerate via the standard Value property
-    foreach(var e in nel.Value)
+    [Tuxedo.Refinement(
+        "The string must be at least 8 characters long, and contain an uppercase letter, a number and a special character. You provided '{value}'.",
+        Name = nameof(PasswordString)
+    )]
+    private static bool IsValidPassword(string value)
     {
-        ...
+        return value.Length >= 8
+            && value.Any(char.IsUpper)
+            && value.Any(char.IsDigit)
+            && value.Any(c => !char.IsLetterOrDigit(c) && !char.IsWhiteSpace(c));
     }
 }
-// or fail fast with an explicit conversion, which
-// throws if the refinement fails
-var nel = (NonEmptyList<string>) list;
 ```
 
-All refined types are structs and will not allocate, making them cost-effective.
+Usage is the same whatever the rule is:
 
-They can parse as well as validate.
+```csharp
+if (PasswordString.TryParse("12Da3%sd", out var password, out string failure))
+{
+    string value = password.Value;
+}
 
-A common case is a predicate that also produces a converted value.
+// or fail fast with an explicit conversion, which throws when the refinement fails
+var password = (PasswordString)"12Da3%sd";
+```
 
-Take a string that should also be a valid Guid. It would be good to produce
-a valid guid as a result of the refinement process.
+## Predicates that produce a value
 
-This can be done with Tuxedo,
+A refinement can also return a converted value next to the check, which is useful
+when the refined type holds more than the raw input.
 
-```c#
-/// <summary>
-/// Represents a string that is also a valid Guid
-/// </summary>
+```csharp
 public readonly partial struct GuidString
 {
-    // custom fields and methods can be added to the refined type
     public byte[] Bytes => AltValue.ToByteArray();
 
-    public bool IsEmpty => AltValue == System.Guid.Empty;
-
-    [Refinement("The value must be a valid GUID, but was '{value}'")]
-    private static bool Guid(string value, out Guid guid) => 
-        // the standard TryParse on guid returns true if it's a valid guid
-        // and also produces a guid as a result, which gets captured as 
-        // part of constructing the GuidString
-        System.Guid.TryParse(value, out guid);
+    [Tuxedo.Refinement("The value must be a valid GUID, but was '{value}'")]
+    private static bool Guid(string value, out Guid guid) => Guid.TryParse(value, out guid);
 }
 ```
 
-A `GuidString` is now a valid string and guid.
+`GuidString` converts implicitly to both `string` and `Guid`, and the guid is
+produced in the same pass as the validation.
 
-It will implicitly convert to both, and will use TryParse on guid internally
-to determine if the string is a valid guid, so in one pass also produces the
-guid.
+## What it does not do
 
-```c#
-// convert the string to a GuidString
-var refined = (GuidString)"6192C5ED-505C-4558-B87C-CA6E7D612B31";
-// now we have a valid Guid
-refined.Value.Should().Be("6192C5ED-505C-4558-B87C-CA6E7D612B31"); // string
-refined.AltValue.Should().Be(new Guid(
-    "6192C5ED-505C-4558-B87C-CA6E7D612B31")); // guid
-// and can also use custom methods defined on GuidString
-refined.Bytes.Should().NotBeEmpty();
-refined.IsEmpty.Should().BeFalse();
-```
+- It is not a runtime validation library. The generated types are ordinary C#
+  types with a validating constructor
+- It does not track values across I/O. A value read from a file or a request has
+  to be refined again when it is read
+- It is not built for `System.Text.Json` or other serialisation layers
+- Compile time checking is limited. Constant assignments to `Parse` and
+  `TryParse` are evaluated at compile time; everything else is checked at runtime
 
-If the alternative value is the same as the raw value, then only one
-implicit conversion method will be generated for the alternative value, not the
-raw value.
+## See also
 
-## Are these Refinement types?
-
-Sort of, at this stage there is limited compile time checks performed.
-
-For constant value assignments to `Parse` and `TryParse` methods, the
-refinement is attempted at compile time. There are many edge cases and for
-the most part any time this analyser runs, it's a bonus.
-
-## When should I not use this?
-
-Refined types are not designed to integrate with System.Text.Json or any
-other serialization layer. That is not to say that they could not be made
-to, but at this stage it's a non-requirement.
-
-Keep the refined types inside the domain boundary of the application and
-use the raw types on the edges.
-
-For more details/information keep reading the docs or have a look at the test
-projects or create an issue.
+- [Getting started](https://bmazzarol.github.io/Tuxedo/getting-started.html)
+- [Alternative values](https://bmazzarol.github.io/Tuxedo/articles/alternative-values.html)
+- [Dependent types](https://bmazzarol.github.io/Tuxedo/articles/dependent-types.html)
+- [Singleton types](https://bmazzarol.github.io/Tuxedo/articles/singleton-types.html)
