@@ -7,24 +7,23 @@
 [![Nuget](https://img.shields.io/nuget/v/tuxedo.sourcegenerator)](https://www.nuget.org/packages/tuxedo.sourcegenerator/)
 
 More precise types can help to reduce the number of bugs in your code. Tuxedo
-provides a source generator that can turn simple conditions (predicates)
-into refined types. There is no other runtime dependency, so it can be used in
-libraries without issue.
+provides a source generator that turns a predicate into a refined type. There is
+no other runtime dependency, so it can be used in libraries without issue.
 
 This provides advantages over the 'Guard' based approaches because once the
 check on the type has been done, it carries with it proof of refinement,
 eliminating the need to ever check it again.
 
 This allows for opt in fail fast behaviour, while eliminating shotgun parsing
-where the same checks are repeated throughout the program "Just in case".
+where the same check is repeated throughout the program as a precaution.
 
-For example, take a simple method that divides 2 floats,
+For example, take a method that divides two floats,
 
 ```c#
 public static float MyCustomDivide(float dividend, float divisor)
 {
     // some check that throws early if the divisor is zero
-    // this could also be some fancy "Guard" library it has the same effect
+    // a "Guard" library would do the same thing here
     ArgumentOutOfRangeException.ThrowIfZero(divisor);
     
     // now we are safe and can do the work
@@ -55,7 +54,7 @@ public static float MyCustomDivide(float dividend, PositiveFloat divisor)
 A `PositiveFloat` is a refined version of a float, it must be positive.
 
 That is what a refined type is, a type paired with a predicate that it
-passes. Tuxedo makes creating these types simple.
+passes. Tuxedo generates one from the predicate.
 
 Let's create the canonical example of a non-empty list.
 
@@ -109,17 +108,16 @@ if(NonEmptyList<string>.TryParse(
         ...
     }
 }
-// or if we want we can just fail fast and do an explicit conversion which 
-// thows if the refinement fails
+// or fail fast with an explicit conversion, which
+// throws if the refinement fails
 var nel = (NonEmptyList<string>) list;
 ```
 
 All refined types are structs and will not allocate, making them cost-effective.
 
-They can also be used to parse, not just validate.
+They can parse as well as validate.
 
-A very common use case is running a predicate which also results in some
-alternative value being created via the process.
+A common case is a predicate that also produces a converted value.
 
 Take a string that should also be a valid Guid. It would be good to produce
 a valid guid as a result of the refinement process.
@@ -182,8 +180,8 @@ Refined types are not designed to integrate with System.Text.Json or any
 other serialization layer. That is not to say that they could not be made
 to, but at this stage it's a non-requirement.
 
-Just keep the refined types inside the domain boundary of your application
-and use the simpler raw types on the edges.
+Keep the refined types inside the domain boundary of the application and
+use the raw types on the edges.
 
 For more details/information keep reading the docs or have a look at the test
 projects or create an issue.

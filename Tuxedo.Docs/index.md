@@ -14,7 +14,7 @@ dotnet add package tuxedo.sourcegenerator
 
 A guard clause proves something about a value for the rest of a method, but the
 proof stops at the method boundary. Every nested call has to check again, and
-the same condition ends up repeated through the program "just in case".
+the same condition ends up repeated through the program as a precaution.
 
 Tuxedo turns the predicate into a type. The generator writes a new type whose
 constructor runs the predicate, so a value of that type has already passed the
