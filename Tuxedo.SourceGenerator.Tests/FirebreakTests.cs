@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -41,14 +42,19 @@ public sealed class FirebreakTests
             """
         );
 
-        var diagnostic = result.Diagnostics.FirstOrDefault(d => d.Id == "TUXEDO001");
+        var diagnostic = result.Diagnostics.FirstOrDefault(d =>
+            d.Id.Equals("TUXEDO001", StringComparison.Ordinal)
+        );
         Assert.True(
             diagnostic is not null,
-            $"diagnostics={string.Join(", ", result.Diagnostics.Select(d => $"{d.Id}: {d.GetMessage()}"))}; generated={result.GeneratedTrees.Length}"
+            $"diagnostics={result.Diagnostics.Count()}; generated={result.GeneratedTrees.Length}"
         );
         Assert.Equal(DiagnosticSeverity.Error, diagnostic!.Severity);
         Assert.NotEqual(Location.None, diagnostic!.Location);
-        Assert.DoesNotContain(result.Diagnostics, d => d.Id == "AD0001");
+        Assert.DoesNotContain(
+            result.Diagnostics,
+            d => d.Id.Equals("AD0001", StringComparison.Ordinal)
+        );
     }
 
     [Fact]
@@ -73,7 +79,13 @@ public sealed class FirebreakTests
             t.ToString().Contains("struct Good", StringComparison.Ordinal)
         );
         Assert.NotNull(goodTree);
-        Assert.DoesNotContain(result.Diagnostics, d => d.Id == "AD0001");
-        Assert.Equal(1, result.Diagnostics.Count(d => d.Id == "TUXEDO001"));
+        Assert.DoesNotContain(
+            result.Diagnostics,
+            d => d.Id.Equals("AD0001", StringComparison.Ordinal)
+        );
+        Assert.Equal(
+            1,
+            result.Diagnostics.Count(d => d.Id.Equals("TUXEDO001", StringComparison.Ordinal))
+        );
     }
 }
