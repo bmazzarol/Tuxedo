@@ -1,7 +1,9 @@
 #pragma warning disable MA0051
 
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text;
+using Firebreak;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -17,6 +19,17 @@ namespace Tuxedo.SourceGenerator;
 [Generator]
 public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
 {
+#pragma warning disable RS2008
+    private static readonly DiagnosticDescriptor RefinementBuildError = new DiagnosticDescriptor(
+        "TUXEDO001",
+        "Failed to build refinement details",
+        "{0}",
+        "Tuxedo",
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true
+    );
+#pragma warning restore RS2008
+
     [ThreadStatic]
     private static StringBuilder? _stringBuilder;
     private static StringBuilder StringBuilder
@@ -47,7 +60,7 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
         var refinedTypeDetailsProvider = context.SyntaxProvider.ForAttributeWithMetadataName(
             "Tuxedo.RefinementAttribute",
             IsRefinementMethod,
-            BuildRefinedTypeDetails
+            BuildRefinedTypeDetailsSafe
         );
 
         context.RegisterSourceOutput(refinedTypeDetailsProvider, GenerateRefinedTypes);
@@ -79,23 +92,36 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
 
     private static bool IsStaticOrWithinGeneratedType(MethodDeclarationSyntax mds)
     {
+        if (mds.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword)))
+        {
+            return true;
+        }
+
+        // Only parse the attribute when we need it. Bad attributes are caught by
+        // the Firebreak stage wrapper in BuildRefinedTypeDetailsSafe.
         var attributeParts = new RefinementAttributeParts(mds);
-        return
-            // either the method is static
-            mds.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword))
-            // or the method is within the struct we are refining
-            || mds.Ancestors()
-                .OfType<StructDeclarationSyntax>()
-                .Any(tds =>
-                    string.Equals(
-                        tds.Identifier.Text,
-                        attributeParts.Name,
-                        StringComparison.Ordinal
-                    )
-                );
+        return mds.Ancestors()
+            .OfType<StructDeclarationSyntax>()
+            .Any(tds =>
+                string.Equals(tds.Identifier.Text, attributeParts.Name, StringComparison.Ordinal)
+            );
     }
 
-    private static RefinedTypeDetails BuildRefinedTypeDetails(
+    private static Result<RefinedTypeDetails> BuildRefinedTypeDetailsSafe(
+        GeneratorAttributeSyntaxContext ctx,
+        CancellationToken token
+    )
+    {
+        // Firebreak POC: a bad refinement attribute is a located Err item, not
+        // an AD0001 generator crash.
+        return FirebreakPipeline.Capture(
+            () => BuildRefinedTypeDetails(ctx, token).Unwrap(),
+            ctx.TargetNode,
+            RefinementBuildError
+        );
+    }
+
+    private static Result<RefinedTypeDetails> BuildRefinedTypeDetails(
         GeneratorAttributeSyntaxContext ctx,
         CancellationToken token
     )
@@ -129,14 +155,53 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
         // get the attribute details
         var attributeParts = new RefinementAttributeParts(methodDeclarationSyntax);
 
+        if (attributeParts.Name is not null && !IsValidIdentifier(attributeParts.Name))
+        {
+            return new Err<RefinedTypeDetails>(
+                EquatableArray<GenerationError>.Create(
+                    GenerationError.At(
+                        RefinementBuildError,
+                        "The Name argument on the Refinement attribute must be a valid C# identifier.",
+                        ctx.TargetNode
+                    )
+                )
+            );
+        }
+
         // extract the generic parts
         var genericDetails = ExtractGenericPartDetails(methodSymbol, methodDeclarationSyntax);
+
+        if (methodDeclarationSyntax.ParameterList.Parameters.Count == 0)
+        {
+            return new Err<RefinedTypeDetails>(
+                EquatableArray<GenerationError>.Create(
+                    GenerationError.At(
+                        RefinementBuildError,
+                        "Refinement methods must have at least one parameter.",
+                        ctx.TargetNode
+                    )
+                )
+            );
+        }
 
         // get the first parameter type
         var firstParam = methodDeclarationSyntax.ParameterList.Parameters[0].Type!;
         var firstParameterTypeInfo = ctx
             .SemanticModel.GetTypeInfo(firstParam, cancellationToken: token)
             .Type;
+
+        if (firstParameterTypeInfo is null)
+        {
+            return new Err<RefinedTypeDetails>(
+                EquatableArray<GenerationError>.Create(
+                    GenerationError.At(
+                        RefinementBuildError,
+                        "Could not resolve the first refinement parameter type.",
+                        ctx.TargetNode
+                    )
+                )
+            );
+        }
         var rawType = firstParameterTypeInfo!.ToDisplayString();
 
         // build the name of the refined type
@@ -163,22 +228,24 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
             altTypeSymbol = secondParameterTypeInfo;
         }
 
-        return new RefinedTypeDetails(
-            Namespace: ns,
-            Usings: usings,
-            PredicateDetails: new PredicateDetails(
-                Name: predicate,
-                MethodDeclaration: methodDeclarationSyntax,
-                MethodSymbol: methodSymbol,
-                ReturnsFailureMessage: returningFailureMessage
-            ),
-            AttributeDetails: attributeParts,
-            GenericDetails: genericDetails,
-            RawType: rawType,
-            RawTypeSymbol: firstParameterTypeInfo,
-            RefinedType: refinedType,
-            AlternativeType: altType,
-            AlternativeTypeSymbol: altTypeSymbol
+        return new Ok<RefinedTypeDetails>(
+            new RefinedTypeDetails(
+                Namespace: ns,
+                Usings: usings,
+                PredicateDetails: new PredicateDetails(
+                    Name: predicate,
+                    MethodDeclaration: methodDeclarationSyntax,
+                    MethodSymbol: methodSymbol,
+                    ReturnsFailureMessage: returningFailureMessage
+                ),
+                AttributeDetails: attributeParts,
+                GenericDetails: genericDetails,
+                RawType: rawType,
+                RawTypeSymbol: firstParameterTypeInfo,
+                RefinedType: refinedType,
+                AlternativeType: altType,
+                AlternativeTypeSymbol: altTypeSymbol
+            )
         );
     }
 
@@ -227,11 +294,41 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
         return parameterType == null ? name : $"{name}{parameterType}";
     }
 
+    private static bool IsValidIdentifier(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            return false;
+        }
+
+        if (!char.IsLetter(value[0]) && value[0] != '_')
+        {
+            return false;
+        }
+
+        for (int i = 1; i < value.Length; i++)
+        {
+            if (!char.IsLetterOrDigit(value[i]) && value[i] != '_')
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private static void GenerateRefinedTypes(
         SourceProductionContext context,
-        RefinedTypeDetails refinedTypeDetails
+        Result<RefinedTypeDetails> result
     )
     {
+        if (result is Err<RefinedTypeDetails>)
+        {
+            context.ReportDiagnostics(result);
+            return;
+        }
+
+        var refinedTypeDetails = ((Ok<RefinedTypeDetails>)result).Value;
         var stringBuilder = StringBuilder;
         if (refinedTypeDetails.AlternativeType is not null)
         {
@@ -249,11 +346,25 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
 
     private static void GenerateRefinementService(
         SourceProductionContext context,
-        ImmutableArray<RefinedTypeDetails> refinedTypeDetails
+        ImmutableArray<Result<RefinedTypeDetails>> results
     )
     {
+        var details = new List<RefinedTypeDetails>();
+        foreach (var result in results)
+        {
+            if (result is Ok<RefinedTypeDetails> ok)
+            {
+                details.Add(ok.Value);
+            }
+        }
+
+        if (details.Count == 0)
+        {
+            return;
+        }
+
         var stringBuilder = StringBuilder;
-        stringBuilder.WriteRefinementService(refinedTypeDetails);
+        stringBuilder.WriteRefinementService(details.ToImmutableArray());
         context.AddSource(
             "RefinementService.g.cs",
             SourceText.From(stringBuilder.ToString(), Encoding.UTF8)

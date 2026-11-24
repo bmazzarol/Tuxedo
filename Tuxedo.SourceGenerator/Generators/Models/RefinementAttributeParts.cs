@@ -1,3 +1,5 @@
+using System;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Tuxedo.SourceGenerator;
@@ -12,17 +14,30 @@ internal sealed record RefinementAttributeParts
 
     public RefinementAttributeParts(MethodDeclarationSyntax methodDeclaration)
     {
-        var arguments = methodDeclaration
+        var attribute = methodDeclaration
             .AttributeLists.SelectMany(list => list.Attributes)
-            .Single(attribute =>
+            .FirstOrDefault(attribute =>
                 string.Equals(attribute.Name.ToString(), "Refinement", StringComparison.Ordinal)
                 || string.Equals(
                     attribute.Name.ToString(),
                     "Tuxedo.Refinement",
                     StringComparison.Ordinal
                 )
-            )
-            .ArgumentList!.Arguments;
+                || string.Equals(
+                    attribute.Name.ToString(),
+                    "RefinementAttribute",
+                    StringComparison.Ordinal
+                )
+            );
+
+        if (attribute is null)
+        {
+            return;
+        }
+
+        IEnumerable<AttributeArgumentSyntax> arguments = attribute.ArgumentList is null
+            ? new List<AttributeArgumentSyntax>()
+            : attribute.ArgumentList.Arguments;
 
         var nameToArgs = arguments
             .Where(x => x.NameEquals is not null)
