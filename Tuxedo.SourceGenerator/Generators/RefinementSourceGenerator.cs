@@ -72,9 +72,15 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
 
     private static bool IsRefinementMethod(SyntaxNode s, CancellationToken cancellationToken)
     {
-        return s is MethodDeclarationSyntax mds
-            // the method is either static or within the struct we are refining
-            && IsStaticOrWithinGeneratedType(mds)
+        if (s is not MethodDeclarationSyntax mds)
+        {
+            return false;
+        }
+
+        // The method is either static or within the struct we are refining.
+        // Malformed attributes are forwarded to the captured transform so they
+        // become located diagnostics instead of predicate crashes.
+        return IsStaticOrWithinGeneratedTypeSafe(mds)
             // and returns a bool or a string
             && (
                 string.Equals(mds.ReturnType.ToString(), "bool", StringComparison.Ordinal)
@@ -90,21 +96,31 @@ public sealed partial class RefinementSourceGenerator : IIncrementalGenerator
             );
     }
 
-    private static bool IsStaticOrWithinGeneratedType(MethodDeclarationSyntax mds)
+    private static bool IsStaticOrWithinGeneratedTypeSafe(MethodDeclarationSyntax mds)
     {
-        if (mds.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword)))
+        try
+        {
+            if (mds.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword)))
+            {
+                return true;
+            }
+
+            var attributeParts = new RefinementAttributeParts(mds);
+            return attributeParts.Name is null
+                || mds.Ancestors()
+                    .OfType<StructDeclarationSyntax>()
+                    .Any(tds =>
+                        string.Equals(
+                            tds.Identifier.Text,
+                            attributeParts.Name,
+                            StringComparison.Ordinal
+                        )
+                    );
+        }
+        catch
         {
             return true;
         }
-
-        // Only parse the attribute when we need it. Bad attributes are caught by
-        // the Firebreak stage wrapper in BuildRefinedTypeDetailsSafe.
-        var attributeParts = new RefinementAttributeParts(mds);
-        return mds.Ancestors()
-            .OfType<StructDeclarationSyntax>()
-            .Any(tds =>
-                string.Equals(tds.Identifier.Text, attributeParts.Name, StringComparison.Ordinal)
-            );
     }
 
     private static Result<RefinedTypeDetails> BuildRefinedTypeDetailsSafe(

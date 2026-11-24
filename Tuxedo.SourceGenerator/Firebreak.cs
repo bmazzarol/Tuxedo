@@ -428,7 +428,7 @@ public sealed record GenerationError(
         return Diagnostic.Create(
             Descriptor,
             location,
-            MessageArgs.Length == 0 ? Message : MessageArgs.ToArray()
+            !MessageArgs.IsDefault && MessageArgs.Length > 0 ? MessageArgs.ToArray() : Message
         );
     }
 }
